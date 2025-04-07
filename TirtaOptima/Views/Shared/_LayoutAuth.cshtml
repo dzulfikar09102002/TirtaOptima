@@ -1,0 +1,115 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Tirta Optima | Authentication</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Perumdam Tirta Umbulan Kota Pasuruan" name="description" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+    <link rel="stylesheet" href="~/css/main.min.css">
+    <link rel="shortcut icon" href="/assets/images/Logo Bulat.png">
+
+    <meta name="theme-color" content="#0d6efd">
+    <style>
+        .bd-login-form {
+            min-height: 100vh;
+            flex: 3;
+            background-position: center;
+            background-size: cover;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url(/assets/images/bg-auth-2.jpeg)
+        }
+
+        .bd-login-cover {
+            flex: 8;
+            min-height: 100vh;
+            background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .5)), url(/assets/images/bg-login.jpg);
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+
+<body style="background-color: var(--bs-gray-900);">
+    <div class="bg-white d-block d-lg-flex">
+
+        <section class="bd-login-form px-5 h-100 d-flex align-items-center justify-content-center">
+            @RenderBody()
+        </section>
+
+        <section class="bd-login-cover p-3 p-lg-5 d-flex flex-column justify-content-center justify-content-lg-end">
+            <div class="row justify-content-end">
+                <div class="col-12 col-lg-6">
+                    <div class="border border-light rounded p-4 shadow" style="
+                            backdrop-filter: blur( 4px );
+                            backdrop-filter: blur( 7.5px );
+                             -webkit-backdrop-filter: blur( 10px );">
+                        <div class="text-white">
+                            <img src="/assets/images/Logo Panjang Transparan.png" alt="Logo" height="75" class="mb-3 img-fluid">
+                            <p class="text-justify fw-bold">
+                                Tirta Optima hadir untuk membantu Anda dalam menentukan strategi penagihan pembayaran yang tepat.
+                            </p>
+                            <p class="text-justify">
+                                Melalui analisis data dan Artificial Intelligence, aplikasi ini dirancang untuk meningkatkan efektivitas pengambilan keputusan dalam proses penagihan.
+                                Telusuri informasi, pelajari rekomendasi strategi yang tersedia, dan temukan solusi terbaik untuk mendukung keberhasilan Perumdam Tirta Umbulan Kota Pasuruan.
+                            </p>
+                            <p>© @(DateTime.Now.Year) Tirta Optima. All rights reserved.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="container w-100 position-absolute top-0 end-0 p-2">
+        <div class="col-lg-12 d-flex justify-content-center justify-content-lg-end">
+            <div class="border border-light rounded p-3 shadow text-white d-flex align-items-center"
+                 style="backdrop-filter: blur(7.5px); -webkit-backdrop-filter: blur(10px); background-color: rgba(255, 255, 255, 0.1);">
+                <div>
+                    <img src="~/assets/images/Logo-Kota-Pasuruan-380x458.png" alt="" height="60">
+                </div>
+                <div class="ps-2">
+                    <img src="~/assets/images/logo-circle.png" alt="" height="60">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    @{
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            crossorigin="anonymous"></script>
+
+    <script>
+        function showPassword() {
+            const password = document.getElementById('Password');
+            const showPassword = document.getElementById('show-password');
+            if (password.type === 'password') {
+                password.type = 'text';
+                showPassword.innerHTML = '<i class="px-2 bi bi-eye-slash"></i>';
+                showPassword.title = 'Sembunyikan Kata Sandi';
+            } else {
+                password.type = 'password';
+                showPassword.innerHTML = '<i class="px-2 bi bi-eye"></i>';
+                showPassword.title = 'Tampilkan Kata Sandi';
+            }
+        }
+
+        $('.form-select').select2({
+            theme: 'bootstrap-5',
+            width: '100%',
+            dropdownAutoWidth: true
+        });
+    </script>
+
+</body>
+
+</html>
