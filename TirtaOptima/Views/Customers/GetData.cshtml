@@ -1,0 +1,128 @@
+﻿@using System.Globalization
+@model TirtaOptima.ViewModels.CustomerViewModel
+<div class="card mt-2">
+    <div class="card-body">
+        <div class="d-flex flex-wrap gap-2 mb-3">
+            @if (TempData["Source"]?.ToString() != "database")
+            {
+                <button type="button" class="btn btn-info btn-label waves-effect waves-light" onclick="window.location.reload()">
+                    <i class="mdi mdi-arrow-u-left-top label-icon align-middle fs-16 me-2"></i> Kembali
+                </button>
+            }
+            <button type="button" class="btn btn-success btn-label waves-effect waves-light" onclick="GetDataApi()">
+                <i class="mdi @(TempData["Source"]?.ToString() == "database" ? "mdi-refresh" : "mdi-circle-edit-outline") label-icon align-middle fs-16 me-2"></i>
+                @(TempData["Source"]?.ToString() == "database" ? "Periksa Pembaruan" : "Catat Pelanggan")
+            </button>
+        </div>
+        <table id="tbl" class="table table-hover table-striped align-middle table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th class="text-center"><input class="form-check-input chk-all" type="checkbox" name="checkAll" value="option1"><br /></th>
+                    <th class="text-center">Id Pelanggan</th>
+                    <th class="text-center">Nomor & Jenis</th>
+                    <th class="text-center">Nama Pelanggan</th>
+                    <th class="text-center">Alamat</th>
+                    <th class="text-center">Tanggal Pasang</th>
+                    <th class="text-center">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Customers)
+                {
+                    <tr class="odd">
+                        <td class="text-center"><input type="checkbox" name="NopPiutang" class="form-check-input chk-save"></td>
+                        <td class="text-center">
+                            <b>@item.Id</b>
+                        </td>
+                        <td class="text-center">
+                            <span class="fw-bold">@(string.IsNullOrEmpty(item.Nomor) ? "-" : item.Nomor)</span> <br /> @item.JenisNavigation?.Deskripsi
+                        </td>
+                        <td class="text-center fw-bold">
+                            @item.Nama
+                        </td>
+                        <td class="text-center">
+                            <b class="fw-bold">@item.Alamat</b>
+                            <br />@item.KelurahanNavigation?.Nama | @item.KecamatanNavigation?.Nama
+                        </td>
+                        <td class="text-center">
+                            @(
+                                item.Pasang.HasValue
+                                ? item.Pasang.Value.ToString("dd MMMM yyyy", new CultureInfo("id-ID"))
+                                : "-"
+                                )
+                        </td>
+                        <td class="text-center">
+                            <span class="badge bg-@(
+                                item.Status == 0 ? "info" :
+                                item.Status == 2 ? "success" :
+                                item.Status == 5 ? "warning" :
+                                item.Status == 7 ? "danger" :
+                                "light"
+                            )">
+                                @item.StatusNavigation?.Name
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="period-container"
+     data-bulan="@Model.BulanSelect"
+     data-tahun="@Model.TahunSelect">
+    @{
+        TempData["Bulan-cs"] = Model.BulanSelect;
+        TempData["Tahun-cs"] = Model.TahunSelect;
+    }
+</div>
+<script>
+
+    $(document).ready(function () {
+        $('#tbl').DataTable({
+        })
+    });
+
+    function GetDataApi() {
+        var t = $("input[name='__RequestVerificationToken']").val();
+        var bulan = $("#period-container").data("bulan");
+        var tahun = $("#period-container").data("tahun");
+
+        $.ajax({
+            url: '@(Url.Action("GetDataApi", "Customers"))',
+            type: "GET",
+            data: { bulan, tahun },
+            headers:
+            {
+                "RequestVerificationToken": t
+            },
+            beforeSend: function () {
+                $("#loader").show()
+                $('#data-customers').hide();
+            },
+            complete: function () { $("#loader").hide(); },
+            success: function (resp) {
+                if (resp.status == undefined) {
+                    $('#data-customers').show();
+                    $('#data-customers').html(resp);
+                    $("#loader").hide()
+                    Swal.fire({
+                        icon: 'success',
+                        title: '<b>Success</b>',
+                        text: 'Data Berhasil Diambil',
+                        showConfirmButton: false,
+                        timer: 1000
+                    });
+                }
+                else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '<b style="color:orange">Peringatan</b>',
+                        text: resp.message,
+                    })
+                    $("#loader").hide()
+                }
+            }
+        })
+    }
+</script>

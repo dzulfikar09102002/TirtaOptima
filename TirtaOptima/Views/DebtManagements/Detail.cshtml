@@ -1,0 +1,192 @@
+﻿@using System.Globalization
+@model TirtaOptima.ViewModels.DebtManagementsViewModel
+@{
+    ViewData["Title"] = "Rincian Pengelolaan Piutang";
+    int no = 1;
+}
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">RINCIAN REKENING DAN PEMBAYARAN</h4>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">Tirta Optima</li>
+                    <li class="breadcrumb-item">Pengelolaan Piutang</li>
+                    <li class="breadcrumb-item active">Rincian</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body">
+        <div class="row p-2 align-items-end">
+            <h5 class="mb-4">Informasi Pelanggan</h5>
+            @if (Model.DebtManagements != null && Model.DebtManagements.Any())
+            {
+                var dm = Model.DebtManagements[0];
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 col-sm-12 d-flex align-items-center mb-3">
+                        <div class="avatar-xs d-block flex-shrink-0 me-3">
+                            <span class="avatar-title rounded-circle fs-16 bg-primary">
+                                <i class="mdi mdi-card-account-details-outline"></i>
+                            </span>
+                        </div>
+                        @Html.TextBox("IdPelanggan", dm.IdPelanggan, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 col-sm-12 d-flex align-items-center mb-3">
+                        <div class="avatar-xs d-block flex-shrink-0 me-3">
+                            <span class="avatar-title rounded-circle fs-16 bg-success">
+                                <i class="mdi mdi-account"></i>
+                            </span>
+                        </div>
+                        @Html.TextBox("NamaPelanggan", dm.NamaPelanggan, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 col-sm-12 d-flex align-items-center mb-3">
+                        <div class="avatar-xs d-block flex-shrink-0 me-3">
+                            <span class="avatar-title rounded-circle fs-16 bg-info">
+                                <i class="mdi mdi-numeric"></i>
+                            </span>
+                        </div>
+                        @Html.TextBox("NomorPelanggan", dm.NomorPelanggan, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 col-sm-12 d-flex align-items-center mb-3">
+                        <div class="avatar-xs d-block flex-shrink-0 me-3">
+                            <span class="avatar-title rounded-circle fs-16 bg-warning">
+                                <i class="mdi mdi-tag-outline"></i>
+                            </span>
+                        </div>
+                        @Html.TextBox("JenisPelanggan", dm.JenisPelanggan, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 col-sm-12 d-flex align-items-center mb-3">
+                        <div class="avatar-xs d-block flex-shrink-0 me-3">
+                            <span class="avatar-title rounded-circle fs-16 bg-danger">
+                                <i class="mdi mdi-map-marker"></i>
+                            </span>
+                        </div>
+                        @Html.TextBox("Alamat", dm.Alamat, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 col-sm-12 d-flex align-items-center mb-3">
+                        <div class="avatar-xs d-block flex-shrink-0 me-3">
+                            <span class="avatar-title rounded-circle fs-16 @(dm.Status == "Baru" ? "bg-info" : dm.Status == "Aktif" ? "bg-success" : dm.Status == "Segel" ? "bg-warning" : dm.Status == "Cabut" ? "bg-danger" : "bg-secondary")">
+                                <i class="mdi mdi-check-circle-outline"></i>
+                            </span>
+                        </div>
+                        @Html.TextBox("Status", dm.Status, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning mt-3">Data pelanggan tidak ditemukan.</div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="card mt-2">
+    <div class="card-body">
+        <div class="d-flex flex-wrap gap-2 mb-3">
+            <button type="button" class="btn btn-info btn-label waves-effect waves-light" onclick="Correction()">
+                <i class="mdi mdi-circle-edit-outline label-icon align-middle fs-16 me-2"></i> Catat Koreksi
+            </button>
+        </div>
+        <table id="tbl" class="table table-hover table-striped align-middle table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th class="text-center">No.</th>
+                    <th class="text-center">Rekening Tagihan</th>
+                    <th class="text-center">Tanggal Pencatatan</th>
+                    <th class="text-center">Tanggal Pembayaran</th>
+                    <th class="text-center">Nominal</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.DebtManagements!)
+                {
+                    <tr class="odd">
+                        <td class="text-center">@no</td>
+                        <td class="text-center">
+                            @item.Periode
+                        </td>
+                        <td class="text-center">
+                            @(item.Pencatatan != null
+                                ? ((DateTime)item.Pencatatan).ToString("d MMMM yyyy", new CultureInfo("id-ID"))
+                                : "-")
+                        </td>
+                        <td class="text-center">
+                            @(item.Pembayaran != null
+                                ? item.Pembayaran.Value.ToString("dd MMMM yyyy", new CultureInfo("id-ID"))
+                                : "-")
+                        </td>
+                        <td class="text-center">
+                            <strong>
+                                @(
+                                    item.TotalNominal.HasValue
+                                    ? string.Format(
+                                    new System.Globalization.CultureInfo("id-ID"),
+                                    "Rp {0:N0}",
+                                    Math.Abs(item.TotalNominal.Value)
+                                    )
+                                    : "-"
+                                    )
+                            </strong>
+                            <br />
+                            <span class="badge bg-@(item.TotalNominal == 0 ? "success" : item.TotalNominal < 1 ? "danger" : "info")">
+                                <i class="mdi mdi-circle-medium"></i>
+                                @(item.TotalNominal == 0 ? "Nihil" : item.TotalNominal < 1 ? "Kredit" : "Debit")
+                            </span>
+                        </td>
+                    </tr>
+                    no++;
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4" class="text-center">
+                        <strong>TOTAL PIUTANG</strong>
+                    </td>
+                    <td class="text-center">
+                        <strong>
+                            @{
+                                var totalPiutang = Model.DebtManagements?.Sum(x => x.TotalNominal) ?? 0;
+                                var formattedTotal = string.Format(
+                                new CultureInfo("id-ID"),
+                                "Rp {0:N0}",
+                                Math.Abs(totalPiutang)
+                                );
+                            }
+                            @formattedTotal
+                        </strong>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#sidebarMultilevel6").addClass('show')
+            $('#tbl').DataTable({
+            })
+        });
+        function Correction() {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Correction")',
+                success: function (data) {
+                    $("#staticBackdropLarge .modal-title").html("Catat Koreksi");
+                    $("#staticBackdropLarge .modal-body").html(data);
+                    $("#staticBackdropLarge").modal('show');
+                }
+            });
+        }
+    </script>
+}

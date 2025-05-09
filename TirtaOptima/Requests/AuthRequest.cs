@@ -31,6 +31,7 @@ namespace TirtaOptima.Requests
             }
             else if (EncryptHelper.GeneratedPassword(user.Username ?? "", UserInput.Password ?? "") != user.Password)
             {
+                var pw = EncryptHelper.GeneratedPassword(user.Username ?? "", UserInput.Password ?? "");
                 ErrorMassage = "Password Anda Salah";
                 return false;
             }

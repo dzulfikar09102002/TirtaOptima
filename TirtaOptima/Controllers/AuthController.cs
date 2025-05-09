@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using TirtaOptima.Services;
 using TirtaOptima.Requests;
 
-namespace PEMIRA.Controllers;
+namespace TirtaOptima.Controllers;
 public class AuthController : BaseController
 {
 
@@ -26,13 +26,17 @@ public class AuthController : BaseController
         }
         if (requestValidator.User != null &&
                 requestValidator.User.Username != null &&
+                requestValidator.User.Email != null &&
                 requestValidator.User.Role != null &&
                 requestValidator.User.Role.Name != null)
         {
             List<Claim> claims = new List<Claim>
             {
-                 new Claim(ClaimTypes.Name, requestValidator.User.Username),
-                 new Claim(ClaimTypes.Role, requestValidator.User.Role.Name)
+                 new Claim(ClaimTypes.Name, requestValidator.User.Name),
+                 new Claim(ClaimTypes.Email, requestValidator.User.Email),
+                 new Claim(ClaimTypes.Role, requestValidator.User.Role.Name),
+                 new Claim("UserId", requestValidator.User.Id.ToString()),
+                 new Claim("RoleId", requestValidator.User.RoleId.ToString() ?? ""),
              };
 
             ClaimsIdentity identity = new(claims, CookieAuthenticationDefaults.AuthenticationScheme);

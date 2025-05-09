@@ -1,0 +1,134 @@
+﻿@model TirtaOptima.ViewModels.UserViewModel
+<div class="row">
+    <div class="col-12">
+        <form id="frmAdd" class="needs-validation" novalidate asp-controller="Users" asp-action="Add" method="POST" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-6 mb-3">
+                    @Html.AntiForgeryToken()
+                    <label asp-for="NikNip" class="form-label">Nik / Nip <span class="text-danger">*</span></label>
+                    @Html.TextBoxFor(x => x.NikNip, new { @class = "form-control" })
+                </div>
+
+                <div class="col-6 mb-3">
+                    <label asp-for="Name" class="form-label">Nama <span class="text-danger">*</span></label>
+                    @Html.TextBoxFor(x => x.Name, new { @class = "form-control" })
+                </div>
+
+                <div class="col-6 mb-3">
+                    <label asp-for="Username" class="form-label">Username <span class="text-danger">*</span></label>
+                    @Html.TextBoxFor(x => x.Username, new { @class = "form-control" })
+                </div>
+
+                <div class="col-6 mb-3">
+                    <label asp-for="Email" class="form-label">Email</label>
+                    @Html.TextBoxFor(x => x.Email, new { @class = "form-control", type = "email" })
+                </div>
+
+                <div class="col-6 mb-3">
+                    <label asp-for="Password" class="form-label">Password <span class="text-danger">*</span></label>
+                    @Html.PasswordFor(x => x.Password, new { @class = "form-control" })
+                </div>
+
+                <div class="col-6 mb-3">
+                    <label asp-for="ConfirmPassword" class="form-label">Konfirmasi Password <span class="text-danger">*</span></label>
+                    @Html.PasswordFor(x => x.ConfirmPassword, new { @class = "form-control" })
+                </div>
+
+
+                <div class="col-6 mb-3">
+                    <label asp-for="NomorTelepon" class="form-label">No. Telepon</label>
+                    @Html.TextBoxFor(x => x.NomorTelepon, new { @class = "form-control", type = "tel" })
+                </div>
+
+                <div class="col-6 mb-3">
+                    <label asp-for="Alamat" class="form-label">Alamat</label>
+                    @Html.TextBoxFor(x => x.Alamat, new { @class = "form-control" })
+                </div>
+
+                <div class="col-12 mb-3">
+                    <label asp-for="More" class="form-label">Keterangan</label>
+                    @Html.TextAreaFor(x => x.More, new { @class = "form-control", rows = 3 })
+                </div>
+
+                <div class="col-4 mb-3">
+                    <label class="form-label">Jenis Kelamin <span class="text-danger">*</span></label>
+                    @Html.DropDownListFor(x => x.Gender,
+                             new SelectList(new List<SelectListItem>
+                    {
+                    new SelectListItem { Text = "Laki-laki", Value = "true" },
+                    new SelectListItem { Text = "Perempuan", Value = "false" }
+                    }, "Value", "Text"),
+                             "-- Pilih Jenis Kelamin --",
+                             new { @class = "form-control" })
+                </div>
+                <div class="col-4 mb-3">
+                    <label asp-for="Alamat" class="form-label">Jabatan <span class="text-danger">*</span></label>
+                    @Html.TextBoxFor(x => x.Jabatan, new { @class = "form-control" })
+                </div>
+                <div class="col-4 mb-3">
+                    <label asp-for="RoleId" class="form-label">Role <span class="text-danger">*</span></label>
+                    @Html.DropDownListFor(x => x.RoleId,
+                             new SelectList(Model.Roles, "Id", "Name"),
+                             "-- Pilih Role --",
+                             new { @class = "form-control" })
+                </div>
+                <div class="col-2">
+                    <img class="img-thumbnail" src="@(Url.Content("/assets/images/nophoto.jpg"))" id="preview"
+                         style="width: 160px; height: 160px;">
+                </div>
+                <div class="col-10 mt-4">
+                    <label asp-for="Img" class="form-label">Foto Profil</label>
+                    <input type="file" id="inputImage" name="Img" class="form-control" accept=".jpg, .jpeg, .png" onchange="previewImage(event,'preview')" />
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="hstack gap-2 justify-content-end">
+        <button type="button" class="btn btn-danger" id="btn-tutup-event" data-bs-dismiss="modal">Tutup</button>
+        <button type="button" class="btn btn-success" id="btn-save-event" onclick="Add()">Simpan</button>
+    </div>
+</div>
+<script>
+    function Add() {
+        var formData = new FormData($("#frmAdd")[0]);
+        var t = $("input[name='__RequestVerificationToken']").val();
+
+        $.ajax({
+            url: $("#frmAdd").attr('action'),
+            type: "POST",
+            data: formData,
+            dataType: "json",
+            contentType: false,
+            processData: false,
+            headers:
+            {
+                "RequestVerificationToken": t
+            },
+            beforeSend: function () {
+                $("#loader").show()
+            },
+            complete: function () { $("#loader").hide(); },
+            success: function (resp) {
+                if (resp.status == 1) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '<b>Info</b>',
+                        text: resp.message,
+                        timer: 1000,
+                        showConfirmButton: false,
+                    }).then(() => {
+                        window.location.reload();
+                    })
+                }
+                else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '<b style="color:orange">Peringatan</b>',
+                        text: resp.message,
+                    })
+                }
+            }
+        })
+
+    }
+</script>

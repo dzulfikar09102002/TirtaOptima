@@ -11,6 +11,10 @@ public partial class Leader
 
     public string Signature { get; set; } = null!;
 
+    public DateTime? TanggalAwal { get; set; }
+
+    public DateTime? TanggalAkhir { get; set; }
+
     public DateTime CreatedAt { get; set; }
 
     public DateTime UpdatedAt { get; set; }

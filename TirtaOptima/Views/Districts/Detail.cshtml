@@ -1,0 +1,57 @@
+﻿@model TirtaOptima.ViewModels.DistrictsViewModel
+@{
+    ViewData["Title"] = "Detail Kecamatan";
+}
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">TIRTA OPTIMA PERUMDAM TIRTA UMBULAN KOTA PASURUAN</h4>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">Tirta Optima</a></li>
+                    <li class="breadcrumb-item">Master Data</li>
+                    <li class="breadcrumb-item active">Detail Kecamatan</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex flex-wrap gap-2 mb-3">
+            <a asp-action="Index" class="btn btn-info btn-label">
+                <i class="mdi mdi-arrow-u-left-top label-icon align-middle fs-16 me-2">
+                </i> Kembali
+            </a>
+        </div>
+        <table id="tbl" class="table table-hover table-striped align-middle table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th class="text-center">No</th>
+                    <th class="text-center">Kelurahan / Desa</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Villages)
+                {
+                    <tr class="odd">
+                        <td class="text-center">
+                            @item.Id
+                        </td>
+                        <td class="text-center">
+                            @item.Nama
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#sidebarMultilevel3").addClass('show')
+            $('#tbl').DataTable();
+        }); 
+    </script>
+}

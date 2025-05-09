@@ -2481,6 +2481,10 @@
       "PackagePath": "staticwebassets\\assets\\images\\bg-auth-1.jpg"
     },
     {
+      "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\bg-auth-2.jpeg",
+      "PackagePath": "staticwebassets\\assets\\images\\bg-auth-2.jpeg"
+    },
+    {
       "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\bg-auth.jpg",
       "PackagePath": "staticwebassets\\assets\\images\\bg-auth.jpg"
     },
@@ -2777,6 +2781,10 @@
       "PackagePath": "staticwebassets\\assets\\images\\modal-bg.png"
     },
     {
+      "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\nophoto.jpg",
+      "PackagePath": "staticwebassets\\assets\\images\\nophoto.jpg"
+    },
+    {
       "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\products\\img-1.png",
       "PackagePath": "staticwebassets\\assets\\images\\products\\img-1.png"
     },
@@ -2823,6 +2831,14 @@
     {
       "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\server-error.png",
       "PackagePath": "staticwebassets\\assets\\images\\server-error.png"
+    },
+    {
+      "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\signatures\\1-0-1746672126.png",
+      "PackagePath": "staticwebassets\\assets\\images\\signatures\\1-0-1746672126.png"
+    },
+    {
+      "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\signatures\\1-3-1746679049.png",
+      "PackagePath": "staticwebassets\\assets\\images\\signatures\\1-3-1746679049.png"
     },
     {
       "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\small\\img-1.jpg",
@@ -4793,52 +4809,16 @@
       "PackagePath": "staticwebassets\\assets\\images\\user-illustarator-2.png"
     },
     {
-      "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\users\\avatar-1.jpg",
-      "PackagePath": "staticwebassets\\assets\\images\\users\\avatar-1.jpg"
+      "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\users\\3514180239220101-leader-1746681825.jpg",
+      "PackagePath": "staticwebassets\\assets\\images\\users\\3514180239220101-leader-1746681825.jpg"
     },
     {
-      "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\users\\avatar-10.jpg",
-      "PackagePath": "staticwebassets\\assets\\images\\users\\avatar-10.jpg"
+      "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\users\\3514200910020002-administrator_system-1746680665.jpg",
+      "PackagePath": "staticwebassets\\assets\\images\\users\\3514200910020002-administrator_system-1746680665.jpg"
     },
     {
-      "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\users\\avatar-2.jpg",
-      "PackagePath": "staticwebassets\\assets\\images\\users\\avatar-2.jpg"
-    },
-    {
-      "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\users\\avatar-3.jpg",
-      "PackagePath": "staticwebassets\\assets\\images\\users\\avatar-3.jpg"
-    },
-    {
-      "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\users\\avatar-4.jpg",
-      "PackagePath": "staticwebassets\\assets\\images\\users\\avatar-4.jpg"
-    },
-    {
-      "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\users\\avatar-5.jpg",
-      "PackagePath": "staticwebassets\\assets\\images\\users\\avatar-5.jpg"
-    },
-    {
-      "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\users\\avatar-6.jpg",
-      "PackagePath": "staticwebassets\\assets\\images\\users\\avatar-6.jpg"
-    },
-    {
-      "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\users\\avatar-7.jpg",
-      "PackagePath": "staticwebassets\\assets\\images\\users\\avatar-7.jpg"
-    },
-    {
-      "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\users\\avatar-8.jpg",
-      "PackagePath": "staticwebassets\\assets\\images\\users\\avatar-8.jpg"
-    },
-    {
-      "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\users\\avatar-9.jpg",
-      "PackagePath": "staticwebassets\\assets\\images\\users\\avatar-9.jpg"
-    },
-    {
-      "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\users\\multi-user.jpg",
-      "PackagePath": "staticwebassets\\assets\\images\\users\\multi-user.jpg"
-    },
-    {
-      "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\users\\user-dummy-img.jpg",
-      "PackagePath": "staticwebassets\\assets\\images\\users\\user-dummy-img.jpg"
+      "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\users\\LOGO_LIGHT MODE.png",
+      "PackagePath": "staticwebassets\\assets\\images\\users\\LOGO_LIGHT MODE.png"
     },
     {
       "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\verification-img.png",

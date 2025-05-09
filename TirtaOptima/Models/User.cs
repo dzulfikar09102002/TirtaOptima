@@ -51,6 +51,12 @@ public partial class User
 
     public virtual ICollection<ActionType> ActionTypeUpdatedByNavigations { get; set; } = new List<ActionType>();
 
+    public virtual ICollection<Bill> BillCreatedByNavigations { get; set; } = new List<Bill>();
+
+    public virtual ICollection<Bill> BillDeletedByNavigations { get; set; } = new List<Bill>();
+
+    public virtual ICollection<Bill> BillUpdatedByNavigations { get; set; } = new List<Bill>();
+
     public virtual ICollection<Collection> CollectionCreatedByNavigations { get; set; } = new List<Collection>();
 
     public virtual ICollection<Collection> CollectionDeletedByNavigations { get; set; } = new List<Collection>();
@@ -64,6 +70,18 @@ public partial class User
     public virtual ICollection<Criteria> CriteriaDeletedByNavigations { get; set; } = new List<Criteria>();
 
     public virtual ICollection<Criteria> CriteriaUpdatedByNavigations { get; set; } = new List<Criteria>();
+
+    public virtual ICollection<Customer> CustomerCreatedByNavigations { get; set; } = new List<Customer>();
+
+    public virtual ICollection<Customer> CustomerDeletedByNavigations { get; set; } = new List<Customer>();
+
+    public virtual ICollection<CustomerType> CustomerTypeCreatedByNavigations { get; set; } = new List<CustomerType>();
+
+    public virtual ICollection<CustomerType> CustomerTypeDeletedByNavigations { get; set; } = new List<CustomerType>();
+
+    public virtual ICollection<CustomerType> CustomerTypeUpdatedByNavigations { get; set; } = new List<CustomerType>();
+
+    public virtual ICollection<Customer> CustomerUpdatedByNavigations { get; set; } = new List<Customer>();
 
     public virtual ICollection<Debt> DebtCreatedByNavigations { get; set; } = new List<Debt>();
 

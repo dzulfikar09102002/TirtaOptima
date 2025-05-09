@@ -1,0 +1,89 @@
+﻿@model TirtaOptima.ViewModels.DebtManagementsViewModel
+@using System.Globalization
+@{
+    int no = 1;
+}
+<div class="card mt-2">
+    <div class="card-body">
+        <table id="tbl" class="table table-hover table-striped align-middle table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th class="text-center">No.</th>
+                    <th class="text-center">Pelanggan</th>
+                    <th class="text-center">Nomor & Jenis</th>
+                    <th class="text-center">Alamat</th>
+                    <th class="text-center">Periode Pemakaian</th>
+                    <th class="text-center">Nominal</th>
+                    <th class="text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.DebtManagements)
+                {
+                    <tr class="odd">
+                        <td class="text-center">@no</td>
+                        <td class="text-center">
+                            <strong>@item.IdPelanggan</strong> <br />
+                            @item.NamaPelanggan
+                        </td>
+                        <td class="text-center">
+                            <span class="fw-bold">@(item.NomorPelanggan ?? "-")</span> <br /> @item.JenisPelanggan
+                        </td>
+                        <td class="text-center">
+                            @item.Alamat <br />
+                            @item.Kelurahan | @item.Kecamatan
+                        </td>
+                        <td class="text-center">
+                            @item.Periode
+                        </td>
+
+                        <td class="text-end">
+                           <strong>
+                           @(
+                                item.TotalNominal.HasValue
+                                ? string.Format(
+                                new System.Globalization.CultureInfo("id-ID"),
+                                "Rp {0:N0}",
+                                Math.Abs(item.TotalNominal.Value)
+                                )
+                                : "-"
+                                )
+                           </strong> 
+                                <br />
+                            <span class="badge badge-label bg-@(item.TotalNominal == 0 ? "success" : item.TotalNominal < 1 ? "danger" : "info")">
+                                <i class="mdi mdi-circle-medium"></i>
+                                @(item.TotalNominal == 0 ? "Lunas" : item.TotalNominal < 1 ? "Belum Lunas" : "Lebih Bayar")
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <a asp-action="Detail" asp-controller="DebtManagements" class="btn btn-info btn-edit" asp-route-id="@item.IdPelanggan">
+                                <i class="ri-external-link-line"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    no++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="period-container"
+     data-bulan="@Model.BulanSelect"
+     data-tahun="@Model.TahunSelect">
+    @{
+        TempData["Bulan-debt"] = Model.BulanSelect;
+        TempData["Tahun-debt"] = Model.TahunSelect;
+        if (!string.IsNullOrEmpty(ViewBag.Message))
+        {
+            <div id="partial-message" data-message="@ViewBag.Message"></div>
+        }
+    }
+</div>
+<script>
+
+    $(document).ready(function () {
+        $('#tbl').DataTable({
+        })
+    });
+  
+</script>

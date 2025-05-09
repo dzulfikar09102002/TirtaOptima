@@ -1,0 +1,164 @@
+﻿@model TirtaOptima.ViewModels.CustomerTypeViewModel
+@{
+    ViewData["Title"] = "Jenis Pelanggan";
+    int no = 1;
+}
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">TIRTA OPTIMA PERUMDAM TIRTA UMBULAN KOTA PASURUAN</h4>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">Tirta Optima</a></li>
+                    <li class="breadcrumb-item">Master Data</li>
+                    <li class="breadcrumb-item active">Jenis Pelanggan</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card mt-2">
+    <div class="card-body">
+        <div class="d-flex flex-wrap gap-2 mb-3">
+            <button type="button" class="btn btn-info btn-label waves-effect waves-light" onclick="Create()">
+                <i class="ri-add-line label-icon align-middle fs-16 me-2"></i> Jenis Pelanggan Baru
+            </button>
+        </div>
+        <table id="tbl" class="table table-hover table-striped align-middle table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th class="text-center">No</th>
+                    <th class="text-center">Jenis</th>
+                    <th class="text-center">Jenis Tindakan</th>
+                    <th class="text-center">Min. Pakai</th>
+                    <th class="text-center">Tarif 1</th>
+                    <th class="text-center">Tarif 2</th>
+                    <th class="text-center">Denda</th>
+                    <th class="text-center">Retribusi</th>
+                    <th class="text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.CustomerTypes)
+                {
+                    <tr class="odd">
+                        <td class="text-center">
+                            @no
+                        </td>
+                        <td class="text-center">
+                            @item.Id
+                        </td>
+                        <td class="text-center">
+                            @item.Deskripsi
+                        </td>
+                        <td class="text-center">
+                            @item.MinPakai
+                        </td>
+                        <td class="text-center">
+                            @(item.Tarif1.GetValueOrDefault() != 0
+                                ? "Rp " + ((decimal)item.Tarif1.GetValueOrDefault()).ToString("N0", new System.Globalization.CultureInfo("id-ID"))
+                                : "-"
+                                )
+                        </td>
+                        <td class="text-center">
+                            @(
+                                item.Tarif2.GetValueOrDefault() != 0
+                                ? "Rp " + ((decimal)item.Tarif2.GetValueOrDefault()).ToString("N0", new System.Globalization.CultureInfo("id-ID"))
+                                : "-"
+                            )
+                            </td>
+                        <td class="text-center">
+                            @(
+                                item.Denda.GetValueOrDefault() != 0
+                                ? "Rp " + ((decimal)item.Denda.GetValueOrDefault()).ToString("N0", new System.Globalization.CultureInfo("id-ID"))
+                                : "-"
+                            )
+                        </td>
+                        <td class="text-center">
+                            @(
+                                item.Retribusi.GetValueOrDefault() != 0
+                                ? "Rp " + ((decimal)item.Retribusi.GetValueOrDefault()).ToString("N0", new System.Globalization.CultureInfo("id-ID"))
+                                : "-"
+                            )
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-warning btn-edit" data-id="@item.Id" onclick="Edit(this)">
+                                <i class="mdi mdi-circle-edit-outline"></i>
+                            </button>
+                            <button class="btn btn-danger btn-delete" data-id="@item.Id" onclick="Delete(this)">
+                                <i class="mdi mdi-trash-can-outline"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    no++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#sidebarMultilevel3").addClass('show')
+            $('#tbl').DataTable({
+            })
+        });
+        function Create() {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Create")',
+                success: function (data) {
+                    $("#staticBackdrop .modal-title").html("Jenis Pelanggan Baru");
+                    $("#staticBackdrop .modal-body").html(data);
+                    $("#staticBackdrop").modal('show');
+                }
+            });
+        }
+
+        function Edit(button) {
+            var id = $(button).data('id');
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Edit")',
+                data: { id: id },
+                success: function (data) {
+                    $("#staticBackdrop .modal-title").html("Edit Jenis Pelanggan");
+                    $("#staticBackdrop .modal-body").html(data);
+                    $("#staticBackdrop").modal('show');
+                }
+            });
+        }
+
+        function Delete(button) {
+            var id = $(button).data('id');
+            Swal.fire({
+                title: 'Attention?',
+                text: "Yakin ingin menghapus data?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Hapus'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("Delete")',
+                        data: { id: id },
+                        success: function (resp) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil!',
+                                text: resp.message,
+                                timer: 1500,
+                                showConfirmButton: false
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}

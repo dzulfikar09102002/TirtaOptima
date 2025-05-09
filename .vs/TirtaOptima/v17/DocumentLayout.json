@@ -3,8 +3,64 @@
   "WorkspaceRootPath": "C:\\Projek C#\\TirtaOptima\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|c:\\projek c#\\tirtaoptima\\tirtaoptima\\views\\shared\\_layoutauth.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|solutionrelative:tirtaoptima\\views\\shared\\_layoutauth.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|c:\\projek c#\\tirtaoptima\\tirtaoptima\\viewmodels\\debtmanagementsviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|solutionrelative:tirtaoptima\\viewmodels\\debtmanagementsviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|c:\\projek c#\\tirtaoptima\\tirtaoptima\\services\\debtmanagementsservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|solutionrelative:tirtaoptima\\services\\debtmanagementsservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|c:\\projek c#\\tirtaoptima\\tirtaoptima\\controllers\\debtmanagementscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|solutionrelative:tirtaoptima\\controllers\\debtmanagementscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|c:\\projek c#\\tirtaoptima\\tirtaoptima\\views\\debtmanagements\\detail.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|solutionrelative:tirtaoptima\\views\\debtmanagements\\detail.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|c:\\projek c#\\tirtaoptima\\tirtaoptima\\views\\debtmanagements\\getdata.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|solutionrelative:tirtaoptima\\views\\debtmanagements\\getdata.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|c:\\projek c#\\tirtaoptima\\tirtaoptima\\views\\users\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|solutionrelative:tirtaoptima\\views\\users\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|c:\\projek c#\\tirtaoptima\\tirtaoptima\\views\\debtmanagements\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|solutionrelative:tirtaoptima\\views\\debtmanagements\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|c:\\projek c#\\tirtaoptima\\tirtaoptima\\models\\debtsmanagement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|solutionrelative:tirtaoptima\\models\\debtsmanagement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|c:\\projek c#\\tirtaoptima\\tirtaoptima\\controllers\\leaderscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|solutionrelative:tirtaoptima\\controllers\\leaderscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|c:\\projek c#\\tirtaoptima\\tirtaoptima\\controllers\\actiontypescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|solutionrelative:tirtaoptima\\controllers\\actiontypescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|c:\\projek c#\\tirtaoptima\\tirtaoptima\\views\\bills\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|solutionrelative:tirtaoptima\\views\\bills\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|c:\\projek c#\\tirtaoptima\\tirtaoptima\\controllers\\billscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|solutionrelative:tirtaoptima\\controllers\\billscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|c:\\projek c#\\tirtaoptima\\tirtaoptima\\views\\debtmanagements\\correction.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|solutionrelative:tirtaoptima\\views\\debtmanagements\\correction.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|c:\\projek c#\\tirtaoptima\\tirtaoptima\\views\\roles\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|solutionrelative:tirtaoptima\\views\\roles\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|c:\\projek c#\\tirtaoptima\\tirtaoptima\\requests\\debtmanagementsrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2856652-890B-49A1-8E22-0C6AAD3D0110}|TirtaOptima\\TirtaOptima.csproj|solutionrelative:tirtaoptima\\requests\\debtmanagementsrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,7 +70,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 9,
           "Children": [
             {
               "$type": "Bookmark",
@@ -22,16 +78,191 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "_LayoutAuth.cshtml",
-              "DocumentMoniker": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Views\\Shared\\_LayoutAuth.cshtml",
-              "RelativeDocumentMoniker": "TirtaOptima\\Views\\Shared\\_LayoutAuth.cshtml",
-              "ToolTip": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Views\\Shared\\_LayoutAuth.cshtml",
-              "RelativeToolTip": "TirtaOptima\\Views\\Shared\\_LayoutAuth.cshtml",
-              "ViewState": "AQIAAAwAAAAAAAAAAAAYwBQAAABFAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-04-07T17:55:47.755Z",
+              "DocumentIndex": 7,
+              "Title": "DebtsManagement.cs",
+              "DocumentMoniker": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Models\\DebtsManagement.cs",
+              "RelativeDocumentMoniker": "TirtaOptima\\Models\\DebtsManagement.cs",
+              "ToolTip": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Models\\DebtsManagement.cs",
+              "RelativeToolTip": "TirtaOptima\\Models\\DebtsManagement.cs",
+              "ViewState": "AQIAAAsAAAAAAAAAAAA9wBAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-09T09:11:30.518Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ActionTypesController.cs",
+              "DocumentMoniker": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Controllers\\ActionTypesController.cs",
+              "RelativeDocumentMoniker": "TirtaOptima\\Controllers\\ActionTypesController.cs",
+              "ToolTip": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Controllers\\ActionTypesController.cs",
+              "RelativeToolTip": "TirtaOptima\\Controllers\\ActionTypesController.cs",
+              "ViewState": "AQIAADsAAAAAAAAAAAAIwAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-08T18:16:20.044Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Views\\Users\\Index.cshtml",
+              "RelativeDocumentMoniker": "TirtaOptima\\Views\\Users\\Index.cshtml",
+              "ToolTip": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Views\\Users\\Index.cshtml",
+              "RelativeToolTip": "TirtaOptima\\Views\\Users\\Index.cshtml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABkAAAAOAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-08T17:19:06.4Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Views\\DebtManagements\\Index.cshtml",
+              "RelativeDocumentMoniker": "TirtaOptima\\Views\\DebtManagements\\Index.cshtml",
+              "ToolTip": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Views\\DebtManagements\\Index.cshtml",
+              "RelativeToolTip": "TirtaOptima\\Views\\DebtManagements\\Index.cshtml",
+              "ViewState": "AQIAAB4AAAAAAAAAAAAAAC4AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-08T16:51:45.567Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "GetData.cshtml",
+              "DocumentMoniker": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Views\\DebtManagements\\GetData.cshtml",
+              "RelativeDocumentMoniker": "TirtaOptima\\Views\\DebtManagements\\GetData.cshtml",
+              "ToolTip": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Views\\DebtManagements\\GetData.cshtml",
+              "RelativeToolTip": "TirtaOptima\\Views\\DebtManagements\\GetData.cshtml",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAAA4AAAA9AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-08T06:01:05.998Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Detail.cshtml",
+              "DocumentMoniker": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Views\\DebtManagements\\Detail.cshtml",
+              "RelativeDocumentMoniker": "TirtaOptima\\Views\\DebtManagements\\Detail.cshtml",
+              "ToolTip": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Views\\DebtManagements\\Detail.cshtml",
+              "RelativeToolTip": "TirtaOptima\\Views\\DebtManagements\\Detail.cshtml",
+              "ViewState": "AQIAAKEAAAAAAAAAAAAAALMAAAAbAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-08T05:59:36.641Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DebtManagementsService.cs",
+              "DocumentMoniker": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Services\\DebtManagementsService.cs",
+              "RelativeDocumentMoniker": "TirtaOptima\\Services\\DebtManagementsService.cs",
+              "ToolTip": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Services\\DebtManagementsService.cs",
+              "RelativeToolTip": "TirtaOptima\\Services\\DebtManagementsService.cs",
+              "ViewState": "AQIAAFQAAAAAAAAAAAAQwGkAAAAxAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-08T05:40:38.923Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "DebtManagementsController.cs",
+              "DocumentMoniker": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Controllers\\DebtManagementsController.cs",
+              "RelativeDocumentMoniker": "TirtaOptima\\Controllers\\DebtManagementsController.cs",
+              "ToolTip": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Controllers\\DebtManagementsController.cs",
+              "RelativeToolTip": "TirtaOptima\\Controllers\\DebtManagementsController.cs",
+              "ViewState": "AQIAADoAAAAAAAAAAAAUwFEAAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-08T05:33:16.031Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "DebtManagementsViewModel.cs",
+              "DocumentMoniker": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\ViewModels\\DebtManagementsViewModel.cs",
+              "RelativeDocumentMoniker": "TirtaOptima\\ViewModels\\DebtManagementsViewModel.cs",
+              "ToolTip": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\ViewModels\\DebtManagementsViewModel.cs",
+              "RelativeToolTip": "TirtaOptima\\ViewModels\\DebtManagementsViewModel.cs",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAAAgAAAAsAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-08T05:40:55.708Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "LeadersController.cs",
+              "DocumentMoniker": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Controllers\\LeadersController.cs",
+              "RelativeDocumentMoniker": "TirtaOptima\\Controllers\\LeadersController.cs",
+              "ToolTip": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Controllers\\LeadersController.cs",
+              "RelativeToolTip": "TirtaOptima\\Controllers\\LeadersController.cs",
+              "ViewState": "AQIAABAAAAAAAAAAAAAgwAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-08T18:44:34.253Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Correction.cshtml",
+              "DocumentMoniker": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Views\\DebtManagements\\Correction.cshtml",
+              "RelativeDocumentMoniker": "TirtaOptima\\Views\\DebtManagements\\Correction.cshtml",
+              "ToolTip": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Views\\DebtManagements\\Correction.cshtml",
+              "RelativeToolTip": "TirtaOptima\\Views\\DebtManagements\\Correction.cshtml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAA2AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-08T06:00:36.432Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Views\\Bills\\Index.cshtml",
+              "RelativeDocumentMoniker": "TirtaOptima\\Views\\Bills\\Index.cshtml",
+              "ToolTip": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Views\\Bills\\Index.cshtml",
+              "RelativeToolTip": "TirtaOptima\\Views\\Bills\\Index.cshtml",
+              "ViewState": "AQIAAC0AAAAAAAAAAAAAABwAAAAGAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-08T05:52:38.047Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "BillsController.cs",
+              "DocumentMoniker": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Controllers\\BillsController.cs",
+              "RelativeDocumentMoniker": "TirtaOptima\\Controllers\\BillsController.cs",
+              "ToolTip": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Controllers\\BillsController.cs",
+              "RelativeToolTip": "TirtaOptima\\Controllers\\BillsController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAFcAAAA1AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-08T05:35:48.186Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "DebtManagementsRequest.cs",
+              "DocumentMoniker": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Requests\\DebtManagementsRequest.cs",
+              "RelativeDocumentMoniker": "TirtaOptima\\Requests\\DebtManagementsRequest.cs",
+              "ToolTip": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Requests\\DebtManagementsRequest.cs",
+              "RelativeToolTip": "TirtaOptima\\Requests\\DebtManagementsRequest.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAqwA4AAABHAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-08T05:37:00.378Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Views\\Roles\\Index.cshtml",
+              "RelativeDocumentMoniker": "TirtaOptima\\Views\\Roles\\Index.cshtml",
+              "ToolTip": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\Views\\Roles\\Index.cshtml",
+              "RelativeToolTip": "TirtaOptima\\Views\\Roles\\Index.cshtml",
+              "ViewState": "AQIAABUAAAAAAAAAAIBJwDUAAAAZAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-05-08T06:48:08.437Z"
             }
           ]
         },

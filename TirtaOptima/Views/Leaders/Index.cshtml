@@ -1,0 +1,92 @@
+﻿@using System.Globalization
+@model TirtaOptima.ViewModels.LeaderViewModel
+@{
+    ViewData["Title"] = "Pimpinan";
+    int no = 1;
+}
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">TIRTA OPTIMA PERUMDAM TIRTA UMBULAN KOTA PASURUAN</h4>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">Tirta Optima</a></li>
+                    <li class="breadcrumb-item">Master Data</li>
+                    <li class="breadcrumb-item active">Pimpinan</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card mt-2">
+    <div class="card-body">
+        <div class="d-flex flex-wrap gap-2 mb-3">
+            <a href="@Url.Action("SetLeader", "Leaders")" type="button" class="btn btn-info btn-label waves-effect waves-light">
+                <i class="ri-add-line label-icon align-middle fs-16 me-2"></i> Pimpinan Baru
+            </a>
+        </div>
+        <table id="tbl" class="table table-hover table-striped align-middle table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th class="text-center">No</th>
+                    <th class="text-center">Nama Pimpinan</th>
+                    <th class="text-center">Jabatan</th>
+                    <th class="text-center">Periode</th>
+                    <th class="text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Leaders)
+                {
+                    <tr class="odd">
+                        <td class="text-center">
+                            @no
+                        </td>
+                        <td class="text-center">
+                            @item.User.Name
+                        </td>
+                        <td class="text-center">
+                            @item.User.Jabatan
+                        </td>
+                        <td class="text-center">
+                            @(item.TanggalAwal == null
+                                ? "-"
+                                : item.TanggalAwal.Value.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("id-ID")) + " - " +
+                                (item.TanggalAkhir != null
+                                ? item.TanggalAkhir.Value.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("id-ID"))
+                                : "Sekarang"))
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-warning btn-edit" data-id="@item.Id" onclick="Edit(this)">
+                                <i class="mdi mdi-circle-edit-outline"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    no++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#sidebarMultilevel4").addClass('show')
+            $('#tbl').DataTable();
+        });
+        function Edit(button) {
+            var id = $(button).data('id');
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Edit")',
+                data: { id: id },
+                success: function (data) {
+                    $("#staticBackdrop .modal-title").html("Edit Pimpinan");
+                    $("#staticBackdrop .modal-body").html(data);
+                    $("#staticBackdrop").modal('show');
+                }
+            });
+        }
+
+    </script>
+}

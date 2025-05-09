@@ -1,0 +1,135 @@
+﻿@model TirtaOptima.ViewModels.CustomerTypeViewModel
+<div class="row">
+	<div class="col-12 mb-3">
+		<form id="frmEdit" asp-controller="CustomerTypes" asp-action="Update" method="POST" enctype="multipart/form-data">
+			<div class="row">
+				@Html.AntiForgeryToken()
+				@Html.HiddenFor(x => x.Id)
+				<div class="col-12 mb-3">
+					<label asp-for="Id" class="form-label required-star">Jenis Pelanggan</label>
+					@Html.TextBoxFor(x => x.Id, new { @class = "form-control", @readonly = true})
+				</div>
+				<div class="col-12 mb-3">
+					<label asp-for="Deskripsi" class="form-label required-star">Deskripsi Pelanggan</label>
+					@Html.TextBoxFor(x => x.Deskripsi, new { @class = "form-control" })
+				</div>
+				<div class="col-12 mb-3">
+					<label asp-for="MinPakai" class="form-label required-star">Minimal Pemakaian</label>
+					@Html.TextBoxFor(x => x.MinPakai, new { @class = "form-control" })
+				</div>
+				<div class="col-12 mb-3">
+					<label asp-for="Tarif1" class="form-label required-star">Tarif 1</label>
+					@Html.TextBoxFor(x => x.Tarif1, new
+						{
+							@class = "form-control currency-input",
+							inputmode = "numeric"
+						})
+				</div>
+				<div class="col-12 mb-3">
+					<label asp-for="Tarif2" class="form-label required-star">Tarif 2</label>
+					@Html.TextBoxFor(x => x.Tarif2, new
+						{
+							@class = "form-control currency-input",
+							inputmode = "numeric"
+						})
+				</div>
+				<div class="col-12 mb-3">
+					<label asp-for="Denda" class="form-label required-star">Denda</label>
+					@Html.TextBoxFor(x => x.Denda, new
+						{
+							@class = "form-control currency-input",
+							inputmode = "numeric"
+						})
+				</div>
+				<div class="col-12 mb-3">
+					<label asp-for="Retribusi" class="form-label required-star">Retribusi</label>
+					@Html.TextBoxFor(x => x.Retribusi, new
+						{
+							@class = "form-control currency-input",
+							inputmode = "numeric"
+						})
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="hstack gap-2 justify-content-end">
+		<button type="button" class="btn btn-danger" id="btn-tutup-event" data-bs-dismiss="modal">Tutup</button>
+		<button type="button" class="btn btn-success" id="btn-save-event" onclick="Update()">Simpan</button>
+	</div>
+</div>
+<script>
+	function Update() {
+		$(".currency-input").each(function () {
+			let rawValue = $(this).val().replace(/[^0-9]/g, '');
+			$(this).val(rawValue);
+		});
+		var formData = new FormData($("#frmEdit")[0]);
+		var t = $("input[name='__RequestVerificationToken']").val();
+
+		$.ajax({
+			url: $("#frmEdit").attr('action'),
+			type: "POST",
+			data: formData,
+			dataType: "json",
+			contentType: false,
+			processData: false,
+			headers:
+			{
+				"RequestVerificationToken": t
+			},
+			beforeSend: function () {
+				$("#loader").show()
+			},
+			complete: function () { $("#loader").hide(); },
+			success: function (resp) {
+				if (resp.status == 1) {
+					Swal.fire({
+						icon: 'success',
+						title: '<b>Info</b>',
+						text: resp.message,
+						timer: 1000,
+						showConfirmButton: false,
+					}).then(() => {
+						window.location.reload();
+					})
+				}
+				else {
+					Swal.fire({
+						icon: 'warning',
+						title: '<b style="color:orange">Peringatan</b>',
+						text: resp.message,
+					})
+				}
+			}
+		})
+
+	}
+	function formatRupiah(angka) {
+		const numberString = angka.replace(/[^,\d]/g, "").toString();
+		const split = numberString.split(",");
+		const sisa = split[0].length % 3;
+		let rupiah = split[0].substr(0, sisa);
+		const ribuan = split[0].substr(sisa).match(/\d{3}/g);
+		if (ribuan) {
+			const separator = sisa ? "." : "";
+			rupiah += separator + ribuan.join(".");
+		}
+		rupiah = split[1] !== undefined ? rupiah + "," + split[1] : rupiah;
+		return rupiah ? "Rp " + rupiah : "";
+	}
+
+	document.querySelectorAll(".currency-input").forEach(function (input) {
+		const rawValue = input.value.replace(/[^,\d]/g, "");
+		input.value = formatRupiah(rawValue);
+		input.addEventListener("input", function () {
+			const rawValue = input.value.replace(/[^,\d]/g, "");
+			const formatted = formatRupiah(rawValue);
+			input.value = formatted;
+
+			setTimeout(() => {
+				input.selectionStart = input.selectionEnd = input.value.length;
+			}, 0);
+		});
+	});
+
+</script>

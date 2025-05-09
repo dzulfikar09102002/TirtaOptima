@@ -1,0 +1,144 @@
+﻿@model TirtaOptima.ViewModels.PaymentViewModel
+@using System.Globalization
+<div class="card mt-2">
+    <div class="card-body">
+        <div class="d-flex flex-wrap gap-2 mb-3">
+            @if (TempData["Source"]?.ToString() != "database")
+            {
+                <button type="button" class="btn btn-info btn-label waves-effect waves-light" onclick="window.location.reload()">
+                    <i class="mdi mdi-arrow-u-left-top label-icon align-middle fs-16 me-2"></i> Kembali
+                </button>
+            }
+            <button type="button" class="btn btn-success btn-label waves-effect waves-light" onclick="GetDataApi()">
+                <i class="mdi @(TempData["Source"]?.ToString() == "database" ? "mdi-refresh" : "mdi-circle-edit-outline") label-icon align-middle fs-16 me-2"></i>
+                @(TempData["Source"]?.ToString() == "database" ? "Periksa Pembaruan" : "Catat Rekening")
+            </button>
+        </div>
+        <table id="tbl" class="table table-hover table-striped align-middle table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th class="text-center"><input class="form-check-input chk-all" type="checkbox" name="checkAll" value="option1"><br /></th>
+                    <th class="text-center">Id Pelanggan</th>
+                    <th class="text-center">Nomor & Jenis</th>
+                    <th class="text-center">Nama & Jenis</th>
+                    <th class="text-center">Periode</th>
+                    <th class="text-center">Nominal</th>
+                    <th class="text-center">Tanggal</th>
+                    <th class="text-center">Kasir</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Payments)
+                {
+                    <tr class="odd">
+                        <td class="text-center"><input type="checkbox" name="NopPiutang" class="form-check-input chk-save"></td>
+                        <td class="text-center">
+                            <b>@item.IdPelanggan</b>
+                        </td>
+                        <td class="text-center">
+                            <span class="fw-bold">@(item.IdPelangganNavigation?.Nomor ?? "-")</span> <br /> @item.IdPelangganNavigation?.JenisNavigation?.Deskripsi
+                        </td>
+                        <td class="text-center">
+                            <span class="fw-bold"> @item.IdPelangganNavigation?.Nama</span> <br />
+                            @item.IdPelangganNavigation?.Alamat <br />
+                            @item.IdPelangganNavigation?.KelurahanNavigation?.Nama | @item.IdPelangganNavigation?.KelurahanNavigation?.KodeKecNavigation?.Nama
+                        </td>
+                        @{
+                            var bulan = new DateTime(item.Tahun.GetValueOrDefault(), item.Bulan.GetValueOrDefault(), 1)
+                            .ToString("MMMM", new CultureInfo("id-ID"));
+                            <td class="text-center">
+                                @bulan | @item.Tahun
+                            </td>
+                        }
+                        <td class="text-center fw-bold">
+                            @(
+                                item.NominalBayar != 0
+                                ? "Rp " + item.NominalBayar.ToString("N0", new System.Globalization.CultureInfo("id-ID"))
+                                : "-"
+                                )
+                        </td>
+                        <td class="text-center">
+                            @item?.TanggalBayar?.ToString("dd MMMM yyyy", new CultureInfo("id-ID"))
+                        </td>
+                        <td class="text-center">
+                            @(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(item?.Kasir?.ToLower() ?? ""))
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="period-container"
+     data-bulan="@Model.BulanSelect"
+     data-tahun="@Model.TahunSelect">
+    @{
+        TempData["Bulan-pym"] = Model.BulanSelect;
+        TempData["Tahun-pym"] = Model.TahunSelect;
+        if (!string.IsNullOrEmpty(ViewBag.Message))
+        {
+            <div id="partial-message" data-message="@ViewBag.Message"></div>
+        }
+    }
+</div>
+<script>
+
+    $(document).ready(function () {
+        $('#tbl').DataTable({
+        })
+    });
+    function GetDataApi() {
+        var t = $("input[name='__RequestVerificationToken']").val();
+        var bulan = $("#period-container").data("bulan");
+        var tahun = $("#period-container").data("tahun");
+
+        $.ajax({
+            url: '@(Url.Action("GetDataApi", "Payments"))',
+            type: "GET",
+            data: { bulan, tahun },
+            headers: {
+                "RequestVerificationToken": t
+            },
+            beforeSend: function () {
+                $("#loader").show();
+                $('#data-customers').hide();
+            },
+            complete: function () {
+                $("#loader").hide();
+            },
+            success: function (resp) {
+                if (resp.status === undefined) {
+                    $('#data-customers').show();
+                    $('#data-customers').html(resp);
+                    const msg = $('#data-customers').find('#partial-message').data('message');
+                    if (msg) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '<b>Success</b>',
+                            text: msg,
+                            confirmButtonText: 'OK'
+                        });
+
+                    } else {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '<b>Success</b>',
+                            text: 'Data Berhasil Diambil',
+                            showConfirmButton: false,
+                            timer: 1000
+                        });
+                    }
+                } else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Peringatan',
+                        text: resp.message ?? "Terjadi kesalahan",
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                }
+            }
+        });
+    }
+</script>

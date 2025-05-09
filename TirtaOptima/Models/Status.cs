@@ -25,7 +25,7 @@ public partial class Status
 
     public virtual User? CreatedByNavigation { get; set; }
 
-    public virtual ICollection<DebtsManagement> DebtsManagements { get; set; } = new List<DebtsManagement>();
+    public virtual ICollection<Customer> Customers { get; set; } = new List<Customer>();
 
     public virtual User? DeletedByNavigation { get; set; }
 

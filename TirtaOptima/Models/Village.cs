@@ -11,13 +11,13 @@ public partial class Village
 
     public string Nama { get; set; } = null!;
 
-    public long KodeKec { get; set; }
+    public long? KodeKec { get; set; }
+
+    public string? Keterangan { get; set; }
 
     public int? Layanan { get; set; }
 
     public int? Jarak { get; set; }
-
-    public string? Keterangan { get; set; }
 
     public DateTime CreatedAt { get; set; }
 
@@ -33,9 +33,11 @@ public partial class Village
 
     public virtual User? CreatedByNavigation { get; set; }
 
+    public virtual ICollection<Customer> Customers { get; set; } = new List<Customer>();
+
     public virtual User? DeletedByNavigation { get; set; }
 
-    public virtual District KodeKecNavigation { get; set; } = null!;
+    public virtual District? KodeKecNavigation { get; set; }
 
     public virtual User? UpdatedByNavigation { get; set; }
 }

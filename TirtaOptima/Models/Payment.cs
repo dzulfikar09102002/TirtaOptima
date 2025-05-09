@@ -9,25 +9,13 @@ public partial class Payment
 
     public long IdPelanggan { get; set; }
 
-    public long PiutangId { get; set; }
-
-    public string? NoPelanggan { get; set; }
-
-    public string Name { get; set; } = null!;
-
-    public string? Alamat { get; set; }
-
-    public string? Jenis { get; set; }
-
-    public string? NoTelepon { get; set; }
-
-    public string? Email { get; set; }
-
     public long NominalBayar { get; set; }
 
     public string? Ket { get; set; }
 
-    public string? Status { get; set; }
+    public DateOnly? TanggalBayar { get; set; }
+
+    public string? Kasir { get; set; }
 
     public int? Bulan { get; set; }
 
@@ -51,7 +39,7 @@ public partial class Payment
 
     public virtual User? DeletedByNavigation { get; set; }
 
-    public virtual Debt Piutang { get; set; } = null!;
+    public virtual Customer IdPelangganNavigation { get; set; } = null!;
 
     public virtual User? UpdatedByNavigation { get; set; }
 }

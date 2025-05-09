@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using TirtaOptima.Models;
-namespace PEMIRA.Controllers
+namespace TirtaOptima.Controllers
 {
     public class BaseController : Controller
     {
@@ -14,10 +14,10 @@ namespace PEMIRA.Controllers
 
         protected long RoleId;
 
+        public ResponseBase ResponseBase { get; set; } = new();
         public BaseController()
         {
             _context = new DatabaseContext();
-
         }
         public override void OnActionExecuting(ActionExecutingContext context)
         {
@@ -26,5 +26,6 @@ namespace PEMIRA.Controllers
             UserId = Convert.ToInt64(Cookie.FindFirst("UserId")?.Value);
             RoleId = Convert.ToInt64(Cookie.FindFirst("RoleId")?.Value);
         }
+
     }
 }

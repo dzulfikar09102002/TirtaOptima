@@ -1,0 +1,106 @@
+﻿@model TirtaOptima.ViewModels.LeaderViewModel
+<div class="row">
+    <div class="col-12 mb-3">
+        <form id="frmEdit" class="needs-validation" novalidate asp-controller="Leaders" asp-action="Update" method="POST" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-12 mb-3">
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(x => x.Id)
+                    @Html.HiddenFor(x => x.UserId)
+                    <label for="Ket" class="form-label">Nama Pimpinan</label>
+                    @Html.TextBoxFor(x => x.User.Name, new { @class = "form-control", @readonly = true })
+                </div>
+                <div class="col-12 mb-3">
+                    <label for="Ket" class="form-label">Jabatan</label>
+                    @Html.TextBoxFor(x => x.User.Jabatan, new { @class = "form-control", @readonly = true })
+                </div>
+                <div class="col-6 mb-3">
+                    <label for="TanggalAwal" class="form-label">Awal Jabatan</label>
+                    <input type="date" id="TanggalAwal" name="TanggalAwal"
+                           class="form-control"
+                           value="@(Model.TanggalAwal.HasValue ? Model.TanggalAwal.Value.ToString("yyyy-MM-dd") : "")" />
+                </div>
+
+                <div class="col-6 mb-3">
+                    <label for="TanggalAkhir" class="form-label">Akhir Jabatan</label>
+                    <input type="date" id="TanggalAkhir" name="TanggalAkhir"
+                           class="form-control"
+                           value="@(Model.TanggalAkhir.HasValue ? Model.TanggalAkhir.Value.ToString("yyyy-MM-dd") : "")" />
+                </div>
+                <div class="col-12 mb-3">
+                    <div class="accordion" id="accordionSignature">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingSignature">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSignature" aria-expanded="false" aria-controls="collapseSignature">
+                                    Lihat Tanda Tangan
+                                </button>
+                            </h2>
+                            <div id="collapseSignature" class="accordion-collapse collapse" aria-labelledby="headingSignature" data-bs-parent="#accordionSignature">
+                                <div class="accordion-body text-center">
+                                    <img src="@(Model.Signature != null
+                                        ? Url.Content("~/assets/images/signatures/" + Model.Signature)
+                                        : Url.Content("~/assets/images/signatures/nophoto.jpg"))"
+                                         alt="Tanda Tangan" style="width: 100%; height: 100%; object-fit: contain; border: 1px solid #ccc;" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 mb-3">
+                    <label for="SignatureUpload" class="form-label">Upload Foto Tanda Tangan</label>
+                    <input type="file" id="inputImage" name="Img" class="form-control" accept=".jpg, .jpeg, .png" />
+                </div>
+
+            </div>
+        </form>
+    </div>
+    <div class="hstack gap-2 justify-content-end">
+        <button type="button" class="btn btn-danger" id="btn-tutup-event" data-bs-dismiss="modal">Tutup</button>
+        <button type="button" class="btn btn-success" id="btn-save-event" onclick="Update()">Simpan</button>
+    </div>
+</div>
+<script>
+    function Update() {
+        var formData = new FormData($("#frmEdit")[0]);
+        var t = $("input[name='__RequestVerificationToken']").val();
+
+        $.ajax({
+            url: $("#frmEdit").attr('action'),
+            type: "POST",
+            data: formData,
+            dataType: "json",
+            contentType: false,
+            processData: false,
+            headers:
+            {
+                "RequestVerificationToken": t
+            },
+            beforeSend: function () {
+                $("#loader").show()
+            },
+            complete: function () { $("#loader").hide(); },
+            success: function (resp) {
+                if (resp.status == 1) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '<b>Info</b>',
+                        text: resp.message,
+                        timer: 1000,
+                        showConfirmButton: false,
+                    }).then(() => {
+                        window.location.reload();
+                    })
+                }
+                else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '<b style="color:orange">Peringatan</b>',
+                        text: resp.message,
+                    })
+                }
+            }
+        })
+
+    }
+</script>

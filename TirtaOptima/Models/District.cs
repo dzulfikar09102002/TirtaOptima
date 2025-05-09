@@ -25,6 +25,8 @@ public partial class District
 
     public virtual User? CreatedByNavigation { get; set; }
 
+    public virtual ICollection<Customer> Customers { get; set; } = new List<Customer>();
+
     public virtual User? DeletedByNavigation { get; set; }
 
     public virtual User? UpdatedByNavigation { get; set; }

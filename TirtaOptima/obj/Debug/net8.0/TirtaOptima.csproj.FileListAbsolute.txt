@@ -409,3 +409,6 @@ C:\Projek C#\TirtaOptima\TirtaOptima\obj\Debug\net8.0\refint\TirtaOptima.dll
 C:\Projek C#\TirtaOptima\TirtaOptima\obj\Debug\net8.0\TirtaOptima.pdb
 C:\Projek C#\TirtaOptima\TirtaOptima\obj\Debug\net8.0\TirtaOptima.genruntimeconfig.cache
 C:\Projek C#\TirtaOptima\TirtaOptima\obj\Debug\net8.0\ref\TirtaOptima.dll
+C:\Projek C#\TirtaOptima\TirtaOptima\obj\Debug\net8.0\TirtaOptima.sourcelink.json
+C:\Projek C#\TirtaOptima\TirtaOptima\obj\Debug\net8.0\scopedcss\Views\Shared\_Modal.cshtml.rz.scp.css
+C:\Projek C#\TirtaOptima\TirtaOptima\bin\Debug\net8.0\SixLabors.ImageSharp.dll

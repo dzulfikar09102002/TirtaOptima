@@ -1,0 +1,131 @@
+﻿@model TirtaOptima.ViewModels.UserViewModel
+@{
+    ViewData["Title"] = "Tambah Pimpinan";
+    var no = 1;
+}
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">TIRTA OPTIMA PERUMDAM TIRTA UMBULAN KOTA PASURUAN</h4>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">Tirta Optima</a></li>
+                    <li class="breadcrumb-item">Master Data</li>
+                    <li class="breadcrumb-item active">Pengguna</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card mt-2">
+    <div class="card-body">
+        <div class="alert alert-info alert-border-left alert-dismissible fade show material-shadow" role="alert">
+            <i class="mdi mdi-information-outline mdi-24px me-3 align-middle"></i> <strong>Info</strong> - Pilih pengguna untuk menjadi pimpinan
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div class="d-flex flex-wrap gap-2 mb-3">
+            <a href="@Url.Action("Index", "Leaders")" type="button" class="btn btn-success btn-label waves-effect waves-light">
+                <i class="mdi mdi-arrow-u-left-top label-icon align-middle fs-16 me-2"></i> Kembali
+            </a>
+        </div>
+        <table id="tbl" class="table table-hover table-striped align-middle table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th class="text-center">No</th>
+                    <th class="text-center">Foto</th>
+                    <th class="text-center">Identitas</th>
+                    <th class="text-center">Kontak</th>
+                    <th class="text-center">Akun</th>
+                    <th class="text-center">Jabatan dan Peran</th>
+                    <th class="text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Users)
+                {
+                    <tr class="odd">
+                        <td class="text-center fw-bold text-primary">@no</td>
+
+                        <td class="text-center">
+                            <img src="~/assets/images/users/@(item.Photo ?? "user-dummy-img.jpg")"
+                                 alt="User Photo" style="width: 65px; height: 65px;"
+                                 class="rounded-circle border border-3 border-info shadow-sm" />
+                        </td>
+
+                        <td class="text-dark">
+                            <div><i class="mdi mdi-account me-1 text-info"></i> <span class="fw-semibold"> : @(item.Name ?? "-")</span></div>
+                            <div><i class="mdi mdi-card-account-details me-1 text-success"></i>  : @item.NikNip</div>
+                            <div><i class="mdi mdi-gender-male-female me-1 text-warning"></i> @(item.Gender == true ? "Laki-laki" : "Perempuan")</div>
+                        </td>
+
+                        <td class="text-dark">
+                            <div><i class="mdi mdi-phone me-1 text-success"></i>  : @(item.NomorTelepon ?? "-")</div>
+                            <div><i class="mdi mdi-email me-1 text-danger"></i>  : @(item.Email ?? "-")</div>
+                            <div><i class="mdi mdi-map-marker me-1 text-secondary"></i>  : @(item.Alamat ?? "-")</div>
+                        </td>
+
+                        <td class="text-dark">
+                            <div><i class="mdi mdi-account-circle-outline me-1 text-info"></i>  : @item.Username</div>
+                            <div>
+                                <i class="mdi mdi-checkbox-blank-circle me-1 @(item.Status == true ? "text-success" : "text-danger")"></i>
+                                <span class="fw-semibold">@((item.Status == true) ? "Aktif" : "Tidak Aktif")</span>
+                            </div>
+                        </td>
+
+                        <td class="text-dark">
+                            <div><i class="mdi mdi-briefcase me-1 text-info"></i>  : @item.Jabatan</div>
+                            <div><i class="mdi mdi-account-check-outline me-1 text-secondary"></i>  : @item.Role?.Name</div>
+                        </td>
+
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-info btn-edit shadow-sm" style="height:40px; width:40px" data-id="@item.Id" onclick="SetLeader(this)">
+                                <i class="ri-add-line" style="font-size:20px"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    no++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#sidebarMultilevel4").addClass('show')
+            $('#tbl').DataTable({
+            })
+        });
+        function SetLeader(button) {
+            var id = $(button).data('id');
+            Swal.fire({
+                title: 'Attention?',
+                text: "Yakin ingin menjadikan pimpinan",
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("SetLeader")',
+                        data: { id: id },
+                        success: function (resp) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil!',
+                                text: resp.message,
+                                timer: 1500,
+                                showConfirmButton: false
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}

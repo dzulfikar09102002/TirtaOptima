@@ -26,10 +26,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 // Authorization by role (claim-based)
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("Admin", policy => policy.RequireClaim("Administrator Sistem"));
-    options.AddPolicy("Penagih", policy => policy.RequireClaim("Petugas Penagihan"));
-    options.AddPolicy("Pengelola", policy => policy.RequireClaim("Petugas Pengelola_Piutang"));
-    options.AddPolicy("Pimpinan", policy => policy.RequireClaim("Pimpinan"));
+    options.AddPolicy("Admin", policy => policy.RequireRole("Administrator Sistem"));
+    options.AddPolicy("Penagih", policy => policy.RequireRole("Petugas Penagihan"));
+    options.AddPolicy("Pengelola", policy => policy.RequireRole("Petugas Pengelola Piutang"));
+    options.AddPolicy("Pimpinan", policy => policy.RequireRole("Pimpinan"));
 });
 
 // Password hashing config
@@ -63,7 +63,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseSession(); // Session harus sebelum auth
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 

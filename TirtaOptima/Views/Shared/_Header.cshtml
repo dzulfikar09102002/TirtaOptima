@@ -1,0 +1,63 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@inject DatabaseContext _context
+@{
+    string Name = User.FindFirst(ClaimTypes.Name)?.Value ?? "";
+    string Role = User.FindFirst(ClaimTypes.Role)?.Value ?? "";
+    string Email = User.FindFirst(ClaimTypes.Email)?.Value ?? "";
+    var user = _context.Users.FirstOrDefault(user => user.Email == Email && user.Name == Name);
+}
+<header id="page-topbar">
+    <div class="layout-width">
+        <div class="navbar-header">
+            <div class="d-flex">
+                <button type="button" class="btn btn-sm px-3 fs-16 header-item vertical-menu-btn topnav-hamburger"
+                        id="topnav-hamburger-icon">
+                    <span class="hamburger-icon">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+                </button>
+            </div>
+            <div class="d-flex align-items-center">
+                <div class="ms-1 header-item d-none d-sm-flex">
+                    <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle"
+                            data-toggle="fullscreen">
+                        <i class='bx bx-fullscreen fs-22'></i>
+                    </button>
+                </div>
+                <div class="ms-1 header-item d-sm-flex">
+                    <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle light-dark-mode">
+                        <i class='bx bx-moon fs-22'></i>
+                    </button>
+                </div>
+                <div class="dropdown ms-sm-3 header-item topbar-user" style="background-color:#F3F3F9">
+                    <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="d-flex align-items-center">
+                            <img src="~/assets/images/users/@(user?.Photo ?? "user-dummy-img.jpg")" alt="" width="40" height="40" style="object-fit: cover;" class="rounded-circle">
+                            <span class="text-start ms-xl-2">
+                                <span class="d-none d-xl-block ms-1 fs-12 user-name-sub-text"><h6 class="d-none d-xl-inline-block ms-1 fw-medium user-name-text mb-0"><b>@Name</b></h6></span>
+                                <span class="d-none d-xl-block ms-1 fs-12 user-name-sub-text"><small class="mb-0 text-secondary-emphasis ms-1">@Role</small></span>
+                            </span>
+                        </span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <!-- item-->
+                        <div class="ms-1 header-item d-none d-sm-flex">
+                            <h6 class="dropdown-header">Welcome @Email</h6>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <button type="button" onclick="location.href ='@Url.Action("Index","Profil")'" class="dropdown-item">
+                            <p class="mb-0 fs-5"> <span class="mb-0"><i class="ri-user-3-line"></i></span> Profil</p>
+                        </button>
+                        <div class="dropdown-divider"></div>
+                        <button type="button" onclick="location.href='@Url.Action("Logout","Auth")'" class="dropdown-item">
+                            <p class="mb-0 fs-5 text-danger"> <span class="mb-0"><i class="ri-logout-box-line"></i></span> Keluar</p>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>  
+</header>
