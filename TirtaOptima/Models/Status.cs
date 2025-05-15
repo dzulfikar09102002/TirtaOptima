@@ -21,8 +21,6 @@ public partial class Status
 
     public long? DeletedBy { get; set; }
 
-    public virtual ICollection<Collection> Collections { get; set; } = new List<Collection>();
-
     public virtual User? CreatedByNavigation { get; set; }
 
     public virtual ICollection<Customer> Customers { get; set; } = new List<Customer>();

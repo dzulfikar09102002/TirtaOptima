@@ -47,6 +47,7 @@ namespace TirtaOptima.Services
                 .Select(dm => new DebtSummaryViewModel
                 {
                     Id = dm.Id,
+                    IdPiutang = dm.PiutangId,
                     IdPelanggan = dm.Piutang!.IdPelanggan,
                     NamaPelanggan = dm.Piutang.IdPelangganNavigation.Nama,
                     NomorPelanggan = dm.Piutang.IdPelangganNavigation.Nomor,
@@ -58,7 +59,9 @@ namespace TirtaOptima.Services
                     TotalNominal = dm.Status == "Kredit" ? -dm.Nominal : dm.Nominal,
                     Status = dm.Piutang.IdPelangganNavigation.StatusNavigation.Name,
                     Pencatatan = dm.Tanggal,
-                    Pembayaran = dm.Pembayaran!.TanggalBayar
+                    Pembayaran = dm.Pembayaran!.TanggalBayar,
+                    StatusCatat = dm.Status
+                    
                 })
                 .ToList();
         }

@@ -27,7 +27,7 @@ namespace TirtaOptima.Controllers
             }
             return View(model);
         }
-
+        [HttpGet]
         public IActionResult GetData(string bulan, string tahun)
         {
             DebtManagementsService service = new(_context);
@@ -62,9 +62,9 @@ namespace TirtaOptima.Controllers
                 return RedirectToAction("Index");
             }
             DebtManagementsService service = new(_context);
-            UserService userService = new(_context);
-            User? user = userService.GetUser(id);
-            if (user == null)
+            CustomerService customerService = new(_context);
+            Customer? customer = customerService.GetCustomer(id);
+            if (customer == null)
             {
                 NotFound();
             }
@@ -78,9 +78,16 @@ namespace TirtaOptima.Controllers
             return View("Detail", model);
         }
         [HttpPost]
-        public IActionResult Correction()
+        public IActionResult Correction(DebtManagementsViewModel input)
         {
-            return PartialView();
+            DebtManagementsService service = new(_context);
+            DebtManagementsViewModel model = new DebtManagementsViewModel
+            {
+                Pencatatan = DateOnly.FromDateTime(DateTime.Now)
+
+
+            };
+            return PartialView(model);
         }
     }
 }

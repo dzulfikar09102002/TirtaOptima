@@ -16,6 +16,7 @@ namespace TirtaOptima.Services
             .Include(x => x.KelurahanNavigation).Include(x => x.KecamatanNavigation).Include(x => x.StatusNavigation).Include(x => x.JenisNavigation)
             .Where(x => x.Pasang.HasValue && x.Pasang.Value.Month == model.BulanSelect && x.Pasang.Value.Year == model.TahunSelect)
             ];
+        public Customer? GetCustomer(long id) => _context.Customers.FirstOrDefault(x => x.Id == id && x.DeletedAt == null);
         public async Task<bool> GetCustomersApiAsync(CustomerViewModel model)
         {
             ApiHelper api = new();

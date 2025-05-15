@@ -1,0 +1,131 @@
+﻿@model  TirtaOptima.ViewModels.CollectionMonitoringsViewModel
+@{
+    ViewData["Title"] = "Monitoring Penagihan";
+
+    var now = DateTime.Now;
+    var bulanSelect = Model?.BulanSelect > 0 ? Model.BulanSelect : now.Month;
+    var tahunSelect = Model?.TahunSelect > 0 ? Model.TahunSelect : now.Year;
+    var bulanItems = Enumerable.Range(1, 12)
+    .Select(i => new SelectListItem
+            {
+                Value = i.ToString(),
+                Text = new DateTime(1, i, 1).ToString("MMMM")
+            })
+    .OrderBy(i => Convert.ToInt32(i.Value))
+    .ToList();
+
+    var bulanList = new SelectList(bulanItems, "Value", "Text", bulanSelect);
+    var tahunList = new SelectList(Enumerable.Range(2003, now.Year - 2003 + 1)
+        .Select(i => new SelectListItem
+                {
+                    Value = i.ToString(),
+                    Text = i.ToString()
+                }), "Value", "Text", now.Year)
+                .OrderByDescending(y => y.Value);
+}
+<div id="temp-container"
+     data-temp-bulan="@TempData["Bulan-cm"]"
+     data-temp-tahun="@TempData["Tahun-cm"]">
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">MONITORING PENAGIHAN</h4>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">Tirta Optima</a></li>
+                    <li class="breadcrumb-item">Pengelolaan Piutang</li>
+                    <li class="breadcrumb-item active">Monitoring Penagihan</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body">
+        <div class="row p-2 align-items-end">
+            <h6 class="mb-3">Pilih Periode Rekening Tagihan</h6>
+
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <label for="bulan-select" class="form-label">Bulan</label>
+                @Html.DropDownListFor(x => x.BulanSelect, bulanList, new { @class = "form-select", @id = "bulan-select" })
+            </div>
+
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <label for="tahun-select" class="form-label">Tahun</label>
+                @Html.DropDownListFor(x => x.TahunSelect, tahunList, new { @class = "form-select", @id = "tahun-select" })
+            </div>
+
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <button type="button" class="btn btn-primary btn-label waves-effect waves-light" onclick="GetData()">
+                    <i class="ri-search-line label-icon align-middle fs-16 me-2"></i> Cari
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="data-customers">
+</div>
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#sidebarMultilevel8").addClass('show')
+            var temp_bulan = parseInt($('#temp-container').data('temp-bulan')) || 0;
+            var temp_tahun = parseInt($('#temp-container').data('temp-tahun')) || 0;
+
+            if (temp_bulan != 0 && temp_tahun != 0) {
+                $('#bulan-select').val(temp_bulan).trigger('change');
+                $('#tahun-select').val(temp_tahun).trigger('change');
+                GetData();
+            }
+        });
+
+        const bulanDropdown = new Choices('#bulan-select', {
+            shouldSort: false
+        });
+
+        const tahunDropdown = new Choices('#tahun-select', {
+            shouldSort: false
+        });
+        function GetData() {
+            var t = $("input[name='__RequestVerificationToken']").val();
+            var bulan = $("#bulan-select").val();
+            var tahun = $("#tahun-select").val();
+
+            $.ajax({
+                url: '@(Url.Action("GetData", "CollectionMonitorings"))',
+                type: "GET",
+                data: { bulan, tahun },
+                headers:
+                {
+                    "RequestVerificationToken": t
+                },
+                beforeSend: function () {
+                    $("#loader").show()
+                    $('#data-customers').hide();
+                },
+                complete: function () { $("#loader").hide(); },
+                success: function (resp) {
+                    if (resp.status == undefined) {
+                        $('#data-customers').show();
+                        $('#data-customers').html(resp);
+                        $("#loader").hide()
+                    }
+                    else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: resp.message,
+                        })
+                        $("#loader").hide()
+                    }
+                }
+            })
+        }
+    </script>
+}

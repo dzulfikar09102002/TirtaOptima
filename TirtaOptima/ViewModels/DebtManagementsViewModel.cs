@@ -8,9 +8,10 @@ namespace TirtaOptima.ViewModels
         public int BulanSelect { get; set; }
         public int TahunSelect { get; set; }
         public long IdPelanggan { get; set; }
+        public long IdPiutang {  get; set; }
         public DateOnly? Pencatatan {  get; set; }
         public DateOnly? Pembayaran { get; set; }
-        public decimal Nominal {  get; set; }
+        public decimal? Nominal {  get; set; }
         public string? Status { get; set; }
         public string? Periode { get; set; }
         public List<Bill> Bills { get; set; } = new();
@@ -20,6 +21,7 @@ namespace TirtaOptima.ViewModels
     public class DebtSummaryViewModel
     {
         public long Id {  get; set; }
+        public long? IdPiutang {  get; set; }
         public long IdPelanggan { get; set; }
         public string? NamaPelanggan { get; set; }
         public string? NomorPelanggan { get; set; }
@@ -30,6 +32,7 @@ namespace TirtaOptima.ViewModels
         public string? Periode { get; set; }
         public decimal? TotalNominal { get; set; }
         public string? Status { get; set; }
+        public string? StatusCatat {  get; set; }
         public DateTime? Pencatatan { get; set; }
         public DateOnly? Pembayaran { get; set; }
     }

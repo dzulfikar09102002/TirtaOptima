@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Rincian Pengelolaan Piutang";
     int no = 1;
+    var dm = Model.DebtManagements[0];
 }
 <div class="row">
     <div class="col-12">
@@ -25,7 +26,6 @@
             <h5 class="mb-4">Informasi Pelanggan</h5>
             @if (Model.DebtManagements != null && Model.DebtManagements.Any())
             {
-                var dm = Model.DebtManagements[0];
                 <div class="row">
                     <div class="col-lg-4 col-md-6 col-sm-12 d-flex align-items-center mb-3">
                         <div class="avatar-xs d-block flex-shrink-0 me-3">
@@ -93,9 +93,14 @@
 <div class="card mt-2">
     <div class="card-body">
         <div class="d-flex flex-wrap gap-2 mb-3">
-            <button type="button" class="btn btn-info btn-label waves-effect waves-light" onclick="Correction()">
-                <i class="mdi mdi-circle-edit-outline label-icon align-middle fs-16 me-2"></i> Catat Koreksi
-            </button>
+            <form id="frmCorrection" class="needs-validation" novalidate asp-controller="DebtManagements" asp-action="Correction" method="POST" enctype="multipart/form-data">
+                @Html.Hidden("IdPiutang", dm.IdPiutang)
+                @Html.HiddenFor(x => x.IdPelanggan)
+                @Html.Hidden("Periode", dm.Periode) 
+                <button type="button" class="btn btn-info btn-label waves-effect waves-light" onclick="Correction()">
+                    <i class="mdi mdi-circle-edit-outline label-icon align-middle fs-16 me-2"></i> Catat Koreksi
+                </button>
+            </form>
         </div>
         <table id="tbl" class="table table-hover table-striped align-middle table-bordered">
             <thead class="table-light">
@@ -140,7 +145,7 @@
                             <br />
                             <span class="badge bg-@(item.TotalNominal == 0 ? "success" : item.TotalNominal < 1 ? "danger" : "info")">
                                 <i class="mdi mdi-circle-medium"></i>
-                                @(item.TotalNominal == 0 ? "Nihil" : item.TotalNominal < 1 ? "Kredit" : "Debit")
+                                @item.StatusCatat
                             </span>
                         </td>
                     </tr>
@@ -178,13 +183,22 @@
             })
         });
         function Correction() {
+            var formData = new FormData($("#frmCorrection")[0]);
+            var t = $("input[name='__RequestVerificationToken']").val();
             $.ajax({
+                url: $("#frmCorrection").attr('action'),
                 type: "POST",
-                url: '@Url.Action("Correction")',
+                data: formData,
+                contentType: false,
+                processData: false,
+                headers:
+                {
+                    "RequestVerificationToken": t
+                },
                 success: function (data) {
-                    $("#staticBackdropLarge .modal-title").html("Catat Koreksi");
-                    $("#staticBackdropLarge .modal-body").html(data);
-                    $("#staticBackdropLarge").modal('show');
+                    $("#staticBackdrop .modal-title").html("Catat Koreksi");
+                    $("#staticBackdrop .modal-body").html(data);
+                    $("#staticBackdrop").modal('show');
                 }
             });
         }

@@ -6,10 +6,7 @@ namespace TirtaOptima.ViewModels
 {
     public class BillViewModel
     {
-        [Required(ErrorMessage = "Harap Pilih Bulan")]
         public int BulanSelect { get; set; }
-
-        [Required(ErrorMessage = "Harap Pilih Tahun")]
         public int TahunSelect { get; set; }
         public List<Bill> Bills { get; set; } = new();
           

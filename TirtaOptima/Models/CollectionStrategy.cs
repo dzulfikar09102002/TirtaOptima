@@ -13,6 +13,8 @@ public partial class CollectionStrategy
 
     public string Kondisi { get; set; } = null!;
 
+    public int? RentangWaktu { get; set; }
+
     public DateTime? CreatedAt { get; set; }
 
     public long CreatedBy { get; set; }

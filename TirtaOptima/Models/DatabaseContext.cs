@@ -22,8 +22,6 @@ public partial class DatabaseContext : DbContext
 
     public virtual DbSet<Collection> Collections { get; set; }
 
-    public virtual DbSet<CollectionStrategy> CollectionStrategies { get; set; }
-
     public virtual DbSet<Criteria> Criterias { get; set; }
 
     public virtual DbSet<Customer> Customers { get; set; }
@@ -46,6 +44,8 @@ public partial class DatabaseContext : DbContext
 
     public virtual DbSet<Payment> Payments { get; set; }
 
+    public virtual DbSet<Policy> Policies { get; set; }
+
     public virtual DbSet<PsoResult> PsoResults { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
@@ -67,7 +67,7 @@ public partial class DatabaseContext : DbContext
 
         string connectionString = configuration?.GetConnectionString("MySQL") ?? "server=localhost;database=tirtaoptima;user=root";
 
-        optionsBuilder.UseMySql(connectionString, ServerVersion.Parse("8.0.28-mysql"));
+        optionsBuilder.UseMySql(connectionString, ServerVersion.Parse("8.0.30-mysql"));
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -190,7 +190,11 @@ public partial class DatabaseContext : DbContext
 
             entity.ToTable("collections");
 
+            entity.HasIndex(e => e.TindakanId, "collections_action_types_FK");
+
             entity.HasIndex(e => e.PiutangId, "collections_debts_FK");
+
+            entity.HasIndex(e => e.PenagihId, "collections_users_FK");
 
             entity.HasIndex(e => e.StatusId, "penagihan_status_FK");
 
@@ -227,14 +231,18 @@ public partial class DatabaseContext : DbContext
             entity.Property(e => e.NotelpPenerima)
                 .HasMaxLength(100)
                 .HasColumnName("notelp_penerima");
+            entity.Property(e => e.PenagihId).HasColumnName("penagih_id");
             entity.Property(e => e.PiutangId).HasColumnName("piutang_id");
             entity.Property(e => e.RencanaBayar).HasColumnName("rencana_bayar");
-            entity.Property(e => e.StatusId).HasColumnName("status_id");
+            entity.Property(e => e.StatusId)
+                .HasColumnType("enum('Belum Ditagih','Berhasil Ditagih','Gagal Ditagih')")
+                .HasColumnName("status_id");
             entity.Property(e => e.SuratId).HasColumnName("surat_id");
             entity.Property(e => e.Tanggal)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("datetime")
                 .HasColumnName("tanggal");
+            entity.Property(e => e.TindakanId).HasColumnName("tindakan_id");
             entity.Property(e => e.UpdatedAt)
                 .ValueGeneratedOnAddOrUpdate()
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
@@ -250,53 +258,26 @@ public partial class DatabaseContext : DbContext
                 .HasForeignKey(d => d.DeletedBy)
                 .HasConstraintName("penagihan_users_FK_2");
 
+            entity.HasOne(d => d.Penagih).WithMany(p => p.CollectionPenagihs)
+                .HasForeignKey(d => d.PenagihId)
+                .HasConstraintName("collections_users_FK");
+
             entity.HasOne(d => d.Piutang).WithMany(p => p.Collections)
                 .HasForeignKey(d => d.PiutangId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("collections_debts_FK");
 
-            entity.HasOne(d => d.Status).WithMany(p => p.Collections)
-                .HasForeignKey(d => d.StatusId)
-                .HasConstraintName("penagihan_status_FK");
-
             entity.HasOne(d => d.Surat).WithMany(p => p.Collections)
                 .HasForeignKey(d => d.SuratId)
                 .HasConstraintName("penagihan_surat_FK");
 
+            entity.HasOne(d => d.Tindakan).WithMany(p => p.Collections)
+                .HasForeignKey(d => d.TindakanId)
+                .HasConstraintName("collections_action_types_FK");
+
             entity.HasOne(d => d.UpdatedByNavigation).WithMany(p => p.CollectionUpdatedByNavigations)
                 .HasForeignKey(d => d.UpdatedBy)
                 .HasConstraintName("penagihan_users_FK_1");
-        });
-
-        modelBuilder.Entity<CollectionStrategy>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
-
-            entity.ToTable("collection_strategies");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp")
-                .HasColumnName("created_at");
-            entity.Property(e => e.CreatedBy).HasColumnName("created_by");
-            entity.Property(e => e.DeletedAt)
-                .HasColumnType("timestamp")
-                .HasColumnName("deleted_at");
-            entity.Property(e => e.DeletedBy).HasColumnName("deleted_by");
-            entity.Property(e => e.Deskripsi)
-                .HasColumnType("text")
-                .HasColumnName("deskripsi");
-            entity.Property(e => e.Kondisi)
-                .HasColumnType("text")
-                .HasColumnName("kondisi");
-            entity.Property(e => e.NamaStrategi)
-                .HasMaxLength(100)
-                .HasColumnName("nama_strategi");
-            entity.Property(e => e.UpdatedAt)
-                .HasColumnType("timestamp")
-                .HasColumnName("updated_at");
-            entity.Property(e => e.UpdatedBy).HasColumnName("updated_by");
         });
 
         modelBuilder.Entity<Criteria>(entity =>
@@ -583,14 +564,15 @@ public partial class DatabaseContext : DbContext
                 .HasColumnType("timestamp")
                 .HasColumnName("deleted_at");
             entity.Property(e => e.DeletedBy).HasColumnName("deleted_by");
-            entity.Property(e => e.Nominal).HasColumnName("nominal");
+            entity.Property(e => e.Nominal)
+                .HasPrecision(10)
+                .HasColumnName("nominal");
             entity.Property(e => e.PembayaranId).HasColumnName("pembayaran_id");
             entity.Property(e => e.PiutangId).HasColumnName("piutang_id");
             entity.Property(e => e.Status)
-                .HasColumnType("enum('Kredit','Debit')")
+                .HasColumnType("enum('Kredit','Debit','Dihapus')")
                 .HasColumnName("status");
             entity.Property(e => e.Tanggal)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("datetime")
                 .HasColumnName("tanggal");
             entity.Property(e => e.UpdatedAt)
@@ -981,6 +963,38 @@ public partial class DatabaseContext : DbContext
             entity.HasOne(d => d.UpdatedByNavigation).WithMany(p => p.PaymentUpdatedByNavigations)
                 .HasForeignKey(d => d.UpdatedBy)
                 .HasConstraintName("pembayaran_users_FK_1");
+        });
+
+        modelBuilder.Entity<Policy>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("policy");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy).HasColumnName("created_by");
+            entity.Property(e => e.DeletedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("deleted_at");
+            entity.Property(e => e.DeletedBy).HasColumnName("deleted_by");
+            entity.Property(e => e.Deskripsi)
+                .HasColumnType("text")
+                .HasColumnName("deskripsi");
+            entity.Property(e => e.Kondisi)
+                .HasColumnType("text")
+                .HasColumnName("kondisi");
+            entity.Property(e => e.NamaStrategi)
+                .HasMaxLength(100)
+                .HasColumnName("nama_strategi");
+            entity.Property(e => e.RentangWaktu).HasColumnName("rentang_waktu");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("timestamp")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy).HasColumnName("updated_by");
         });
 
         modelBuilder.Entity<PsoResult>(entity =>

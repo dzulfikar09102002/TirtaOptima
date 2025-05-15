@@ -61,6 +61,8 @@ public partial class User
 
     public virtual ICollection<Collection> CollectionDeletedByNavigations { get; set; } = new List<Collection>();
 
+    public virtual ICollection<Collection> CollectionPenagihs { get; set; } = new List<Collection>();
+
     public virtual ICollection<Collection> CollectionUpdatedByNavigations { get; set; } = new List<Collection>();
 
     public virtual User? CreatedByNavigation { get; set; }

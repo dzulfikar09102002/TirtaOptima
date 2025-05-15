@@ -13,7 +13,11 @@ public partial class Collection
 
     public DateTime Tanggal { get; set; }
 
-    public long? StatusId { get; set; }
+    public string? StatusId { get; set; }
+
+    public long? PenagihId { get; set; }
+
+    public long? TindakanId { get; set; }
 
     public string? NamaPenerima { get; set; }
 
@@ -21,7 +25,7 @@ public partial class Collection
 
     public DateOnly? RencanaBayar { get; set; }
 
-    public string Foto { get; set; } = null!;
+    public string? Foto { get; set; }
 
     public string? Alasan { get; set; }
 
@@ -43,11 +47,13 @@ public partial class Collection
 
     public virtual User? DeletedByNavigation { get; set; }
 
+    public virtual User? Penagih { get; set; }
+
     public virtual Debt Piutang { get; set; } = null!;
 
-    public virtual Status? Status { get; set; }
-
     public virtual Letter? Surat { get; set; }
+
+    public virtual ActionType? Tindakan { get; set; }
 
     public virtual User? UpdatedByNavigation { get; set; }
 }

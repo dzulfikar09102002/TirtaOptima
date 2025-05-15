@@ -13,7 +13,7 @@ public partial class DebtsManagement
 
     public string Status { get; set; } = null!;
 
-    public long Nominal { get; set; }
+    public decimal Nominal { get; set; }
 
     public DateTime? Tanggal { get; set; }
 

@@ -35,7 +35,7 @@ public partial class StrategyResult
 
     public virtual PsoResult Pso { get; set; } = null!;
 
-    public virtual CollectionStrategy Strategi { get; set; } = null!;
+    public virtual Policy Strategi { get; set; } = null!;
 
     public virtual User? UpdatedByNavigation { get; set; }
 }

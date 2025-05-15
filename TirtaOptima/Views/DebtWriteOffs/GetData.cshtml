@@ -1,0 +1,148 @@
+﻿@model TirtaOptima.ViewModels.DebtWriteOffsViewModel
+@using System.Globalization
+@{
+    int no = 1;
+}
+<div class="card mt-2">
+    <div class="card-body">
+        <table id="tbl" class="table table-hover table-striped align-middle table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th class="text-center">No.</th>
+                    <th class="text-center">Pelanggan</th>
+                    <th class="text-center">Nomor & Jenis</th>
+                    <th class="text-center">Alamat</th>
+                    <th class="text-center">Periode Pemakaian</th>
+                    <th class="text-center">Nominal</th>
+                    <th class="text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Debts.Where(x => x.TotalNominal != 0))
+                {
+                    <tr class="odd">
+                        <td class="text-center">@no</td>
+                        <td class="text-center">
+                            <strong>@item.IdPelanggan</strong> <br />
+                            @item.NamaPelanggan
+                        </td>
+                        <td class="text-center">
+                            <span class="fw-bold">@(item.NomorPelanggan ?? "-")</span> <br /> @item.JenisPelanggan
+                        </td>
+                        <td class="text-center">
+                            @item.Alamat <br />
+                            @item.Kelurahan | @item.Kecamatan
+                        </td>
+                        <td class="text-center">
+                            @item.Periode
+                        </td>
+
+                        <td class="text-end">
+                            <strong>
+                                @(
+                                    item.TotalNominal.HasValue
+                                    ? string.Format(
+                                    new System.Globalization.CultureInfo("id-ID"),
+                                    "Rp {0:N0}",
+                                    Math.Abs(item.TotalNominal.Value)
+                                    )
+                                    : "-"
+                                    )
+                            </strong>
+                            <br />
+                            <span class="badge badge-label bg-@(item.TotalNominal == 0 ? "success" : item.TotalNominal < 1 ? "danger" : "info")">
+                                <i class="mdi mdi-circle-medium"></i>
+                                @(item.TotalNominal == 0 ? "Lunas" : item.TotalNominal < 1 ? "Belum Lunas" : "Lebih Bayar")
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <form id="frmDelete" novalidate asp-controller="DebtWriteOffs" asp-action="Delete" method="POST" enctype="multipart/form-data">
+                                @Html.Hidden("IdPiutang", item.IdPiutang)
+                                @Html.Hidden("Nominal", item.TotalNominal)
+                                @Html.Hidden("IdPelanggan", item.IdPelanggan)
+                                @Html.HiddenFor(x => x.BulanSelect)
+                                @Html.HiddenFor(x => x.TahunSelect)
+                                <button class="btn btn-danger btn-delete" onclick="Delete()" type="button">
+                                    <i class="ri-delete-bin-6-line"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    no++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="period-container"
+     data-bulan="@Model.BulanSelect"
+     data-tahun="@Model.TahunSelect">
+    @{
+        TempData["Bulan-dwo"] = Model.BulanSelect;
+        TempData["Tahun-dwo"] = Model.TahunSelect;
+        if (!string.IsNullOrEmpty(ViewBag.Message))
+        {
+                <div id="partial-message" data-message="@ViewBag.Message"></div>
+        }
+    }
+</div>
+<script>
+
+    $(document).ready(function () {
+        $('#tbl').DataTable({
+        })
+    });
+    function Delete() {
+        Swal.fire({
+            title: 'Attention?',
+            text: "Yakin ingin menghapus piutang?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Hapus'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var formData = new FormData($("#frmDelete")[0]);
+                var t = $("input[name='__RequestVerificationToken']").val();
+
+                $.ajax({
+                    url: $("#frmDelete").attr('action'),
+                    type: "POST",
+                    data: formData,
+                    dataType: "json",
+                    contentType: false,
+                    processData: false,
+                    headers:
+                    {
+                        "RequestVerificationToken": t
+                    },
+                    beforeSend: function () {
+                        $("#loader").show()
+                    },
+                    complete: function () { $("#loader").hide(); },
+                    success: function (resp) {
+                        if (resp.status == 1) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil!',
+                                text: resp.message,
+                                timer: 1500,
+                                showConfirmButton: false
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        }
+                        else {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '<b style="color:orange">Peringatan</b>',
+                                text: resp.message,
+                            })
+                        }
+                    }
+                });
+            }
+        });
+    }
+</script>
