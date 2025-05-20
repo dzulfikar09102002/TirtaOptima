@@ -196,7 +196,7 @@ public partial class DatabaseContext : DbContext
 
             entity.HasIndex(e => e.PenagihId, "collections_users_FK");
 
-            entity.HasIndex(e => e.StatusId, "penagihan_status_FK");
+            entity.HasIndex(e => e.Status, "penagihan_status_FK");
 
             entity.HasIndex(e => e.SuratId, "penagihan_surat_FK");
 
@@ -234,7 +234,7 @@ public partial class DatabaseContext : DbContext
             entity.Property(e => e.PenagihId).HasColumnName("penagih_id");
             entity.Property(e => e.PiutangId).HasColumnName("piutang_id");
             entity.Property(e => e.RencanaBayar).HasColumnName("rencana_bayar");
-            entity.Property(e => e.StatusId)
+            entity.Property(e => e.Status)
                 .HasColumnType("enum('Belum Ditagih','Berhasil Ditagih','Gagal Ditagih')")
                 .HasColumnName("status_id");
             entity.Property(e => e.SuratId).HasColumnName("surat_id");

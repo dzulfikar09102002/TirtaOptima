@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TirtaOptima")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1db8ae7540436365e97421b7702596dd32d18963")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3abf64346d5873a8161e9c0c5c8c336546e11abe")]
 [assembly: System.Reflection.AssemblyProductAttribute("TirtaOptima")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TirtaOptima")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

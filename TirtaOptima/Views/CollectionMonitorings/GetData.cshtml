@@ -55,14 +55,9 @@
                             @item.Tindakan!.Name
                         </td>
                         <td class="text-center">
-                            <form id="frmDelete" novalidate asp-controller="CollectionMonitorings" asp-action="Detail" method="POST" enctype="multipart/form-data">
-                                @Html.Hidden("IdPiutang", item.PiutangId)
-                                @Html.HiddenFor(x => x.BulanSelect)
-                                @Html.HiddenFor(x => x.TahunSelect)
-                                <button class="btn btn-danger btn-delete" type="submit">
-                                    <i class="ri-external-link-line"></i>
-                                </button>
-                            </form>
+                            <a href="@Url.Action("Detail", new { id = item.Id })" class="btn btn-info btn-detail" type="button">
+                                <i class="ri-external-link-line"></i>
+                            </a>
                         </td>
                     </tr>
                     no++;

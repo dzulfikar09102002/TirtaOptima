@@ -42,12 +42,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQmlsbHNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Projek C\#/TirtaOptima/TirtaOptima/Views/CollectionMonitorings/Detail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29sbGVjdGlvbk1vbml0b3JpbmdzXERldGFpbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Projek C\#/TirtaOptima/TirtaOptima/Views/CollectionMonitorings/GetData.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29sbGVjdGlvbk1vbml0b3JpbmdzXEdldERhdGEuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Projek C\#/TirtaOptima/TirtaOptima/Views/CollectionMonitorings/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29sbGVjdGlvbk1vbml0b3JpbmdzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projek C\#/TirtaOptima/TirtaOptima/Views/Criteria/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3JpdGVyaWFcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Projek C\#/TirtaOptima/TirtaOptima/Views/Customers/GetData.cshtml]
@@ -122,6 +130,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGlzdHJpY3RzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Projek C\#/TirtaOptima/TirtaOptima/Views/FurtherActions/GetData.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRnVydGhlckFjdGlvbnNcR2V0RGF0YS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projek C\#/TirtaOptima/TirtaOptima/Views/FurtherActions/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRnVydGhlckFjdGlvbnNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Projek C\#/TirtaOptima/TirtaOptima/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -152,6 +168,30 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Projek C\#/TirtaOptima/TirtaOptima/Views/LetterCategories/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGV0dGVyQ2F0ZWdvcmllc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projek C\#/TirtaOptima/TirtaOptima/Views/LetterDeliveries/GetData.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGV0dGVyRGVsaXZlcmllc1xHZXREYXRhLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projek C\#/TirtaOptima/TirtaOptima/Views/LetterDeliveries/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGV0dGVyRGVsaXZlcmllc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projek C\#/TirtaOptima/TirtaOptima/Views/LetterIssuances/GetData.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGV0dGVySXNzdWFuY2VzXEdldERhdGEuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projek C\#/TirtaOptima/TirtaOptima/Views/LetterIssuances/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGV0dGVySXNzdWFuY2VzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projek C\#/TirtaOptima/TirtaOptima/Views/OfficerMonitorings/Detail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT2ZmaWNlck1vbml0b3JpbmdzXERldGFpbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projek C\#/TirtaOptima/TirtaOptima/Views/OfficerMonitorings/GetData.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT2ZmaWNlck1vbml0b3JpbmdzXEdldERhdGEuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Projek C\#/TirtaOptima/TirtaOptima/Views/OfficerMonitorings/Index.cshtml]
@@ -228,6 +268,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Projek C\#/TirtaOptima/TirtaOptima/Views/StatusCodes/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhdHVzQ29kZXNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projek C\#/TirtaOptima/TirtaOptima/Views/StrategyCalculations/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RyYXRlZ3lDYWxjdWxhdGlvbnNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projek C\#/TirtaOptima/TirtaOptima/Views/StrategyResults/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RyYXRlZ3lSZXN1bHRzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Projek C\#/TirtaOptima/TirtaOptima/Views/Users/Create.cshtml]

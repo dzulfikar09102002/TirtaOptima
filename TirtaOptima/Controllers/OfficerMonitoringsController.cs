@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TirtaOptima.Requests;
+using TirtaOptima.Services;
 using TirtaOptima.ViewModels;
 
 namespace TirtaOptima.Controllers
@@ -23,6 +25,43 @@ namespace TirtaOptima.Controllers
                 TempData.Keep("Tahun-mo");
             }
             return View(model);
+        }
+        [Authorize(Roles = "Administrator Sistem, Petugas Penagihan")]
+        [HttpGet]
+        public IActionResult GetData(string bulan, string tahun)
+        {
+            OfficerMonitoringsService service = new(_context);
+            OfficerMonitoringsViewModel model = new()
+            {
+                BulanSelect = Convert.ToInt32(bulan),
+                TahunSelect = Convert.ToInt32(tahun)
+            };
+            OfficerMonitoringsRequest requestValidator = new(service, model);
+            try
+            {
+                if (!requestValidator.Validate())
+                {
+                    throw new Exception(ResponseBase.Message = requestValidator.ErrorMessage ?? "Terjadi Kesalahan");
+                }
+                model.Officers = service.GetOfficers(model);
+                return PartialView("GetData", model);
+            }
+            catch (Exception ex)
+            {
+                ResponseBase.Message = ex.Message ?? throw new Exception();
+                return Json(ResponseBase);
+            }   
+        }
+        [HttpGet]
+        public IActionResult Detail(OfficerMonitoringsViewModel input)
+        {
+            OfficerMonitoringsService service = new(_context);
+            input.Collections = service.GetCollections(input).Where(x => x.PenagihId == input.IdPenagih).ToList();
+            if (input.Collections == null)
+            {
+                return NotFound();
+            }
+            return View(input);
         }
     }
 }

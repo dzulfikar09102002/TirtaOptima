@@ -1,0 +1,211 @@
+﻿@model TirtaOptima.ViewModels.CollectionMonitoringsViewModel
+@{
+    ViewData["Title"] = "Detail Penagihan";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">DETAIL PENAGIHAN</h4>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Tirta Optima</a></li>
+                    <li class="breadcrumb-item">Monitoring</li>
+                    <li class="breadcrumb-item active">Detail Penagihan</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xxl-3">
+        <div class="card">
+            <div class="card-body p-4">
+                <div class="text-center">
+                    <img src="@(string.IsNullOrEmpty(Model.Collection?.Foto)
+                            ? Url.Content("~/assets/images/nophoto.jpg")
+                            : Url.Content("~/assets/images/collections/" + Model.Collection.Foto))"
+                         class="img-thumbnail img-fluid mw-100"
+                         style="height: 212px; width: auto; object-fit: cover;"
+                         alt="collection-images">
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-4 mt-2">
+                    <div class="flex-grow-1">
+                        <h6 class="card-title mb-0">Informasi Pelanggan</h6>
+                    </div>
+                </div>
+
+                <div class="mb-3 d-flex">
+                    <div class="avatar-xs d-block flex-shrink-0 me-3">
+                        <span class="avatar-title rounded-circle fs-16 bg-primary text-light">
+                            <i class="bx bx-id-card"></i>
+                        </span>
+                    </div>
+                    <input type="text" class="form-control" value="@(Model.Collection!.Piutang.Pelanggan.Id + " / " + Model.Collection!.Piutang.Pelanggan.Nomor)" readonly />
+                </div>
+
+                <div class="mb-3 d-flex">
+                    <div class="avatar-xs d-block flex-shrink-0 me-3">
+                        <span class="avatar-title rounded-circle fs-16 bg-info text-light">
+                            <i class="ri-mail-fill"></i>
+                        </span>
+                    </div>
+                    <input type="text" class="form-control" value="@Model.Collection!.Piutang.Pelanggan.Nama" readonly />
+                </div>
+
+                <div class="mb-3 d-flex">
+                    <div class="avatar-xs d-block flex-shrink-0 me-3">
+                        <span class="avatar-title rounded-circle fs-16 bg-warning">
+                            <i class="ri-emotion-happy-fill"></i>
+                        </span>
+                    </div>
+                    <input type="text" class="form-control" value="@(Model.Collection!.Piutang.Pelanggan.Jenis + " / " + Model.Collection!.Piutang.Pelanggan.JenisNavigation!.Deskripsi)" readonly />
+                </div>
+
+                <div class="mb-3 d-flex">
+                    <div class="avatar-xs d-block flex-shrink-0 me-3">
+                        <span class="avatar-title rounded-circle fs-16 bg-success">
+                            <i class="ri-account-circle-fill"></i>
+                        </span>
+                    </div>
+                    <input type="text" class="form-control" value="@Model.Collection!.Piutang.Pelanggan.Alamat" readonly />
+                </div>
+                <div class="mb-3 d-flex">
+                    <div class="avatar-xs d-block flex-shrink-0 me-3">
+                        <span class="avatar-title rounded-circle fs-16 bg-info">
+                            <i class="ri-phone-fill"></i>
+                        </span>
+                    </div>
+                    <input type="text" class="form-control" value="@Model.Collection!.Piutang.Pelanggan.StatusNavigation.Name" readonly />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xxl-9">
+        <div class="card">
+            <div class="card-body p-4">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="emailInput" class="form-label">
+                                Petugas Penagihan
+                            </label>
+                            @Html.TextBoxFor(x => x.Collection!.Penagih!.Name, new { @class = "form-control", @readonly = true })
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="emailInput" class="form-label">
+                                Tanggal Penagihan
+                            </label>
+                            @Html.TextBox("Collection.Tanggal",
+                                     Model.Collection?.Tanggal.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("id-ID")),
+                                     new { @class = "form-control", @readonly = true })
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="emailInput" class="form-label">
+                                Total Nominal Piutang (IDR)
+                            </label>
+                            @Html.TextBox("Collection.Piutang.Rekening",
+                                     Model.Collection?.Piutang?.Rekening != null
+                                     ? $"Rp {Model.Collection.Piutang.Nominal.ToString("#,0", new System.Globalization.CultureInfo("id-ID"))}"
+                                     : "",
+                                     new { @class = "form-control", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="emailInput" class="form-label">
+                                Jumlah Rekening
+                            </label>
+                            @Html.TextBoxFor(x => x.Collection!.Piutang.Rekening, new { @class = "form-control", @readonly = true })
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="firstnameInput" class="form-label">
+                                Tindakan
+                            </label>
+                            @Html.TextBoxFor(x => x.Collection!.Tindakan!.Name, new { @class = "form-control", @readonly = true })
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="lastnameInput" class="form-label">
+                                Nomor Surat
+                            </label>
+                            @Html.TextBoxFor(x => x.Collection!.Surat!.NomorSurat, new { @class = "form-control", @readonly = true })
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="phonenumberInput" class="form-label">
+                                Nama Penerima
+                            </label>
+                            @Html.TextBoxFor(x => x.Collection!.NamaPenerima, new { @class = "form-control", @readonly = true })
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="phonenumberInput" class="form-label">
+                                Nomor Telepon Penerima
+                            </label>
+                            @Html.TextBoxFor(x => x.Collection!.NotelpPenerima, new { @class = "form-control", @readonly = true })
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="jabatanInput" class="form-label">
+                                Rencana Bayar
+                            </label>
+                            @Html.TextBox("Collection.RencanaBayar",
+                                     Model.Collection?.RencanaBayar?.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("id-ID")),
+                                     new { @class = "form-control", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="roleInput" class="form-label">
+                                Alasan
+                            </label>
+                            @Html.TextBoxFor(x => x.Collection!.Alasan, new { @class = "form-control", @readonly = true })
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label for="lastnameInput" class="form-label">
+                                Status
+                            </label>
+                            @Html.TextBoxFor(x => x.Collection!.Status, new { @class = "form-control", @readonly = true })
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label for="lastnameInput" class="form-label">
+                                Keterangan
+                            </label>
+                            @Html.TextAreaFor(x => x.Collection!.Ket, new { @class = "form-control", @readonly = true })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#sidebarMultilevel8").addClass('show')
+            $('#tbl').DataTable({
+            })
+        });
+    </script>
+}

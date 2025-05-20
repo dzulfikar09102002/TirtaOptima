@@ -1,0 +1,109 @@
+﻿@model TirtaOptima.ViewModels.OfficerMonitoringsViewModel
+@using System.Globalization
+@{
+    int no = 1;
+    var officers = Model.Officers;
+}
+<div class="card mt-2">
+    <div class="card-body">
+        <table id="tbl" class="table table-hover table-striped align-middle table-bordered" style="width:100%">
+            <thead class="table-light">
+                <tr>
+                    <th class="text-center">No.</th>
+                    <th class="text-center">Nama Petugas</th>
+                    <th class="text-center" style="width:10%">Total Penagihan</th>
+                    <th class="text-center" style="width:10%">Belum Ditagih</th>
+                    <th class="text-center" style="width:10%">Sudah Ditagih</th>
+                    <th class="text-center">Pencapaian (%)</th>
+                    <th class="text-center">Tertagih (IDR)</th>
+                    <th class="text-center">Detail</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var officer in officers)
+                {
+                    var collections = officer.CollectionPenagihs
+                    .Where(x => x.DeletedAt == null &&
+                    x.Tanggal.Month == Model.BulanSelect &&
+                    x.Tanggal.Year == Model.TahunSelect)
+                    .ToList();
+
+                    var total = collections.Count;
+                    var belum = collections.Count(x => x.Status == "Belum Ditagih");
+                    var sudah = total - belum;
+                    var berhasil = collections.Count(x => x.Status == "Berhasil Ditagih");
+                    var gagal = collections.Count(x => x.Status == "Gagal Ditagih");
+                    var sisa = total - berhasil - gagal;
+
+                    double persenBerhasil = total == 0 ? 0 : berhasil * 100.0 / total;
+                    double persenGagal = total == 0 ? 0 : gagal * 100.0 / total;
+                    double persenSisa = total == 0 ? 0 : sisa * 100.0 / total;
+
+                    var tertagih = collections
+                    .Where(x => x.Status == "Berhasil Ditagih")
+                    .Sum(x => x.Piutang?.Nominal ?? 0);
+                    <tr class="odd">
+                        <td class="text-center">@no</td>
+                        <td class="text-center"><strong>@officer.Name</strong></td>
+                        <td class="text-center">@total</td>
+                        <td class="text-center">@belum</td>
+                        <td class="text-center">@sudah</td>
+                        <td class="text-center">
+                            <span class="badge bg-success">Berhasil: @persenBerhasil.ToString("0.##")%</span>
+                            <span class="badge bg-danger">Gagal: @persenGagal.ToString("0.##")%</span>
+                            <span class="badge bg-info">Sisa: @persenSisa.ToString("0.##")%</span>
+                        </td>
+                        <td class="text-center">
+                            <strong>
+                                @(tertagih != 0
+                                    ? string.Format(new CultureInfo("id-ID"), "Rp {0:N0}", tertagih)
+                                    : "-")
+                            </strong>
+                        </td>
+                        @{
+                            if (total > 0)
+                            {
+                                <td class="text-center">
+                                    <form method="get" action="@Url.Action("Detail")" style="display: inline;">
+                                        <input type="hidden" name="IdPenagih" value="@officer.Id" />
+                                        <input type="hidden" name="BulanSelect" value="@Model.BulanSelect" />
+                                        <input type="hidden" name="TahunSelect" value="@Model.TahunSelect" />
+                                        <button type="submit" class="btn btn-info btn-detail">
+                                            <i class="ri-external-link-line"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            }
+                            else
+                            {
+                                <td class="text-center">
+                                    <img src="/assets/images/close.png" />
+                                </td>
+                            }
+                        }
+                    </tr>
+                    no++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="period-container"
+     data-bulan="@Model.BulanSelect"
+     data-tahun="@Model.TahunSelect">
+    @{
+        TempData["Bulan-mo"] = Model.BulanSelect;
+        TempData["Tahun-mo"] = Model.TahunSelect;
+        if (!string.IsNullOrEmpty(ViewBag.Message))
+        {
+            <div id="partial-message" data-message="@ViewBag.Message"></div>
+        }
+    }
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#tbl').DataTable();
+    });
+</script>

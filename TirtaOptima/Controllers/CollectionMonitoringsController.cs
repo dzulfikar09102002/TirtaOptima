@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using TirtaOptima.Requests;
 using TirtaOptima.Services;
 using TirtaOptima.ViewModels;
@@ -51,6 +52,20 @@ namespace TirtaOptima.Controllers
                 ResponseBase.Message = ex.Message ?? throw new Exception();
                 return Json(ResponseBase);
             }
+        }
+        [HttpGet]
+        public IActionResult Detail(long id)
+        {
+            CollectionMonitoringsService service = new(_context);
+            CollectionMonitoringsViewModel model = new CollectionMonitoringsViewModel
+            {
+                Collection = service.GetCollection(id)
+            };
+            if (model.Collection == null)
+            {
+                return NotFound();
+            }
+            return View(model);
         }
     }
 }

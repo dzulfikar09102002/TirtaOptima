@@ -1,0 +1,167 @@
+﻿@model TirtaOptima.ViewModels.OfficerMonitoringsViewModel
+@using System.Globalization
+@{
+    int no = 1;
+    ViewData["Title"] = "Detail Monitoring Petugas";
+}
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">DETAIL PETUGAS</h4>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Tirta Optima</a></li>
+                    <li class="breadcrumb-item">Monitoring</li>
+                    <li class="breadcrumb-item active">Detail Petugas</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xxl-3">
+        <div class="card">
+            <div class="card-body p-4">
+                <div class="text-center">
+                    <img src="@(string.IsNullOrEmpty(Model.Collections.FirstOrDefault()?.Penagih?.Photo)
+                            ? Url.Content("~/assets/images/nophoto.jpg")
+                            : Url.Content("~/assets/images/users/" + Model.Collections.FirstOrDefault()?.Penagih?.Photo))"
+                         class="img-thumbnail img-fluid mw-100"
+                         style="object-fit: cover;"
+                         alt="officer-images">
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-4 mt-2">
+                    <div class="flex-grow-1">
+                        <h6 class="card-title mb-0">Informasi Petugas</h6>
+                    </div>
+                </div>
+
+                <div class="mb-3 d-flex">
+                    <div class="avatar-xs d-block flex-shrink-0 me-3">
+                        <span class="avatar-title rounded-circle fs-16 bg-primary text-light">
+                            <i class="bx bx-id-card"></i>
+                        </span>
+                    </div>
+                    @Html.TextBoxFor(x => x.Collections.First().Penagih!.NikNip, new { @class = "form-control", @readonly = "readonly" })
+                </div>
+
+                <div class="mb-3 d-flex">
+                    <div class="avatar-xs d-block flex-shrink-0 me-3">
+                        <span class="avatar-title rounded-circle fs-16 bg-info text-light">
+                            <i class="ri-mail-fill"></i>
+                        </span>
+                    </div>
+                    @Html.TextBoxFor(x => x.Collections.First().Penagih!.Name, new { @class = "form-control", @readonly = "readonly" })
+                </div>
+
+                <div class="mb-3 d-flex">
+                    <div class="avatar-xs d-block flex-shrink-0 me-3">
+                        <span class="avatar-title rounded-circle fs-16 bg-warning">
+                            <i class="ri-emotion-happy-fill"></i>
+                        </span>
+                    </div>
+                    @Html.TextBoxFor(x => x.Collections.First().Penagih!.Jabatan, new { @class = "form-control", @readonly = "readonly" })
+                </div>
+
+                <div class="mb-3 d-flex">
+                    <div class="avatar-xs d-block flex-shrink-0 me-3">
+                        <span class="avatar-title rounded-circle fs-16 bg-success">
+                            <i class="ri-account-circle-fill"></i>
+                        </span>
+                    </div>
+                    <input type="text" class="form-control" value="@(Model.Collections.First().Penagih!.Status == true ? "Aktif" : "Tidak Aktif")" readonly />
+                </div>
+                <div class="mb-3 d-flex">
+                    <div class="avatar-xs d-block flex-shrink-0 me-3">
+                        <span class="avatar-title rounded-circle fs-16 bg-info">
+                            <i class="ri-phone-fill"></i>
+                        </span>
+                    </div>
+                    @Html.TextBox("Tanggal", Model.Collections.First().Tanggal.ToString("MMMM yyyy", new System.Globalization.CultureInfo("id-ID")), new { @class = "form-control", @readonly = "readonly" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xxl-9">
+        <div class="card">
+            <div class="card-body p-4">
+                <div class="row">
+                    <table id="tbl" class="table table-hover table-striped align-middle table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="text-center">No.</th>
+                                <th class="text-center">Pelanggan</th>
+                                <th class="text-center">Alamat</th>
+                                <th class="text-center">Nominal</th>
+                                <th class="text-center">Petugas</th>
+                                <th class="text-center">Tindakan</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Collections)
+                            {
+                                <tr class="odd">
+                                    <td class="text-center">@no</td>
+                                    <td class="text-center">
+                                        <strong>@item.Piutang.Pelanggan.Id</strong> <br />
+                                        @item.Piutang.Pelanggan.Nama
+                                    </td>
+                                    <td class="text-center">
+                                        @item.Piutang.Pelanggan.Alamat <br />
+                                        @item.Piutang.Pelanggan.KelurahanNavigation!.Nama| @item.Piutang.Pelanggan.KelurahanNavigation!.KodeKecNavigation!.Nama
+                                    </td>
+                                    <td class="text-center">
+                                        <strong>
+                                            @(
+                                                item.Piutang.Nominal != 0
+                                                ? string.Format(
+                                                new System.Globalization.CultureInfo("id-ID"),
+                                                "Rp {0:N0}",
+                                                Math.Abs(item.Piutang.Nominal)
+                                                )
+                                                : "-"
+                                                )
+                                        </strong>
+                                        <br />
+                                        <span class="badge bg-@(item.Piutang.Nominal == 0 ? "success" : item.Piutang.Nominal < 1 ? "danger" : "info")">
+                                            <i class="mdi mdi-circle-medium"></i>
+                                            @(item.Piutang.Nominal == 0 ? "Lunas" : item.Piutang.Nominal < 1 ? "Belum Lunas" : "Lebih Bayar")
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        @item.Penagih!.Name
+                                    </td>
+                                    <td class="text-center">
+                                        @item.Tindakan!.Name
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="@Url.Action("Detail", new { id = item.Id })" class="btn btn-info btn-detail" type="button">
+                                            <i class="ri-external-link-line"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                no++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#sidebarMultilevel8").addClass('show')
+            $('#tbl').DataTable({
+            })
+        });
+    </script>
+}

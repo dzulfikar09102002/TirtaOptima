@@ -2565,6 +2565,14 @@
       "PackagePath": "staticwebassets\\assets\\images\\close.png"
     },
     {
+      "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\collections\\test-2.png",
+      "PackagePath": "staticwebassets\\assets\\images\\collections\\test-2.png"
+    },
+    {
+      "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\collections\\test.png",
+      "PackagePath": "staticwebassets\\assets\\images\\collections\\test.png"
+    },
+    {
       "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\coming-soon-img.png",
       "PackagePath": "staticwebassets\\assets\\images\\coming-soon-img.png"
     },
@@ -2611,6 +2619,10 @@
     {
       "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\cover-pattern.png",
       "PackagePath": "staticwebassets\\assets\\images\\cover-pattern.png"
+    },
+    {
+      "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\criteria.png",
+      "PackagePath": "staticwebassets\\assets\\images\\criteria.png"
     },
     {
       "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\demos\\creative.png",
@@ -2785,6 +2797,14 @@
       "PackagePath": "staticwebassets\\assets\\images\\nophoto.jpg"
     },
     {
+      "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\perhitungan-2.png",
+      "PackagePath": "staticwebassets\\assets\\images\\perhitungan-2.png"
+    },
+    {
+      "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\perhitungan.png",
+      "PackagePath": "staticwebassets\\assets\\images\\perhitungan.png"
+    },
+    {
       "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\products\\img-1.png",
       "PackagePath": "staticwebassets\\assets\\images\\products\\img-1.png"
     },
@@ -2827,6 +2847,10 @@
     {
       "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\profile-bg.jpg",
       "PackagePath": "staticwebassets\\assets\\images\\profile-bg.jpg"
+    },
+    {
+      "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\ranking.png",
+      "PackagePath": "staticwebassets\\assets\\images\\ranking.png"
     },
     {
       "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\server-error.png",
@@ -4815,6 +4839,10 @@
     {
       "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\users\\3514200910020002-administrator_system-1746680665.jpg",
       "PackagePath": "staticwebassets\\assets\\images\\users\\3514200910020002-administrator_system-1746680665.jpg"
+    },
+    {
+      "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\users\\3514200910020003-collection_officer-1747711772.jpg",
+      "PackagePath": "staticwebassets\\assets\\images\\users\\3514200910020003-collection_officer-1747711772.jpg"
     },
     {
       "Id": "C:\\Projek C#\\TirtaOptima\\TirtaOptima\\wwwroot\\assets\\images\\users\\LOGO_LIGHT MODE.png",
