@@ -23,29 +23,40 @@
                     <tr class="odd">
                         <td class="text-center">@no</td>
                         <td class="text-center">
-                            <strong>@item.Piutang.Pelanggan.Id</strong> <br />
-                            @item.Piutang.Pelanggan.Nama
+                            <strong>@item.Piutang.IdPelangganNavigation.Id</strong> <br />
+                            @item.Piutang.IdPelangganNavigation.Nama
                         </td>
                         <td class="text-center">
-                            @item.Piutang.Pelanggan.Alamat <br />
-                            @item.Piutang.Pelanggan.KelurahanNavigation!.Nama| @item.Piutang.Pelanggan.KelurahanNavigation!.KodeKecNavigation!.Nama
+                            @item.Piutang.IdPelangganNavigation.Alamat <br />
+                            @item.Piutang.IdPelangganNavigation.KelurahanNavigation!.Nama| @item.Piutang.IdPelangganNavigation.KelurahanNavigation!.KodeKecNavigation!.Nama
                         </td>
                         <td class="text-center">
+                            @{
+                                var totalNominal = item.Piutang.DebtsManagements.Sum(
+                                x => x.Status == "Kredit" ? -x.Nominal : x.Nominal
+                                );
+                            }
+
                             <strong>
-                                @(
-                                    item.Piutang.Nominal != 0
+                                @(item.Piutang.DebtsManagements.Any()
                                     ? string.Format(
                                     new System.Globalization.CultureInfo("id-ID"),
                                     "Rp {0:N0}",
-                                    Math.Abs(item.Piutang.Nominal)
+                                    Math.Abs(totalNominal)
                                     )
                                     : "-"
                                     )
                             </strong>
                             <br />
-                            <span class="badge bg-@(item.Piutang.Nominal == 0 ? "success" : item.Piutang.Nominal < 1 ? "danger" : "info")">
+                            <span class="badge bg-@(
+                                        totalNominal == 0 ? "success" :
+                                        totalNominal < 0 ? "danger" : "info"
+                                    )">
                                 <i class="mdi mdi-circle-medium"></i>
-                                @(item.Piutang.Nominal == 0 ? "Lunas" : item.Piutang.Nominal < 1 ? "Belum Lunas" : "Lebih Bayar")
+                                @(
+                                    totalNominal == 0 ? "Lunas" :
+                                    totalNominal < 0 ? "Belum Lunas" : "Lebih Bayar"
+                                    )
                             </span>
                         </td>
                         <td class="text-center">

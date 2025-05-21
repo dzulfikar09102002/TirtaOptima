@@ -192,11 +192,11 @@ public partial class DatabaseContext : DbContext
 
             entity.HasIndex(e => e.TindakanId, "collections_action_types_FK");
 
-            entity.HasIndex(e => e.PiutangId, "collections_debts_FK");
+            entity.HasIndex(e => e.PiutangId, "collections_bills_FK");
 
             entity.HasIndex(e => e.PenagihId, "collections_users_FK");
 
-            entity.HasIndex(e => e.Status, "penagihan_status_FK");
+            entity.HasIndex(e => e.StatusId, "penagihan_status_FK");
 
             entity.HasIndex(e => e.SuratId, "penagihan_surat_FK");
 
@@ -234,8 +234,8 @@ public partial class DatabaseContext : DbContext
             entity.Property(e => e.PenagihId).HasColumnName("penagih_id");
             entity.Property(e => e.PiutangId).HasColumnName("piutang_id");
             entity.Property(e => e.RencanaBayar).HasColumnName("rencana_bayar");
-            entity.Property(e => e.Status)
-                .HasColumnType("enum('Belum Ditagih','Berhasil Ditagih','Gagal Ditagih')")
+            entity.Property(e => e.StatusId)
+                .HasColumnType("enum('Belum Ditagih','Berhasil Ditagih','Gagal Ditagih','Janji Bayar')")
                 .HasColumnName("status_id");
             entity.Property(e => e.SuratId).HasColumnName("surat_id");
             entity.Property(e => e.Tanggal)
@@ -265,7 +265,7 @@ public partial class DatabaseContext : DbContext
             entity.HasOne(d => d.Piutang).WithMany(p => p.Collections)
                 .HasForeignKey(d => d.PiutangId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("collections_debts_FK");
+                .HasConstraintName("collections_bills_FK");
 
             entity.HasOne(d => d.Surat).WithMany(p => p.Collections)
                 .HasForeignKey(d => d.SuratId)

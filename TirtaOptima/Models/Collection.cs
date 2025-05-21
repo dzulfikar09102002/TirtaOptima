@@ -13,7 +13,7 @@ public partial class Collection
 
     public DateTime Tanggal { get; set; }
 
-    public string? Status { get; set; }
+    public string? StatusId { get; set; }
 
     public long? PenagihId { get; set; }
 
@@ -49,7 +49,7 @@ public partial class Collection
 
     public virtual User? Penagih { get; set; }
 
-    public virtual Debt Piutang { get; set; } = null!;
+    public virtual Bill Piutang { get; set; } = null!;
 
     public virtual Letter? Surat { get; set; }
 

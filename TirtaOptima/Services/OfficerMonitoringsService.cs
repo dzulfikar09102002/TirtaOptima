@@ -11,14 +11,17 @@ namespace TirtaOptima.Services
             [.. _context.Collections.Where(x => x.DeletedAt == null &&
             x.Tanggal.Month == input.BulanSelect && x.Tanggal.Year == input.TahunSelect)
             .Include(x => x.Piutang)
-            .ThenInclude(x => x.Pelanggan)
+            .ThenInclude(x => x.IdPelangganNavigation)
             .ThenInclude(x => x.KelurahanNavigation!)
             .ThenInclude(x => x.KodeKecNavigation)
             .Include(x => x.Penagih)
-            .Include(x => x.Tindakan)];
-        public List<User> GetOfficers(OfficerMonitoringsViewModel input) =>
+            .Include(x => x.Tindakan)
+            .Include(x => x.Piutang)
+            .ThenInclude(x => x.DebtsManagements)];
+        public List<User> GetOfficers() =>
         [.. _context.Users
         .Where(x => x.RoleId == 3 && x.DeletedAt == null)
-        .Include(x => x.CollectionPenagihs).ThenInclude(x => x.Piutang)];
+        .Include(x => x.CollectionPenagihs).ThenInclude(x => x.Piutang)
+            .ThenInclude(x => x.DebtsManagements)];
     }
 }

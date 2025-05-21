@@ -27,8 +27,6 @@ public partial class Debt
 
     public long? DeletedBy { get; set; }
 
-    public virtual ICollection<Collection> Collections { get; set; } = new List<Collection>();
-
     public virtual User? CreatedByNavigation { get; set; }
 
     public virtual User? DeletedByNavigation { get; set; }

@@ -24,12 +24,12 @@
     <div class="col-xxl-3">
         <div class="card">
             <div class="card-body p-4">
-                <div class="text-center">
+                <div class="text-center align-middle">
                     <img src="@(string.IsNullOrEmpty(Model.Collections.FirstOrDefault()?.Penagih?.Photo)
                             ? Url.Content("~/assets/images/nophoto.jpg")
                             : Url.Content("~/assets/images/users/" + Model.Collections.FirstOrDefault()?.Penagih?.Photo))"
-                         class="img-thumbnail img-fluid mw-100"
-                         style="object-fit: cover;"
+                         class="img-thumbnail img-fluid mw-100 rounded-circle"
+                         style="object-fit: cover; max-height:240px"
                          alt="officer-images">
                 </div>
             </div>
@@ -54,7 +54,7 @@
                 <div class="mb-3 d-flex">
                     <div class="avatar-xs d-block flex-shrink-0 me-3">
                         <span class="avatar-title rounded-circle fs-16 bg-info text-light">
-                            <i class="ri-mail-fill"></i>
+                            <i class="ri-user-3-fill"></i>
                         </span>
                     </div>
                     @Html.TextBoxFor(x => x.Collections.First().Penagih!.Name, new { @class = "form-control", @readonly = "readonly" })
@@ -62,8 +62,8 @@
 
                 <div class="mb-3 d-flex">
                     <div class="avatar-xs d-block flex-shrink-0 me-3">
-                        <span class="avatar-title rounded-circle fs-16 bg-warning">
-                            <i class="ri-emotion-happy-fill"></i>
+                        <span class="avatar-title rounded-circle fs-16 bg-warning text-light">
+                            <i class="ri-briefcase-4-fill"></i>
                         </span>
                     </div>
                     @Html.TextBoxFor(x => x.Collections.First().Penagih!.Jabatan, new { @class = "form-control", @readonly = "readonly" })
@@ -71,16 +71,17 @@
 
                 <div class="mb-3 d-flex">
                     <div class="avatar-xs d-block flex-shrink-0 me-3">
-                        <span class="avatar-title rounded-circle fs-16 bg-success">
-                            <i class="ri-account-circle-fill"></i>
+                        <span class="avatar-title rounded-circle fs-16 bg-success text-light">
+                            <i class="ri-checkbox-circle-fill"></i>
                         </span>
                     </div>
                     <input type="text" class="form-control" value="@(Model.Collections.First().Penagih!.Status == true ? "Aktif" : "Tidak Aktif")" readonly />
                 </div>
+
                 <div class="mb-3 d-flex">
                     <div class="avatar-xs d-block flex-shrink-0 me-3">
-                        <span class="avatar-title rounded-circle fs-16 bg-info">
-                            <i class="ri-phone-fill"></i>
+                        <span class="avatar-title rounded-circle fs-16 bg-danger text-light">
+                            <i class="ri-calendar-fill"></i>
                         </span>
                     </div>
                     @Html.TextBox("Tanggal", Model.Collections.First().Tanggal.ToString("MMMM yyyy", new System.Globalization.CultureInfo("id-ID")), new { @class = "form-control", @readonly = "readonly" })
@@ -98,9 +99,9 @@
                                 <th class="text-center">No.</th>
                                 <th class="text-center">Pelanggan</th>
                                 <th class="text-center">Alamat</th>
-                                <th class="text-center">Nominal</th>
-                                <th class="text-center">Petugas</th>
+                                <th class="text-center">Nomor Surat</th>
                                 <th class="text-center">Tindakan</th>
+                                <th class="text-center">Nominal</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -110,36 +111,48 @@
                                 <tr class="odd">
                                     <td class="text-center">@no</td>
                                     <td class="text-center">
-                                        <strong>@item.Piutang.Pelanggan.Id</strong> <br />
-                                        @item.Piutang.Pelanggan.Nama
+                                        <strong>@item.Piutang.IdPelangganNavigation.Id</strong> <br />
+                                        @item.Piutang.IdPelangganNavigation.Nama
                                     </td>
                                     <td class="text-center">
-                                        @item.Piutang.Pelanggan.Alamat <br />
-                                        @item.Piutang.Pelanggan.KelurahanNavigation!.Nama| @item.Piutang.Pelanggan.KelurahanNavigation!.KodeKecNavigation!.Nama
+                                        @item.Piutang.IdPelangganNavigation.Alamat <br />
+                                        @item.Piutang.IdPelangganNavigation.KelurahanNavigation!.Nama| @item.Piutang.IdPelangganNavigation.KelurahanNavigation!.KodeKecNavigation!.Nama
                                     </td>
                                     <td class="text-center">
+                                        @(item.Surat?.NomorSurat ?? "-")
+                                    </td>
+                                    <td class="text-center">
+                                        @item.Tindakan!.Name <br />
+                                        <span class="badge bg-@(item.StatusId == "Berhasil Ditagih" ? "success" : item.StatusId == "Gagal Ditagih" ? "danger" : "info")">@item.StatusId</span>
+                                    </td>
+                                    <td class="text-center">
+                                        @{
+                                            var totalNominal = item.Piutang.DebtsManagements.Sum(
+                                            x => x.Status == "Kredit" ? -x.Nominal : x.Nominal
+                                            );
+                                        }
+
                                         <strong>
-                                            @(
-                                                item.Piutang.Nominal != 0
+                                            @(item.Piutang.DebtsManagements.Any()
                                                 ? string.Format(
                                                 new System.Globalization.CultureInfo("id-ID"),
                                                 "Rp {0:N0}",
-                                                Math.Abs(item.Piutang.Nominal)
+                                                Math.Abs(totalNominal)
                                                 )
                                                 : "-"
                                                 )
                                         </strong>
                                         <br />
-                                        <span class="badge bg-@(item.Piutang.Nominal == 0 ? "success" : item.Piutang.Nominal < 1 ? "danger" : "info")">
+                                        <span class="badge bg-@(
+                                        totalNominal == 0 ? "success" :
+                                        totalNominal < 0 ? "danger" : "info"
+                                    )">
                                             <i class="mdi mdi-circle-medium"></i>
-                                            @(item.Piutang.Nominal == 0 ? "Lunas" : item.Piutang.Nominal < 1 ? "Belum Lunas" : "Lebih Bayar")
+                                            @(
+                                                totalNominal == 0 ? "Lunas" :
+                                                totalNominal < 0 ? "Belum Lunas" : "Lebih Bayar"
+                                                )
                                         </span>
-                                    </td>
-                                    <td class="text-center">
-                                        @item.Penagih!.Name
-                                    </td>
-                                    <td class="text-center">
-                                        @item.Tindakan!.Name
                                     </td>
                                     <td class="text-center">
                                         <a href="@Url.Action("Detail", new { id = item.Id })" class="btn btn-info btn-detail" type="button">
