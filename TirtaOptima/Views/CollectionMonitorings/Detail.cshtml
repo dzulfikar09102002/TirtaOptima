@@ -53,7 +53,7 @@
                 <div class="mb-3 d-flex">
                     <div class="avatar-xs d-block flex-shrink-0 me-3">
                         <span class="avatar-title rounded-circle fs-16 bg-info text-light">
-                            <i class="ri-mail-fill"></i>
+                            <i class="ri-user-3-line"></i>
                         </span>
                     </div>
                     <input type="text" class="form-control" value="@Model.Collection!.Piutang.Pelanggan.Nama" readonly />
@@ -62,7 +62,7 @@
                 <div class="mb-3 d-flex">
                     <div class="avatar-xs d-block flex-shrink-0 me-3">
                         <span class="avatar-title rounded-circle fs-16 bg-warning">
-                            <i class="ri-emotion-happy-fill"></i>
+                            <i class="ri-shape-line"></i>
                         </span>
                     </div>
                     <input type="text" class="form-control" value="@(Model.Collection!.Piutang.Pelanggan.Jenis + " / " + Model.Collection!.Piutang.Pelanggan.JenisNavigation!.Deskripsi)" readonly />
@@ -71,16 +71,21 @@
                 <div class="mb-3 d-flex">
                     <div class="avatar-xs d-block flex-shrink-0 me-3">
                         <span class="avatar-title rounded-circle fs-16 bg-success">
-                            <i class="ri-account-circle-fill"></i>
+                            <i class="ri-map-pin-line"></i>
                         </span>
                     </div>
                     <input type="text" class="form-control" value="@Model.Collection!.Piutang.Pelanggan.Alamat" readonly />
                 </div>
                 <div class="mb-3 d-flex">
                     <div class="avatar-xs d-block flex-shrink-0 me-3">
-                        <span class="avatar-title rounded-circle fs-16 bg-info">
-                            <i class="ri-phone-fill"></i>
-                        </span>
+                        <span class="avatar-title rounded-circle fs-16 bg-@(
+                                Model.Collection!.Piutang.Pelanggan.StatusNavigation.Id == 1 ? "info" :
+                                Model.Collection.Piutang.Pelanggan.StatusNavigation.Id == 2 ? "success" :
+                                Model.Collection.Piutang.Pelanggan.StatusNavigation.Id == 5 ? "warning" :
+                                Model.Collection.Piutang.Pelanggan.StatusNavigation.Id == 7 ? "danger" :
+                                "secondary"
+                                )">
+                            <i class="ri-information-line"></i>
                     </div>
                     <input type="text" class="form-control" value="@Model.Collection!.Piutang.Pelanggan.StatusNavigation.Name" readonly />
                 </div>

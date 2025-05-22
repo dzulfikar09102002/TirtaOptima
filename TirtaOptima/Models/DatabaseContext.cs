@@ -57,6 +57,7 @@ public partial class DatabaseContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<Village> Villages { get; set; }
+    public virtual DbSet<VDebts> VDebts { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -1339,7 +1340,17 @@ public partial class DatabaseContext : DbContext
                 .HasForeignKey(d => d.UpdatedBy)
                 .HasConstraintName("kelurahan_users_FK_1");
         });
-
+        modelBuilder.Entity<VDebts>(entity =>
+        {
+            entity.HasNoKey(); 
+            entity.ToView("v_debts"); 
+            entity.Property(e => e.PiutangId).HasColumnName("piutang_id");
+            entity.Property(e => e.PelangganId).HasColumnName("pelanggan_id");
+            entity.Property(e => e.Rekening).HasColumnName("rekening");
+            entity.Property(e => e.TotalNominal).HasColumnName("total_nominal");
+            entity.Property(e => e.StatusTerakhir).HasColumnName("status_terakhir");
+            entity.Property(e => e.TanggalTerakhir).HasColumnName("tanggal_terakhir");
+        });
         OnModelCreatingPartial(modelBuilder);
     }
 

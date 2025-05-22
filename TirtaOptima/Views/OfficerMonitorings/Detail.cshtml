@@ -24,12 +24,12 @@
     <div class="col-xxl-3">
         <div class="card">
             <div class="card-body p-4">
-                <div class="text-center">
+                <div class="text-center align-middle">
                     <img src="@(string.IsNullOrEmpty(Model.Collections.FirstOrDefault()?.Penagih?.Photo)
                             ? Url.Content("~/assets/images/nophoto.jpg")
                             : Url.Content("~/assets/images/users/" + Model.Collections.FirstOrDefault()?.Penagih?.Photo))"
-                         class="img-thumbnail img-fluid mw-100"
-                         style="object-fit: cover;"
+                         class="img-thumbnail img-fluid mw-100 rounded-circle"
+                         style="object-fit: cover; max-height:240px"
                          alt="officer-images">
                 </div>
             </div>
@@ -54,7 +54,7 @@
                 <div class="mb-3 d-flex">
                     <div class="avatar-xs d-block flex-shrink-0 me-3">
                         <span class="avatar-title rounded-circle fs-16 bg-info text-light">
-                            <i class="ri-mail-fill"></i>
+                            <i class="ri-user-3-fill"></i>
                         </span>
                     </div>
                     @Html.TextBoxFor(x => x.Collections.First().Penagih!.Name, new { @class = "form-control", @readonly = "readonly" })
@@ -63,7 +63,7 @@
                 <div class="mb-3 d-flex">
                     <div class="avatar-xs d-block flex-shrink-0 me-3">
                         <span class="avatar-title rounded-circle fs-16 bg-warning">
-                            <i class="ri-emotion-happy-fill"></i>
+                            <i class="ri-briefcase-4-fill"></i>
                         </span>
                     </div>
                     @Html.TextBoxFor(x => x.Collections.First().Penagih!.Jabatan, new { @class = "form-control", @readonly = "readonly" })
@@ -72,15 +72,15 @@
                 <div class="mb-3 d-flex">
                     <div class="avatar-xs d-block flex-shrink-0 me-3">
                         <span class="avatar-title rounded-circle fs-16 bg-success">
-                            <i class="ri-account-circle-fill"></i>
+                            <i class="ri-checkbox-circle-fill"></i>
                         </span>
                     </div>
                     <input type="text" class="form-control" value="@(Model.Collections.First().Penagih!.Status == true ? "Aktif" : "Tidak Aktif")" readonly />
                 </div>
                 <div class="mb-3 d-flex">
                     <div class="avatar-xs d-block flex-shrink-0 me-3">
-                        <span class="avatar-title rounded-circle fs-16 bg-info">
-                            <i class="ri-phone-fill"></i>
+                        <span class="avatar-title rounded-circle fs-16 bg-danger">
+                            <i class="ri-calendar-fill"></i>
                         </span>
                     </div>
                     @Html.TextBox("Tanggal", Model.Collections.First().Tanggal.ToString("MMMM yyyy", new System.Globalization.CultureInfo("id-ID")), new { @class = "form-control", @readonly = "readonly" })
