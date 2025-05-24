@@ -86,6 +86,7 @@
                                 "secondary"
                                 )">
                             <i class="ri-information-line"></i>
+                        </span>
                     </div>
                     <input type="text" class="form-control" value="@Model.Collection!.Piutang.Pelanggan.StatusNavigation.Name" readonly />
                 </div>
@@ -110,7 +111,7 @@
                                 Tanggal Penagihan
                             </label>
                             @Html.TextBox("Collection.Tanggal",
-                                     Model.Collection?.Tanggal.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("id-ID")),
+                                     Model.Collection?.Tanggal.ToString("d MMMM yyyy", new System.Globalization.CultureInfo("id-ID")),
                                      new { @class = "form-control", @readonly = true })
                         </div>
                     </div>
@@ -172,7 +173,7 @@
                                 Rencana Bayar
                             </label>
                             @Html.TextBox("Collection.RencanaBayar",
-                                     Model.Collection?.RencanaBayar?.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("id-ID")),
+                                     Model.Collection?.RencanaBayar?.ToString("d MMMM yyyy", new System.Globalization.CultureInfo("id-ID")),
                                      new { @class = "form-control", @readonly = "readonly" })
                         </div>
                     </div>
@@ -189,7 +190,7 @@
                             <label for="lastnameInput" class="form-label">
                                 Status
                             </label>
-                            @Html.TextBoxFor(x => x.Collection!.Status, new { @class = "form-control", @readonly = true })
+                            @Html.TextBoxFor(x => x.Collection!.StatusId, new { @class = "form-control", @readonly = true })
                         </div>
                     </div>
                     <div class="col-12">

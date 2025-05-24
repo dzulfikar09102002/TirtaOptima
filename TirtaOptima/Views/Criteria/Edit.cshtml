@@ -1,13 +1,13 @@
-﻿@model ActionTypeViewModel
+﻿@model CriteriaViewModel
 <div class="row">
 	<div class="col-12 mb-3">
 
-		<form id="frmEdit" class="needs-validation" novalidate asp-controller="ActionTypes" asp-action="Update" method="POST" enctype="multipart/form-data">
+		<form id="frmEdit" class="needs-validation" novalidate asp-controller="Criteria" asp-action="Update" method="POST" enctype="multipart/form-data">
 			<div class="row">
 				<div class="col-12 mb-3">
 					@Html.AntiForgeryToken()
 					@Html.HiddenFor(x => x.Id)
-					<label for="Ket" class="form-label required-star">Nama Tindakan</label>
+					<label for="Ket" class="form-label required-star">Nama Kriteria</label>
 					@Html.TextBoxFor(x => x.Name, new { @class = "form-control" })
 				</div>
 			</div>

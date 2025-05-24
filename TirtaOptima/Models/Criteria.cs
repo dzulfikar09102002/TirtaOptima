@@ -9,7 +9,7 @@ public partial class Criteria
 
     public string Name { get; set; } = null!;
 
-    public decimal Bobot { get; set; }
+    public decimal? Bobot { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 

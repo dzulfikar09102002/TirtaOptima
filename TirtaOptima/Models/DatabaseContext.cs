@@ -56,8 +56,9 @@ public partial class DatabaseContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    public virtual DbSet<Village> Villages { get; set; }
     public virtual DbSet<VDebts> VDebts { get; set; }
+
+    public virtual DbSet<Village> Villages { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -197,7 +198,7 @@ public partial class DatabaseContext : DbContext
 
             entity.HasIndex(e => e.PenagihId, "collections_users_FK");
 
-            entity.HasIndex(e => e.Status, "penagihan_status_FK");
+            entity.HasIndex(e => e.StatusId, "penagihan_status_FK");
 
             entity.HasIndex(e => e.SuratId, "penagihan_surat_FK");
 
@@ -235,8 +236,8 @@ public partial class DatabaseContext : DbContext
             entity.Property(e => e.PenagihId).HasColumnName("penagih_id");
             entity.Property(e => e.PiutangId).HasColumnName("piutang_id");
             entity.Property(e => e.RencanaBayar).HasColumnName("rencana_bayar");
-            entity.Property(e => e.Status)
-                .HasColumnType("enum('Belum Ditagih','Berhasil Ditagih','Gagal Ditagih')")
+            entity.Property(e => e.StatusId)
+                .HasColumnType("enum('Belum Ditagih','Berhasil Ditagih','Gagal Ditagih','Janji Bayar')")
                 .HasColumnName("status_id");
             entity.Property(e => e.SuratId).HasColumnName("surat_id");
             entity.Property(e => e.Tanggal)
@@ -512,6 +513,12 @@ public partial class DatabaseContext : DbContext
                 .HasColumnName("nominal");
             entity.Property(e => e.PelangganId).HasColumnName("pelanggan_id");
             entity.Property(e => e.Rekening).HasColumnName("rekening");
+            entity.Property(e => e.StatusTerakhir)
+                .HasMaxLength(100)
+                .HasColumnName("status_terakhir");
+            entity.Property(e => e.TanggalTerakhir)
+                .HasColumnType("datetime")
+                .HasColumnName("tanggal_terakhir");
             entity.Property(e => e.UpdatedAt)
                 .ValueGeneratedOnAddOrUpdate()
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
@@ -571,7 +578,7 @@ public partial class DatabaseContext : DbContext
             entity.Property(e => e.PembayaranId).HasColumnName("pembayaran_id");
             entity.Property(e => e.PiutangId).HasColumnName("piutang_id");
             entity.Property(e => e.Status)
-                .HasColumnType("enum('Kredit','Debit','Dihapus')")
+                .HasColumnType("enum('Kredit','Debit','Dihapus','Ditagih')")
                 .HasColumnName("status");
             entity.Property(e => e.Tanggal)
                 .HasColumnType("datetime")
@@ -1281,6 +1288,25 @@ public partial class DatabaseContext : DbContext
                 .HasConstraintName("users_users_FK_1");
         });
 
+        modelBuilder.Entity<VDebts>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("v_debts");
+
+            entity.Property(e => e.PelangganId).HasColumnName("pelanggan_id");
+            entity.Property(e => e.Rekening).HasColumnName("rekening");
+            entity.Property(e => e.StatusTerakhir)
+                .HasMaxLength(7)
+                .HasColumnName("status_terakhir");
+            entity.Property(e => e.TanggalTerakhir)
+                .HasColumnType("datetime")
+                .HasColumnName("tanggal_terakhir");
+            entity.Property(e => e.TotalNominal)
+                .HasPrecision(32)
+                .HasColumnName("total_nominal");
+        });
+
         modelBuilder.Entity<Village>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
@@ -1340,17 +1366,7 @@ public partial class DatabaseContext : DbContext
                 .HasForeignKey(d => d.UpdatedBy)
                 .HasConstraintName("kelurahan_users_FK_1");
         });
-        modelBuilder.Entity<VDebts>(entity =>
-        {
-            entity.HasNoKey(); 
-            entity.ToView("v_debts"); 
-            entity.Property(e => e.PiutangId).HasColumnName("piutang_id");
-            entity.Property(e => e.PelangganId).HasColumnName("pelanggan_id");
-            entity.Property(e => e.Rekening).HasColumnName("rekening");
-            entity.Property(e => e.TotalNominal).HasColumnName("total_nominal");
-            entity.Property(e => e.StatusTerakhir).HasColumnName("status_terakhir");
-            entity.Property(e => e.TanggalTerakhir).HasColumnName("tanggal_terakhir");
-        });
+
         OnModelCreatingPartial(modelBuilder);
     }
 

@@ -12,10 +12,10 @@
                     <th rowspan="2" class="text-center align-middle">Pelanggan</th>
                     <th rowspan="2" class="text-center align-middle">Nomor & Jenis</th>
                     <th rowspan="2" class="text-center align-middle">Alamat</th>
-                    <th rowspan="2" class="text-center align-middle">Periode</th>
                     <th rowspan="2" class="text-center align-middle">Nominal</th>
                     <th rowspan="2" class="text-center align-middle">Tunggakan</th>
-                    <th colspan="@Model.Policies.Count" class="text-center">Tindakan</th>
+                    <th rowspan="2" class="text-center align-middle">Status</th>
+                    <th colspan="@Model.Policies.Count" class="text-center">Rekomendasi Tindakan</th>
                 </tr>
                 <tr>
                     @foreach (var item in Model.Policies.OrderBy(x => x.RentangWaktu))
@@ -32,45 +32,49 @@
                     <tr class="odd">
                         <td class="text-center">@no</td>
                         <td class="text-center">
-                            <strong>@item.IdPelanggan</strong> <br />
-                            @item.NamaPelanggan
+                            <strong>@item.PelangganId</strong> <br />
+                            @item.Pelanggan.Nama
                         </td>
                         <td class="text-center">
-                            <span class="fw-bold">@(item.NomorPelanggan ?? "-")</span> <br /> @item.JenisPelanggan
+                            <span class="fw-bold">@(item.Pelanggan.Nomor ?? "-")</span> <br /> @item.Pelanggan.JenisNavigation!.Deskripsi
                         </td>
                         <td class="text-center">
-                            @item.Alamat <br />
-                            @item.Kelurahan | @item.Kecamatan
-                        </td>
-                        <td class="text-center">
-                            @item.Periode
+                            @item.Pelanggan.Alamat <br />
+                            @item.Pelanggan.KelurahanNavigation!.Nama | @item.Pelanggan.KelurahanNavigation.KodeKecNavigation!.Nama
                         </td>
 
                         <td class="text-end">
                             <strong>
                                 @(
-                                    item.TotalNominal.HasValue
-                                    ? string.Format(
+                                    string.Format(
                                     new System.Globalization.CultureInfo("id-ID"),
                                     "Rp {0:N0}",
-                                    Math.Abs(item.TotalNominal.Value)
+                                    Math.Abs(item.Nominal)
                                     )
-                                    : "-"
                                     )
                             </strong>
                             <br />
-                            <span class="badge badge-label bg-@(item.TotalNominal == 0 ? "success" : item.TotalNominal < 1 ? "danger" : "info")">
+                            <span class="badge badge-label bg-@(item.Nominal == 0 ? "success" : item.Nominal > 1 ? "danger" : "info")">
                                 <i class="mdi mdi-circle-medium"></i>
-                                @(item.TotalNominal == 0 ? "Lunas" : item.TotalNominal < 1 ? "Belum Lunas" : "Lebih Bayar")
+                                @(item.Nominal == 0 ? "Lunas" : item.Nominal > 1 ? "Belum Lunas" : "Lebih Bayar")
                             </span>
                         </td>
                         <td class="text-center">
-                           + @item.RentangWaktu Hari
+                            @item.TanggalTerakhir!.Value.ToString("d MMMM yyyy", new System.Globalization.CultureInfo("id-ID"))
+                            <br />
+                            <span class="badge bg-@(item.Nominal == 0 ? "success" : item.Nominal > 1 ? "danger" : "info")">
+                                + @((item.TanggalTerakhir.HasValue
+                                  ? (DateTime.Now - item.TanggalTerakhir.Value).Days.ToString() + " Hari"
+                                  : "Tanggal belum tersedia"))
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            @(item.Nominal != 0 ? (item.Collections != null && item.Collections.Any() ? item.Collections.LastOrDefault()?.StatusId : "-") : "Tuntas")
                         </td>
                         @foreach (var policy in Model.Policies)
                         {
                             <td class="text-center">
-                                @Html.Raw(item.RentangWaktu < policy.RentangWaktu
+                                @Html.Raw(item.TanggalTerakhir.HasValue && (DateTime.Now - item.TanggalTerakhir.Value).Days < policy.RentangWaktu
                                          ? "<img src='/assets/images/close.png' class='mb-2' />"
                                          : "<img src='/assets/images/check.png' class='mb-2' />")
                             </td>

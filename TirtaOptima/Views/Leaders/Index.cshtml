@@ -51,9 +51,9 @@
                         <td class="text-center">
                             @(item.TanggalAwal == null
                                 ? "-"
-                                : item.TanggalAwal.Value.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("id-ID")) + " - " +
+                                : item.TanggalAwal.Value.ToString("d MMMM yyyy", new System.Globalization.CultureInfo("id-ID")) + " - " +
                                 (item.TanggalAkhir != null
-                                ? item.TanggalAkhir.Value.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("id-ID"))
+                                ? item.TanggalAkhir.Value.ToString("d MMMM yyyy", new System.Globalization.CultureInfo("id-ID"))
                                 : "Sekarang"))
                         </td>
                         <td class="text-center">

@@ -7,7 +7,11 @@ namespace TirtaOptima.Services
     public class CollectionMonitoringsService(DatabaseContext context)
     {
         private readonly DatabaseContext _context = context;
-        public List<Collection> GetCollections(CollectionMonitoringsViewModel input) => 
+        public List<Collection> GetCollections(CollectionMonitoringsViewModel input)
+        {
+            ViewDebtsService service = new(_context);
+            service.UpdateDebts();
+            return 
             [.. _context.Collections.Where(x => x.DeletedAt == null && 
             x.Tanggal.Month == input.BulanSelect && x.Tanggal.Year == input.TahunSelect)
             .Include(x => x.Piutang)
@@ -16,6 +20,7 @@ namespace TirtaOptima.Services
             .ThenInclude(x => x.KodeKecNavigation)
             .Include(x => x.Penagih)
             .Include(x => x.Tindakan)];
+        }
         public Collection? GetCollection(long id) => 
             _context.Collections
             .Include(x => x.Piutang)

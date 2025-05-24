@@ -25,6 +25,7 @@
                     <th class="text-center">Nominal</th>
                     <th class="text-center">Tanggal</th>
                     <th class="text-center">Kasir</th>
+                    <th class="text-center">Keterangan</th>
                 </tr>
             </thead>
             <tbody>
@@ -58,10 +59,13 @@
                                 )
                         </td>
                         <td class="text-center">
-                            @item?.TanggalBayar?.ToString("dd MMMM yyyy", new CultureInfo("id-ID"))
+                            @item?.TanggalBayar?.ToString("d MMMM yyyy", new CultureInfo("id-ID"))
                         </td>
                         <td class="text-center">
-                            @(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(item?.Kasir?.ToLower() ?? ""))
+                            @(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(item?.Kasir?.ToLower() ?? "-"))
+                        </td>
+                        <td class="text-center">
+                            @(item?.Ket ?? "-")
                         </td>
                     </tr>
                 }

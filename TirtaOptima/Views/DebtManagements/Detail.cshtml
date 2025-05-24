@@ -96,6 +96,8 @@
             <form id="frmCorrection" class="needs-validation" novalidate asp-controller="DebtManagements" asp-action="Correction" method="POST" enctype="multipart/form-data">
                 @Html.Hidden("IdPiutang", dm.IdPiutang)
                 @Html.HiddenFor(x => x.IdPelanggan)
+                @Html.HiddenFor(x => x.BulanSelect)
+                @Html.HiddenFor(x => x.TahunSelect)
                 @Html.Hidden("Periode", dm.Periode) 
                 <button type="button" class="btn btn-info btn-label waves-effect waves-light" onclick="Correction()">
                     <i class="mdi mdi-circle-edit-outline label-icon align-middle fs-16 me-2"></i> Catat Koreksi
@@ -127,7 +129,7 @@
                         </td>
                         <td class="text-center">
                             @(item.Pembayaran != null
-                                ? item.Pembayaran.Value.ToString("dd MMMM yyyy", new CultureInfo("id-ID"))
+                                ? item.Pembayaran.Value.ToString("d MMMM yyyy", new CultureInfo("id-ID"))
                                 : "-")
                         </td>
                         <td class="text-center">

@@ -33,6 +33,8 @@
                     <th class="text-center">Nomor & Jenis</th>
                     <th class="text-center">Alamat</th>
                     <th class="text-center">Jumlah Rekening</th>
+                    <th class="text-center">Tanggal</th>
+                    <th class="text-center">Status Terakhir</th>
                     <th class="text-center">Total Nominal</th>
                 </tr>
             </thead>
@@ -59,9 +61,20 @@
                             @item.Rekening
                         </td>
                         <td class="text-center">
+                            @item.TanggalTerakhir!.Value.ToString("d MMMM yyyy", new System.Globalization.CultureInfo("id-ID"))
+                        </td>           
+                        <td class="text-center">
+                            @item.StatusTerakhir
+                        </td>
+                        <td class="text-end">
                             <strong>
                                 @("Rp " + item.Nominal.ToString("N0", new System.Globalization.CultureInfo("id-ID")))
                             </strong>
+                            <br />
+                            <span class="badge badge-label bg-@(item.Nominal == 0 ? "success" : item.Nominal > 1 ? "danger" : "info")">
+                                <i class="mdi mdi-circle-medium"></i>
+                                @(item.Nominal == 0 ? "Lunas" : item.Nominal > 1 ? "Belum Lunas" : "Lebih Bayar")
+                            </span>
                         </td>
                     </tr>
                     no++;
@@ -69,8 +82,8 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="5" class="text-center"><strong>TOTAL PIUTANG</strong></td>
-                    <td class="text-center"><strong>@("Rp " + totalNominal.ToString("N0", new System.Globalization.CultureInfo("id-ID")))</strong></td>
+                    <td colspan="7" class="text-center"><strong>TOTAL PIUTANG</strong></td>
+                    <td class="text-end"><strong>@("Rp " + totalNominal.ToString("N0", new System.Globalization.CultureInfo("id-ID")))</strong></td>
                 </tr>
             </tfoot>
         </table>

@@ -33,7 +33,7 @@ namespace TirtaOptima.Services
                      dm.Piutang.Tahun == tahun &&
                      dm.Piutang.IdPelanggan == model.IdPelanggan)
                     ||
-                    (dm.Pembayaran != null &&   
+                    (dm.Pembayaran != null &&
                      dm.Pembayaran.Bulan == bulan &&
                      dm.Pembayaran.Tahun == tahun &&
                      dm.Pembayaran.IdPelanggan == model.IdPelanggan)
@@ -61,7 +61,7 @@ namespace TirtaOptima.Services
                     Pencatatan = dm.Tanggal,
                     Pembayaran = dm.Pembayaran!.TanggalBayar,
                     StatusCatat = dm.Status
-                    
+
                 })
                 .ToList();
         }
@@ -116,6 +116,64 @@ namespace TirtaOptima.Services
                     )
                 })
                 .ToList();
+        }
+        public void Note(DebtManagementsViewModel input, long userid)
+        {
+
+            if (input.Pembayaran != null)
+            {
+                long idPayment = _context.Payments.Select(x => x.Id).Max() + 1;
+                _context.Payments.Add(new Payment
+                {
+                    Id = idPayment,
+                    IdPelanggan = input.IdPelanggan,
+                    NominalBayar = (long)input.Nominal!.Value,
+                    Ket = "Catat Koreksi",
+                    Kasir = "-",
+                    TanggalBayar = input.Pembayaran,
+                    Bulan = input.Pembayaran.Value.Month,
+                    Tahun = input.Pembayaran.Value.Year,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now,
+                    CreatedBy = userid,
+                    UpdatedBy = userid
+                });
+                _context.SaveChanges();
+                _context.DebtsManagements.Add(new DebtsManagement
+                {
+                    Id = _context.DebtsManagements.Select(x => x.Id).Max() + 1,
+                    PiutangId = input.IdPiutang,
+                    Nominal = input.Nominal!.Value,
+                    Status = input.Status ?? "Kredit",
+                    Tanggal = (input.Pencatatan ?? DateOnly.FromDateTime(DateTime.Now))
+                          .ToDateTime(TimeOnly.MinValue),
+                    PembayaranId = _context.Payments.FirstOrDefault(x => x.Id == idPayment)?.Id,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now,
+                    CreatedBy = userid,
+                    UpdatedBy = userid
+                });
+            }
+            else
+            {
+                _context.DebtsManagements.Add(new DebtsManagement
+                {
+                    Id = _context.DebtsManagements.Select(x => x.Id).Max() + 1,
+                    PiutangId = input.IdPiutang,
+                    Nominal = input.Nominal!.Value,
+                    Status = input.Status ?? "Kredit",
+                    Tanggal = (input.Pencatatan ?? DateOnly.FromDateTime(DateTime.Now))
+                          .ToDateTime(TimeOnly.MinValue),
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now,
+                    CreatedBy = userid,
+                    UpdatedBy = userid
+                });
+
+            }
+            ViewDebtsService service = new(_context);
+            _context.SaveChanges();
+            service.UpdateDebts();
         }
     }
 }

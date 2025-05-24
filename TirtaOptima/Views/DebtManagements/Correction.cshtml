@@ -12,15 +12,17 @@
             <div class="row">
                 <div class="col-12 mb-3">
                     <label for="Ket" class="form-label required-star">Id Pelanggan</label>
-                    @Html.TextBoxFor(x => x.IdPelanggan, new { @class = "form-control" , @readonly = true})
+                    @Html.TextBoxFor(x => x.IdPelanggan, new { @class = "form-control", @readonly = true })
                 </div>
                 <div class="col-12 mb-3">
                     <label for="Ket" class="form-label required-star">Rekening Tagihan</label>
-                    @Html.TextBoxFor(x => x.Periode, new { @class = "form-control" , @readonly = true})
+                    @Html.TextBoxFor(x => x.Periode, new { @class = "form-control", @readonly = true })
                 </div>
                 <div class="col-12 mb-3">
                     @Html.AntiForgeryToken()
                     @Html.HiddenFor(x => x.IdPiutang)
+                    @Html.HiddenFor(x => x.BulanSelect)
+                    @Html.HiddenFor(x => x.TahunSelect)
                     <label for="Ket" class="form-label required-star">Tanggal Pencatatan</label>
                     <input type="date" id="Pencatatan" name="Pencatatan"
                            class="form-control"
@@ -28,7 +30,7 @@
                 </div>
                 <div class="col-12 mb-3">
                     <label for="Ket" class="form-label required-star">Tanggal Pembayaran</label>
-                    <input type="date" id="Pencatatan" name="Pencatatan"
+                    <input type="date" id="Pencatatan" name="Pembayaran"
                            class="form-control"
                            value="@(Model.Pembayaran.HasValue ? Model.Pembayaran.Value.ToString("yyyy-MM-dd") : "")" />
                 </div>
@@ -40,6 +42,7 @@
                     <label for="Status" class="form-label required-star">Status</label>
                     @Html.DropDownListFor(x => x.Status, statusOptions, "-- Pilih Status --", new { @class = "form-control" })
                 </div>
+            </div>
         </form>
     </div>
     <div class="hstack gap-2 justify-content-end">

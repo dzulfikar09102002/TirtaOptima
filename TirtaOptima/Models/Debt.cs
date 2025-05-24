@@ -13,6 +13,10 @@ public partial class Debt
 
     public decimal Nominal { get; set; }
 
+    public DateTime? TanggalTerakhir { get; set; }
+
+    public string? StatusTerakhir { get; set; }
+
     public string? Ket { get; set; }
 
     public DateTime CreatedAt { get; set; }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TirtaOptima.Helpers;
 using TirtaOptima.Models;
 using TirtaOptima.Requests;
 using TirtaOptima.Services;
@@ -57,7 +58,7 @@ namespace TirtaOptima.Controllers
         {
             var bulan = TempData.Peek("Bulan-debt")?.ToString();
             var tahun = TempData.Peek("Tahun-debt")?.ToString();
-            if(bulan == null || tahun == null)
+            if (bulan == null || tahun == null)
             {
                 return RedirectToAction("Index");
             }
@@ -83,11 +84,34 @@ namespace TirtaOptima.Controllers
             DebtManagementsService service = new(_context);
             DebtManagementsViewModel model = new DebtManagementsViewModel
             {
-                Pencatatan = DateOnly.FromDateTime(DateTime.Now)
-
+                Pencatatan = DateOnly.FromDateTime(DateTime.Now),
+                BulanSelect = input.BulanSelect,
+                TahunSelect = input.TahunSelect
 
             };
             return PartialView(model);
+        }
+        [HttpPost]
+        public IActionResult Note(DebtManagementsViewModel input)
+        {
+            try
+            {
+                DebtManagementsService service = new(_context);
+                DebtManagementsRequest requestValidator = new(input, service);
+                if (!requestValidator.ValidateInput())
+                {
+                    ResponseBase.Message = requestValidator.ErrorMessage ?? "Terjadi Kesalahan";
+                    throw new Exception(ResponseBase.Message);
+                };
+                service.Note(input, UserId);
+                ResponseBase.Status = StatusEnum.Success;
+                ResponseBase.Message = "Data Berhasil Ditambahkan";
+            }
+            catch (Exception ex)
+            {
+                ResponseBase.Message = ex.Message;
+            }
+            return Json(ResponseBase);
         }
     }
 }

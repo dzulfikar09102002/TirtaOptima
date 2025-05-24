@@ -17,10 +17,5 @@ namespace TirtaOptima.Controllers
             };
             return View(model);
         }
-        [HttpPost]
-        public IActionResult Index(DebtReportsViewModel input)
-        {
-            return View(input);
-        }
     }
 }

@@ -1,13 +1,12 @@
-﻿@model ActionTypeViewModel
+﻿@model CriteriaViewModel
 <div class="row">
 	<div class="col-12 mb-3">
 
-		<form id="frmEdit" class="needs-validation" novalidate asp-controller="ActionTypes" asp-action="Update" method="POST" enctype="multipart/form-data">
+		<form id="frmAdd" class="needs-validation" novalidate asp-controller="Criteria" asp-action="Add" method="POST" enctype="multipart/form-data">
 			<div class="row">
 				<div class="col-12 mb-3">
 					@Html.AntiForgeryToken()
-					@Html.HiddenFor(x => x.Id)
-					<label for="Ket" class="form-label required-star">Nama Tindakan</label>
+					<label asp-for="Name" class="form-label required-star">Nama Kriteria</label>
 					@Html.TextBoxFor(x => x.Name, new { @class = "form-control" })
 				</div>
 			</div>
@@ -15,16 +14,16 @@
 	</div>
 	<div class="hstack gap-2 justify-content-end">
 		<button type="button" class="btn btn-danger" id="btn-tutup-event" data-bs-dismiss="modal">Tutup</button>
-		<button type="button" class="btn btn-success" id="btn-save-event" onclick="Update()">Simpan</button>
+		<button type="button" class="btn btn-success" id="btn-save-event" onclick="Add()">Simpan</button>
 	</div>
 </div>
 <script>
-	function Update() {
-		var formData = new FormData($("#frmEdit")[0]);
+	function Add() {
+		var formData = new FormData($("#frmAdd")[0]);
 		var t = $("input[name='__RequestVerificationToken']").val();
 
 		$.ajax({
-			url: $("#frmEdit").attr('action'),
+			url: $("#frmAdd").attr('action'),
 			type: "POST",
 			data: formData,
 			dataType: "json",
