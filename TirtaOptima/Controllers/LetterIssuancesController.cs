@@ -43,7 +43,7 @@ namespace TirtaOptima.Controllers
                 {
                     throw new Exception(ResponseBase.Message = requestValidator.ErrorMessage ?? "Terjadi Kesalahan");
                 }
-              /*  model.Collections = service.GetCollections(model)*/;
+             model.Debts = service.GetDebts(model);
                 return PartialView("GetData", model);
             }
             catch (Exception ex)

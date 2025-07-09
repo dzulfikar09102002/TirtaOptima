@@ -282,6 +282,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RyYXRlZ3lDYWxjdWxhdGlvbnNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Projek C\#/TirtaOptima/TirtaOptima/Views/StrategyCalculations/Input.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RyYXRlZ3lDYWxjdWxhdGlvbnNcSW5wdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Projek C\#/TirtaOptima/TirtaOptima/Views/StrategyResults/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RyYXRlZ3lSZXN1bHRzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 

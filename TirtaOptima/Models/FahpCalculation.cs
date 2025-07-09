@@ -11,8 +11,6 @@ public partial class FahpCalculation
 
     public long KriteriaId { get; set; }
 
-    public decimal NilaiFuzzy { get; set; }
-
     public DateTime? CreatedAt { get; set; }
 
     public long CreatedBy { get; set; }
@@ -24,6 +22,12 @@ public partial class FahpCalculation
     public DateTime? DeletedAt { get; set; }
 
     public long? DeletedBy { get; set; }
+
+    public decimal? FuzzyL { get; set; }
+
+    public decimal? FuzzyM { get; set; }
+
+    public decimal? FuzzyU { get; set; }
 
     public virtual User CreatedByNavigation { get; set; } = null!;
 

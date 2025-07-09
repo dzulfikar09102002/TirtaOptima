@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Globalization;
+using TirtaOptima.Helpers;
 using TirtaOptima.Models;
 using TirtaOptima.ViewModels;
 
@@ -171,9 +172,8 @@ namespace TirtaOptima.Services
                 });
 
             }
-            ViewDebtsService service = new(_context);
             _context.SaveChanges();
-            service.UpdateDebts();
+            ViewDebtsHelper.UpdateDebts(_context);
         }
     }
 }

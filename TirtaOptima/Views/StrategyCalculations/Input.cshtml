@@ -1,0 +1,143 @@
+﻿@model StrategyCalculationViewModel
+
+@{
+    decimal? selectedScaleValue = Model.CriteriaComparison?.ScaleValue;
+}
+
+<form id="frmInput" asp-action="SaveScale" method="post" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="CriteriaId1" value="@Model.CriteriaComparison?.CriteriaId1" />
+    <input type="hidden" name="CriteriaId2" value="@Model.CriteriaComparison?.CriteriaId2" />
+
+    <p class="fs-14">
+        Seberapa penting <b>
+            <u>@Model.CriteriaComparison?.CriteriaId1Navigation?.Name</u>
+        </b>
+        dibanding
+        <b>
+            <u>@Model.CriteriaComparison?.CriteriaId2Navigation?.Name</u>
+        </b>?
+    </p>
+
+    <div class="normalscale">
+        <div class="form-check form-radio-info mb-2">
+            <input class="form-check-input" type="radio" name="ScaleValue" id="scale1" value="1" @(selectedScaleValue == 1 ? "checked" : "") />
+            <label class="form-check-label" for="scale1">Sama penting</label>
+        </div>
+
+        <div class="form-check form-radio-info mb-2">
+            <input class="form-check-input" type="radio" name="ScaleValue" id="scale3" value="3" @(selectedScaleValue == 3 ? "checked" : "") />
+            <label class="form-check-label" for="scale3">Sedikit lebih penting</label>
+        </div>
+
+        <div class="form-check form-radio-info mb-2">
+            <input class="form-check-input" type="radio" name="ScaleValue" id="scale5" value="5" @(selectedScaleValue == 5 ? "checked" : "") />
+            <label class="form-check-label" for="scale5">Lebih penting</label>
+        </div>
+
+        <div class="form-check form-radio-info mb-2">
+            <input class="form-check-input" type="radio" name="ScaleValue" id="scale7" value="7" @(selectedScaleValue == 7 ? "checked" : "") />
+            <label class="form-check-label" for="scale7">Jauh lebih penting</label>
+        </div>
+
+        <div class="form-check form-radio-info mb-3">
+            <input class="form-check-input" type="radio" name="ScaleValue" id="scale9" value="9" @(selectedScaleValue == 9 ? "checked" : "") />
+            <label class="form-check-label" for="scale9">Mutlak lebih penting</label>
+        </div>
+    </div>
+    <div class="repricoralscale">
+        <div class="form-check form-radio-danger mb-2">
+            <input class="form-check-input" type="radio" name="ScaleValue" id="rscale3" value="3" @(selectedScaleValue == 0.333333m ? "checked" : "") />
+            <label class="form-check-label" for="rscale3">Sedikit kurang penting</label>
+        </div>
+
+        <div class="form-check form-radio-danger mb-2">
+            <input class="form-check-input" type="radio" name="ScaleValue" id="rscale5" value="5" @(selectedScaleValue == 0.2m ? "checked" : "") />
+            <label class="form-check-label" for="rscale5">Kurang penting</label>
+        </div>
+
+        <div class="form-check form-radio-danger mb-2">
+            <input class="form-check-input" type="radio" name="ScaleValue" id="rscale7" value="7" @(selectedScaleValue == 0.142857m ? "checked" : "") />
+            <label class="form-check-label" for="rscale7">Jauh kurang penting</label>
+        </div>
+
+        <div class="form-check form-radio-danger mb-3">
+            <input class="form-check-input" type="radio" name="ScaleValue" id="rscale9" value="9" @(selectedScaleValue == 0.111111m ? "checked" : "") />
+            <label class="form-check-label" for="rscale9">Mutlak kurang penting</label>
+        </div>
+    </div>
+    <input type="hidden" id="selectedScaleValue" value="@(selectedScaleValue?.ToString(System.Globalization.CultureInfo.InvariantCulture))" />
+    <div class="d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-info" onclick="Inverse()">Inverse</button>
+        <button type="button" class="btn btn-success" onclick="Save()">Simpan</button>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function () {
+        const val = parseFloat($("#selectedScaleValue").val());
+
+        if (val > 0 && val < 1) {
+            $('.normalscale').hide();
+            $('.repricoralscale').show();
+        } else {
+            $('.normalscale').show();
+            $('.repricoralscale').hide();
+        }
+    });
+
+    function Inverse() {
+        if ($('.normalscale').is(':visible')) {
+            $('.normalscale').hide();
+            $('.repricoralscale').show();
+        } else {
+            $('.normalscale').show();
+            $('.repricoralscale').hide();
+        }
+    }
+
+    function Save() {
+        var formData = new FormData($("#frmInput")[0]);
+        var t = $("input[name='__RequestVerificationToken']").val();
+        var isReciprocal = $('.repricoralscale').is(':visible');
+
+        formData.append("IsRepricoral", isReciprocal);
+
+        $.ajax({
+            url: $("#frmInput").attr('action'),
+            type: "POST",
+            data: formData,
+            dataType: "json",
+            contentType: false,
+            processData: false,
+            headers:
+            {
+                "RequestVerificationToken": t
+            },
+            beforeSend: function () {
+                $("#loader").show()
+            },
+            complete: function () { $("#loader").hide(); },
+            success: function (resp) {
+                if (resp.status == 1) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '<b>Info</b>',
+                        text: resp.message,
+                        timer: 1000,
+                        showConfirmButton: false,
+                    }).then(() => {
+                        window.location.reload();
+                    })
+                }
+                else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '<b style="color:orange">Peringatan</b>',
+                        text: resp.message,
+                    })
+                }
+            }
+        })
+
+    }
+</script>

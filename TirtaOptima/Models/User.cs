@@ -105,12 +105,6 @@ public partial class User
 
     public virtual ICollection<District> DistrictUpdatedByNavigations { get; set; } = new List<District>();
 
-    public virtual ICollection<FahpCalculation> FahpCalculationCreatedByNavigations { get; set; } = new List<FahpCalculation>();
-
-    public virtual ICollection<FahpCalculation> FahpCalculationDeletedByNavigations { get; set; } = new List<FahpCalculation>();
-
-    public virtual ICollection<FahpCalculation> FahpCalculationUpdatedByNavigations { get; set; } = new List<FahpCalculation>();
-
     public virtual ICollection<User> InverseCreatedByNavigation { get; set; } = new List<User>();
 
     public virtual ICollection<User> InverseDeletedByNavigation { get; set; } = new List<User>();

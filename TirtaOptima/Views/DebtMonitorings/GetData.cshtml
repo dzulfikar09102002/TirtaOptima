@@ -1,4 +1,4 @@
-﻿@model TirtaOptima.ViewModels.DebtMonitoringsViewModel
+﻿@model DebtMonitoringsViewModel
 @using System.Globalization
 @{
     int no = 1;
@@ -49,7 +49,7 @@
                                     string.Format(
                                     new System.Globalization.CultureInfo("id-ID"),
                                     "Rp {0:N0}",
-                                    Math.Abs(item.Nominal)
+                                    Math.Abs(item.Nominal!.Value)
                                     )
                                     )
                             </strong>

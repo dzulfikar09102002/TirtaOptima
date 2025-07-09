@@ -1,20 +1,21 @@
 ﻿using TirtaOptima.Models;
 
-namespace TirtaOptima.Services
+namespace TirtaOptima.Helpers
 {
-    public class ViewDebtsService(DatabaseContext context)
+    public static class ViewDebtsHelper
     {
-        private readonly DatabaseContext _context = context;
-        public List<VDebts> GetViewDebts() => [.. _context.VDebts];
-        public void UpdateDebts()
+        public static List<VDebt> GetViewDebts(DatabaseContext context) =>
+            context.VDebts.ToList();
+
+        public static void UpdateDebts(DatabaseContext context)
         {
-            var vDebts = GetViewDebts();
+            var vDebts = GetViewDebts(context);
 
             if (!vDebts.Any()) return;
 
             var pelangganIds = vDebts.Select(v => v.PelangganId).ToList();
 
-            var existingDebts = _context.Debts
+            var existingDebts = context.Debts
                 .Where(d => pelangganIds.Contains(d.PelangganId))
                 .ToDictionary(d => d.PelangganId);
 
@@ -33,20 +34,21 @@ namespace TirtaOptima.Services
                 }
                 else
                 {
-                    _context.Debts.Add(new Debt
+                    context.Debts.Add(new Debt
                     {
                         PelangganId = v.PelangganId,
                         Nominal = v.TotalNominal,
                         Rekening = v.Rekening,
                         CreatedAt = DateTime.Now,
                         UpdatedAt = DateTime.Now,
-                        TanggalTerakhir= v.TanggalTerakhir,
+                        TanggalTerakhir = v.TanggalTerakhir,
                         StatusTerakhir = v.StatusTerakhir
                     });
                 }
             }
 
-            _context.SaveChanges();
+            context.SaveChanges();
         }
     }
 }
+

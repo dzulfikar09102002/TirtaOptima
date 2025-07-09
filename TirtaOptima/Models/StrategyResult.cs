@@ -9,9 +9,9 @@ public partial class StrategyResult
 
     public long PiutangId { get; set; }
 
-    public long PsoId { get; set; }
-
     public long StrategiId { get; set; }
+
+    public decimal? Score { get; set; }
 
     public string? Status { get; set; }
 
@@ -32,8 +32,6 @@ public partial class StrategyResult
     public virtual User? DeletedByNavigation { get; set; }
 
     public virtual Debt Piutang { get; set; } = null!;
-
-    public virtual PsoResult Pso { get; set; } = null!;
 
     public virtual Policy Strategi { get; set; } = null!;
 

@@ -6,7 +6,7 @@ namespace TirtaOptima.ViewModels
     {
         public int BulanSelect { get; set; }
         public int TahunSelect { get; set; }
-        public List<Collection> Collections { get; set; } = new();
-        public Collection? Collection { get; set; }
+        public List<Debt> Debts { get; set; } = new();
+        public Debt? Debt { get; set; }
     }
 }

@@ -1,1 +1,90 @@
 ﻿@model LetterIssuancesViewModel
+@using System.Globalization
+@{
+    int no = 1;
+}
+<div class="card mt-2">
+    <div class="card-body">
+        <table id="tbl" class="table table-hover table-striped align-middle table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th class="text-center align-middle">No.</th>
+                    <th class="text-center align-middle">Pelanggan</th>
+                    <th class="text-center align-middle">Nomor & Jenis</th>
+                    <th class="text-center align-middle">Alamat</th>
+                    <th class="text-center align-middle">Nominal</th>
+                    <th class="text-center align-middle">Tunggakan</th>
+                    <th class="text-center align-middle">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Debts)
+                {
+                    <tr class="odd">
+                        <td class="text-center">@no</td>
+                        <td class="text-center">
+                            <strong>@item.PelangganId</strong> <br />
+                            @item.Pelanggan.Nama
+                        </td>
+                        <td class="text-center">
+                            <span class="fw-bold">@(item.Pelanggan.Nomor ?? "-")</span> <br /> @item.Pelanggan.JenisNavigation!.Deskripsi
+                        </td>
+                        <td class="text-center">
+                            @item.Pelanggan.Alamat <br />
+                            @item.Pelanggan.KelurahanNavigation!.Nama | @item.Pelanggan.KelurahanNavigation.KodeKecNavigation!.Nama
+                        </td>
+
+                        <td class="text-end">
+                            <strong>
+                                @(
+                                    string.Format(
+                                    new System.Globalization.CultureInfo("id-ID"),
+                                    "Rp {0:N0}",
+                                    Math.Abs(item.Nominal!.Value)
+                                    )
+                                    )
+                            </strong>
+                            <br />
+                            <span class="badge badge-label bg-@(item.Nominal == 0 ? "success" : item.Nominal > 1 ? "danger" : "info")">
+                                <i class="mdi mdi-circle-medium"></i>
+                                @(item.Nominal == 0 ? "Lunas" : item.Nominal > 1 ? "Belum Lunas" : "Lebih Bayar")
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            @item.TanggalTerakhir!.Value.ToString("d MMMM yyyy", new System.Globalization.CultureInfo("id-ID"))
+                            <br />
+                            <span class="badge bg-@(item.Nominal == 0 ? "success" : item.Nominal > 1 ? "danger" : "info")">
+                                + @((item.TanggalTerakhir.HasValue
+                                  ? (DateTime.Now - item.TanggalTerakhir.Value).Days.ToString() + " Hari"
+                                  : "Tanggal belum tersedia"))
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            @(item.Nominal != 0 ? (item.Collections != null && item.Collections.Any() ? item.Collections.LastOrDefault()?.StatusId : "-") : "Tuntas")
+                        </td>
+                    </tr>
+                    no++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="period-container"
+     data-bulan="@Model.BulanSelect"
+     data-tahun="@Model.TahunSelect">
+    @{
+        TempData["Bulan-li"] = Model.BulanSelect;
+        TempData["Tahun-li"] = Model.TahunSelect;
+        if (!string.IsNullOrEmpty(ViewBag.Message))
+        {
+            <div id="partial-message" data-message="@ViewBag.Message"></div>
+        }
+    }
+</div>
+<script>
+
+    $(document).ready(function () {
+        $('#tbl').DataTable({
+        })
+    });
+</script>

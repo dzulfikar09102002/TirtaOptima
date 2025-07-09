@@ -68,7 +68,7 @@
                         </td>
                         <td class="text-end">
                             <strong>
-                                @("Rp " + item.Nominal.ToString("N0", new System.Globalization.CultureInfo("id-ID")))
+                                @("Rp " + item.Nominal!.Value.ToString("N0", new System.Globalization.CultureInfo("id-ID")))
                             </strong>
                             <br />
                             <span class="badge badge-label bg-@(item.Nominal == 0 ? "success" : item.Nominal > 1 ? "danger" : "info")">
@@ -83,7 +83,7 @@
             <tfoot>
                 <tr>
                     <td colspan="7" class="text-center"><strong>TOTAL PIUTANG</strong></td>
-                    <td class="text-end"><strong>@("Rp " + totalNominal.ToString("N0", new System.Globalization.CultureInfo("id-ID")))</strong></td>
+                    <td class="text-end"><strong>@("Rp " + totalNominal!.Value.ToString("N0", new System.Globalization.CultureInfo("id-ID")))</strong></td>
                 </tr>
             </tfoot>
         </table>

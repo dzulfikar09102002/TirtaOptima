@@ -24,6 +24,10 @@ public partial class DatabaseContext : DbContext
 
     public virtual DbSet<Criteria> Criterias { get; set; }
 
+    public virtual DbSet<CriteriaComparison> CriteriaComparisons { get; set; }
+
+    public virtual DbSet<CriteriaNormalization> CriteriaNormalizations { get; set; }
+
     public virtual DbSet<Customer> Customers { get; set; }
 
     public virtual DbSet<CustomerType> CustomerTypes { get; set; }
@@ -33,8 +37,6 @@ public partial class DatabaseContext : DbContext
     public virtual DbSet<DebtsManagement> DebtsManagements { get; set; }
 
     public virtual DbSet<District> Districts { get; set; }
-
-    public virtual DbSet<FahpCalculation> FahpCalculations { get; set; }
 
     public virtual DbSet<Leader> Leaders { get; set; }
 
@@ -46,7 +48,7 @@ public partial class DatabaseContext : DbContext
 
     public virtual DbSet<Policy> Policies { get; set; }
 
-    public virtual DbSet<PsoResult> PsoResults { get; set; }
+    public virtual DbSet<PsoIteration> PsoIterations { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
 
@@ -56,7 +58,13 @@ public partial class DatabaseContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    public virtual DbSet<VDebts> VDebts { get; set; }
+    public virtual DbSet<VDebt> VDebts { get; set; }
+
+    public virtual DbSet<VFahpSummary> VFahpSummaries { get; set; }
+
+    public virtual DbSet<VPairwiseComparison> VPairwiseComparisons { get; set; }
+
+    public virtual DbSet<VScoreMatrix> VScoreMatrices { get; set; }
 
     public virtual DbSet<Village> Villages { get; set; }
 
@@ -327,6 +335,72 @@ public partial class DatabaseContext : DbContext
             entity.HasOne(d => d.UpdatedByNavigation).WithMany(p => p.CriteriaUpdatedByNavigations)
                 .HasForeignKey(d => d.UpdatedBy)
                 .HasConstraintName("kriteria_users_FK_1");
+        });
+
+        modelBuilder.Entity<CriteriaComparison>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("criteria_comparisons");
+
+            entity.HasIndex(e => e.CriteriaId1, "criteria_id_1");
+
+            entity.HasIndex(e => e.CriteriaId2, "criteria_id_2");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy).HasColumnName("created_by");
+            entity.Property(e => e.CriteriaId1).HasColumnName("criteria_id_1");
+            entity.Property(e => e.CriteriaId2).HasColumnName("criteria_id_2");
+            entity.Property(e => e.FuzzyL).HasColumnName("fuzzy_l");
+            entity.Property(e => e.FuzzyM).HasColumnName("fuzzy_m");
+            entity.Property(e => e.FuzzyU).HasColumnName("fuzzy_u");
+            entity.Property(e => e.ScaleValue).HasColumnName("scale_value");
+
+            entity.HasOne(d => d.CriteriaId1Navigation).WithMany(p => p.CriteriaComparisonCriteriaId1Navigations)
+                .HasForeignKey(d => d.CriteriaId1)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("criteria_comparisons_ibfk_1");
+
+            entity.HasOne(d => d.CriteriaId2Navigation).WithMany(p => p.CriteriaComparisonCriteriaId2Navigations)
+                .HasForeignKey(d => d.CriteriaId2)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("criteria_comparisons_ibfk_2");
+        });
+
+        modelBuilder.Entity<CriteriaNormalization>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("criteria_normalizations");
+
+            entity.HasIndex(e => e.CriteriaId, "criteria_id");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CriteriaId).HasColumnName("criteria_id");
+            entity.Property(e => e.GeomL)
+                .HasPrecision(18, 8)
+                .HasColumnName("geom_l");
+            entity.Property(e => e.GeomM)
+                .HasPrecision(18, 8)
+                .HasColumnName("geom_m");
+            entity.Property(e => e.GeomU)
+                .HasPrecision(18, 8)
+                .HasColumnName("geom_u");
+            entity.Property(e => e.NormalizationResult)
+                .HasPrecision(18, 8)
+                .HasColumnName("normalization_result");
+
+            entity.HasOne(d => d.Criteria).WithMany(p => p.CriteriaNormalizations)
+                .HasForeignKey(d => d.CriteriaId)
+                .HasConstraintName("criteria_normalizations_ibfk_1");
         });
 
         modelBuilder.Entity<Customer>(entity =>
@@ -659,66 +733,6 @@ public partial class DatabaseContext : DbContext
                 .HasConstraintName("kecamatan_users_FK_1");
         });
 
-        modelBuilder.Entity<FahpCalculation>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
-
-            entity.ToTable("fahp_calculations");
-
-            entity.HasIndex(e => e.PiutangId, "fahp_calculations_debts_FK");
-
-            entity.HasIndex(e => e.KriteriaId, "fahp_perhitungan_kriteria_FK");
-
-            entity.HasIndex(e => e.CreatedBy, "fahp_perhitungan_users_FK");
-
-            entity.HasIndex(e => e.UpdatedBy, "fahp_perhitungan_users_FK_1");
-
-            entity.HasIndex(e => e.DeletedBy, "fahp_perhitungan_users_FK_2");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp")
-                .HasColumnName("created_at");
-            entity.Property(e => e.CreatedBy).HasColumnName("created_by");
-            entity.Property(e => e.DeletedAt)
-                .HasColumnType("timestamp")
-                .HasColumnName("deleted_at");
-            entity.Property(e => e.DeletedBy).HasColumnName("deleted_by");
-            entity.Property(e => e.KriteriaId).HasColumnName("kriteria_id");
-            entity.Property(e => e.NilaiFuzzy)
-                .HasPrecision(10, 6)
-                .HasColumnName("nilai_fuzzy");
-            entity.Property(e => e.PiutangId).HasColumnName("piutang_id");
-            entity.Property(e => e.UpdatedAt)
-                .HasColumnType("timestamp")
-                .HasColumnName("updated_at");
-            entity.Property(e => e.UpdatedBy).HasColumnName("updated_by");
-
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.FahpCalculationCreatedByNavigations)
-                .HasForeignKey(d => d.CreatedBy)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fahp_perhitungan_users_FK");
-
-            entity.HasOne(d => d.DeletedByNavigation).WithMany(p => p.FahpCalculationDeletedByNavigations)
-                .HasForeignKey(d => d.DeletedBy)
-                .HasConstraintName("fahp_perhitungan_users_FK_2");
-
-            entity.HasOne(d => d.Kriteria).WithMany(p => p.FahpCalculations)
-                .HasForeignKey(d => d.KriteriaId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fahp_perhitungan_kriteria_FK");
-
-            entity.HasOne(d => d.Piutang).WithMany(p => p.FahpCalculations)
-                .HasForeignKey(d => d.PiutangId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fahp_calculations_debts_FK");
-
-            entity.HasOne(d => d.UpdatedByNavigation).WithMany(p => p.FahpCalculationUpdatedByNavigations)
-                .HasForeignKey(d => d.UpdatedBy)
-                .HasConstraintName("fahp_perhitungan_users_FK_1");
-        });
-
         modelBuilder.Entity<Leader>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
@@ -1005,38 +1019,37 @@ public partial class DatabaseContext : DbContext
             entity.Property(e => e.UpdatedBy).HasColumnName("updated_by");
         });
 
-        modelBuilder.Entity<PsoResult>(entity =>
+        modelBuilder.Entity<PsoIteration>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("pso_results");
+            entity.ToTable("pso_iterations");
 
-            entity.HasIndex(e => e.PiutangId, "pso_results_debts_FK");
+            entity.HasIndex(e => e.CriteriaId, "criteria_id");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp")
+                .HasColumnType("datetime")
                 .HasColumnName("created_at");
-            entity.Property(e => e.CreatedBy).HasColumnName("created_by");
-            entity.Property(e => e.DeletedAt)
-                .HasColumnType("timestamp")
-                .HasColumnName("deleted_at");
-            entity.Property(e => e.DeletedBy).HasColumnName("deleted_by");
-            entity.Property(e => e.Iterasi).HasColumnName("iterasi");
-            entity.Property(e => e.PiutangId).HasColumnName("piutang_id");
-            entity.Property(e => e.Prioritas)
-                .HasPrecision(10, 6)
-                .HasColumnName("prioritas");
-            entity.Property(e => e.UpdatedAt)
-                .HasColumnType("timestamp")
-                .HasColumnName("updated_at");
-            entity.Property(e => e.UpdatedBy).HasColumnName("updated_by");
+            entity.Property(e => e.CriteriaId).HasColumnName("criteria_id");
+            entity.Property(e => e.Fitness)
+                .HasPrecision(18, 8)
+                .HasColumnName("fitness");
+            entity.Property(e => e.Iteration).HasColumnName("iteration");
+            entity.Property(e => e.Pbest)
+                .HasPrecision(18, 8)
+                .HasColumnName("pbest");
+            entity.Property(e => e.Velocity)
+                .HasPrecision(18, 8)
+                .HasColumnName("velocity");
+            entity.Property(e => e.Weight)
+                .HasPrecision(18, 8)
+                .HasColumnName("weight");
 
-            entity.HasOne(d => d.Piutang).WithMany(p => p.PsoResults)
-                .HasForeignKey(d => d.PiutangId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("pso_results_debts_FK");
+            entity.HasOne(d => d.Criteria).WithMany(p => p.PsoIterations)
+                .HasForeignKey(d => d.CriteriaId)
+                .HasConstraintName("pso_iterations_ibfk_1");
         });
 
         modelBuilder.Entity<Role>(entity =>
@@ -1141,8 +1154,6 @@ public partial class DatabaseContext : DbContext
 
             entity.HasIndex(e => e.DeletedBy, "hasil_strategi_users_FK_2");
 
-            entity.HasIndex(e => e.PsoId, "pso_id");
-
             entity.HasIndex(e => e.StrategiId, "strategi_id");
 
             entity.HasIndex(e => e.PiutangId, "strategy_results_debts_FK");
@@ -1158,7 +1169,9 @@ public partial class DatabaseContext : DbContext
                 .HasColumnName("deleted_at");
             entity.Property(e => e.DeletedBy).HasColumnName("deleted_by");
             entity.Property(e => e.PiutangId).HasColumnName("piutang_id");
-            entity.Property(e => e.PsoId).HasColumnName("pso_id");
+            entity.Property(e => e.Score)
+                .HasPrecision(10)
+                .HasColumnName("score");
             entity.Property(e => e.Status)
                 .HasDefaultValueSql("'pending'")
                 .HasColumnType("enum('pending','diterapkan')")
@@ -1182,11 +1195,6 @@ public partial class DatabaseContext : DbContext
                 .HasForeignKey(d => d.PiutangId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("strategy_results_debts_FK");
-
-            entity.HasOne(d => d.Pso).WithMany(p => p.StrategyResults)
-                .HasForeignKey(d => d.PsoId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("strategy_results_ibfk_1");
 
             entity.HasOne(d => d.Strategi).WithMany(p => p.StrategyResults)
                 .HasForeignKey(d => d.StrategiId)
@@ -1288,13 +1296,14 @@ public partial class DatabaseContext : DbContext
                 .HasConstraintName("users_users_FK_1");
         });
 
-        modelBuilder.Entity<VDebts>(entity =>
+        modelBuilder.Entity<VDebt>(entity =>
         {
             entity
                 .HasNoKey()
                 .ToView("v_debts");
 
             entity.Property(e => e.PelangganId).HasColumnName("pelanggan_id");
+            entity.Property(e => e.PiutangId).HasColumnName("piutang_id");
             entity.Property(e => e.Rekening).HasColumnName("rekening");
             entity.Property(e => e.StatusTerakhir)
                 .HasMaxLength(7)
@@ -1305,6 +1314,40 @@ public partial class DatabaseContext : DbContext
             entity.Property(e => e.TotalNominal)
                 .HasPrecision(32)
                 .HasColumnName("total_nominal");
+        });
+
+        modelBuilder.Entity<VFahpSummary>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("v_fahp_summary");
+        });
+
+        modelBuilder.Entity<VPairwiseComparison>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("v_pairwise_comparisons");
+
+            entity.Property(e => e.CriteriaId1).HasColumnName("criteria_id_1");
+            entity.Property(e => e.CriteriaId2).HasColumnName("criteria_id_2");
+            entity.Property(e => e.CriteriaName1)
+                .HasMaxLength(100)
+                .HasColumnName("criteria_name_1");
+            entity.Property(e => e.CriteriaName2)
+                .HasMaxLength(100)
+                .HasColumnName("criteria_name_2");
+            entity.Property(e => e.FuzzyL).HasColumnName("fuzzy_l");
+            entity.Property(e => e.FuzzyM).HasColumnName("fuzzy_m");
+            entity.Property(e => e.FuzzyU).HasColumnName("fuzzy_u");
+            entity.Property(e => e.ScaleValue).HasColumnName("scale_value");
+        });
+
+        modelBuilder.Entity<VScoreMatrix>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("v_score_matrix");
         });
 
         modelBuilder.Entity<Village>(entity =>

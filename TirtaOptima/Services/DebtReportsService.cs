@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using TirtaOptima.Helpers;
 using TirtaOptima.Models;
 
 namespace TirtaOptima.Services
@@ -9,8 +10,7 @@ namespace TirtaOptima.Services
         private readonly DatabaseContext _context = context;
         public List<Debt> GetDebts()
         {
-            ViewDebtsService service = new(_context);
-            service.UpdateDebts();
+            ViewDebtsHelper.UpdateDebts(_context);
 
             return [.._context.Debts
             .Include(x => x.Pelanggan).ThenInclude(x => x.JenisNavigation)

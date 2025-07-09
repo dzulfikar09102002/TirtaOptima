@@ -27,5 +27,7 @@ public partial class PsoResult
 
     public virtual Debt Piutang { get; set; } = null!;
 
+    public virtual ICollection<PsoParticle> PsoParticles { get; set; } = new List<PsoParticle>();
+
     public virtual ICollection<StrategyResult> StrategyResults { get; set; } = new List<StrategyResult>();
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TirtaOptima.Helpers;
 using TirtaOptima.Models;
 using TirtaOptima.ViewModels;
 
@@ -9,8 +10,7 @@ namespace TirtaOptima.Services
         private readonly DatabaseContext _context = context;
         public List<Collection> GetCollections(CollectionMonitoringsViewModel input)
         {
-            ViewDebtsService service = new(_context);
-            service.UpdateDebts();
+            ViewDebtsHelper.UpdateDebts(_context);
             return 
             [.. _context.Collections.Where(x => x.DeletedAt == null && 
             x.Tanggal.Month == input.BulanSelect && x.Tanggal.Year == input.TahunSelect)

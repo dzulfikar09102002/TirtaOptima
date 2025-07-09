@@ -25,9 +25,15 @@ public partial class Criteria
 
     public virtual User CreatedByNavigation { get; set; } = null!;
 
+    public virtual ICollection<CriteriaComparison> CriteriaComparisonCriteriaId1Navigations { get; set; } = new List<CriteriaComparison>();
+
+    public virtual ICollection<CriteriaComparison> CriteriaComparisonCriteriaId2Navigations { get; set; } = new List<CriteriaComparison>();
+
+    public virtual ICollection<CriteriaNormalization> CriteriaNormalizations { get; set; } = new List<CriteriaNormalization>();
+
     public virtual User? DeletedByNavigation { get; set; }
 
-    public virtual ICollection<FahpCalculation> FahpCalculations { get; set; } = new List<FahpCalculation>();
+    public virtual ICollection<PsoIteration> PsoIterations { get; set; } = new List<PsoIteration>();
 
     public virtual User? UpdatedByNavigation { get; set; }
 }
