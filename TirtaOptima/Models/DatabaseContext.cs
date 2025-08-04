@@ -60,26 +60,20 @@ public partial class DatabaseContext : DbContext
 
     public virtual DbSet<VDebt> VDebts { get; set; }
 
-    public virtual DbSet<VFahpSummary> VFahpSummaries { get; set; }
-
-    public virtual DbSet<VPairwiseComparison> VPairwiseComparisons { get; set; }
-
-    public virtual DbSet<VScoreMatrix> VScoreMatrices { get; set; }
-
     public virtual DbSet<Village> Villages { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        IConfigurationRoot configuration = new ConfigurationBuilder()
-            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-            .AddJsonFile("appsettings.json")
-            .Build();
+	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+	{
+		IConfigurationRoot configuration = new ConfigurationBuilder()
+			.SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+			.AddJsonFile("appsettings.json")
+			.Build();
 
-        string connectionString = configuration?.GetConnectionString("MySQL") ?? "server=localhost;database=tirtaoptima;user=root";
+		string connectionString = configuration?.GetConnectionString("MySQL") ?? "server=localhost;database=tirtaoptima;user=root";
 
-        optionsBuilder.UseMySql(connectionString, ServerVersion.Parse("8.0.30-mysql"));
-    }
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+		optionsBuilder.UseMySql(connectionString, ServerVersion.Parse("8.0.30-mysql"));
+	}
+	protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
             .UseCollation("utf8mb4_0900_ai_ci")
@@ -168,7 +162,9 @@ public partial class DatabaseContext : DbContext
             entity.Property(e => e.Pakai).HasColumnName("pakai");
             entity.Property(e => e.Tagihan).HasColumnName("tagihan");
             entity.Property(e => e.Tahun).HasColumnName("tahun");
-            entity.Property(e => e.Total).HasColumnName("total");
+            entity.Property(e => e.Total)
+                .HasPrecision(10)
+                .HasColumnName("total");
             entity.Property(e => e.UpdatedAt)
                 .ValueGeneratedOnAddOrUpdate()
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
@@ -959,7 +955,9 @@ public partial class DatabaseContext : DbContext
             entity.Property(e => e.Ket)
                 .HasColumnType("text")
                 .HasColumnName("ket");
-            entity.Property(e => e.NominalBayar).HasColumnName("nominal_bayar");
+            entity.Property(e => e.NominalBayar)
+                .HasPrecision(10)
+                .HasColumnName("nominal_bayar");
             entity.Property(e => e.Tahun).HasColumnName("tahun");
             entity.Property(e => e.TanggalBayar).HasColumnName("tanggal_bayar");
             entity.Property(e => e.UpdatedAt)
@@ -1027,7 +1025,9 @@ public partial class DatabaseContext : DbContext
 
             entity.HasIndex(e => e.CriteriaId, "criteria_id");
 
-            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("datetime")
@@ -1236,6 +1236,9 @@ public partial class DatabaseContext : DbContext
             entity.Property(e => e.Email)
                 .HasMaxLength(100)
                 .HasColumnName("email");
+            entity.Property(e => e.Failedloginattempts)
+                .HasDefaultValueSql("'0'")
+                .HasColumnName("failedloginattempts");
             entity.Property(e => e.Gender)
                 .IsRequired()
                 .HasDefaultValueSql("'1'")
@@ -1243,6 +1246,9 @@ public partial class DatabaseContext : DbContext
             entity.Property(e => e.Jabatan)
                 .HasMaxLength(100)
                 .HasColumnName("jabatan");
+            entity.Property(e => e.Lockoutend)
+                .HasColumnType("datetime")
+                .HasColumnName("lockoutend");
             entity.Property(e => e.More)
                 .HasMaxLength(50)
                 .HasDefaultValueSql("'-'")
@@ -1302,9 +1308,7 @@ public partial class DatabaseContext : DbContext
                 .HasNoKey()
                 .ToView("v_debts");
 
-            entity.Property(e => e.PelangganId).HasColumnName("pelanggan_id");
-            entity.Property(e => e.PiutangId).HasColumnName("piutang_id");
-            entity.Property(e => e.Rekening).HasColumnName("rekening");
+            entity.Property(e => e.IdPelanggan).HasColumnName("id_pelanggan");
             entity.Property(e => e.StatusTerakhir)
                 .HasMaxLength(7)
                 .HasColumnName("status_terakhir");
@@ -1314,40 +1318,6 @@ public partial class DatabaseContext : DbContext
             entity.Property(e => e.TotalNominal)
                 .HasPrecision(32)
                 .HasColumnName("total_nominal");
-        });
-
-        modelBuilder.Entity<VFahpSummary>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToView("v_fahp_summary");
-        });
-
-        modelBuilder.Entity<VPairwiseComparison>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToView("v_pairwise_comparisons");
-
-            entity.Property(e => e.CriteriaId1).HasColumnName("criteria_id_1");
-            entity.Property(e => e.CriteriaId2).HasColumnName("criteria_id_2");
-            entity.Property(e => e.CriteriaName1)
-                .HasMaxLength(100)
-                .HasColumnName("criteria_name_1");
-            entity.Property(e => e.CriteriaName2)
-                .HasMaxLength(100)
-                .HasColumnName("criteria_name_2");
-            entity.Property(e => e.FuzzyL).HasColumnName("fuzzy_l");
-            entity.Property(e => e.FuzzyM).HasColumnName("fuzzy_m");
-            entity.Property(e => e.FuzzyU).HasColumnName("fuzzy_u");
-            entity.Property(e => e.ScaleValue).HasColumnName("scale_value");
-        });
-
-        modelBuilder.Entity<VScoreMatrix>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToView("v_score_matrix");
         });
 
         modelBuilder.Entity<Village>(entity =>

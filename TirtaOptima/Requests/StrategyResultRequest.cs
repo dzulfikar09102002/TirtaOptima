@@ -1,13 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using TirtaOptima.Services;
+﻿using TirtaOptima.Services;
 using TirtaOptima.ViewModels;
 
 namespace TirtaOptima.Requests
 {
-    public class CustomerRequest(CustomerViewModel input, CustomerService service)
+    public class StrategyResultRequest(StrategyResultViewModel input, StrategyResultService service)
     {
-        public CustomerViewModel UserInput { get; set; } = input;
-        public CustomerService Service { get; set; } = service;
+        public StrategyResultViewModel UserInput { get; set; } = input;
+        public StrategyResultService Service { get; set; } = service;
         public string? ErrorMessage { get; set; }
         public bool Validate()
         {

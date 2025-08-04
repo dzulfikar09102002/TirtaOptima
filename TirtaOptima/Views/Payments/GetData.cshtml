@@ -1,5 +1,6 @@
 ﻿@model TirtaOptima.ViewModels.PaymentViewModel
 @using System.Globalization
+@using Newtonsoft.Json
 <div class="card mt-2">
     <div class="card-body">
         <div class="d-flex flex-wrap gap-2 mb-3">
@@ -9,21 +10,37 @@
                     <i class="mdi mdi-arrow-u-left-top label-icon align-middle fs-16 me-2"></i> Kembali
                 </button>
             }
-            <button type="button" class="btn btn-success btn-label waves-effect waves-light" onclick="GetDataApi()">
-                <i class="mdi @(TempData["Source"]?.ToString() == "database" ? "mdi-refresh" : "mdi-circle-edit-outline") label-icon align-middle fs-16 me-2"></i>
-                @(TempData["Source"]?.ToString() == "database" ? "Periksa Pembaruan" : "Catat Rekening")
+            @{
+                var isDatabase = TempData["Source"]?.ToString() == "database";
+                int no = 1;
+            }
+            <button type="button"
+                    id="btnAction"
+                    class="btn btn-success btn-label waves-effect waves-light"
+                    data-action="@(isDatabase ? "GetDataApi" : "Save")">
+                <i class="mdi @(isDatabase ? "mdi-refresh" : "mdi-circle-edit-outline") label-icon align-middle fs-16 me-2"></i>
+                @(isDatabase ? "Periksa Pembaruan" : "Catat Pembayaran")
             </button>
         </div>
         <table id="tbl" class="table table-hover table-striped align-middle table-bordered">
             <thead class="table-light">
                 <tr>
-                    <th class="text-center"><input class="form-check-input chk-all" type="checkbox" name="checkAll" value="option1"><br /></th>
+                    <th class="text-center">
+                        @if (isDatabase)
+                        {
+                            @:No.
+                        }
+                        else
+                        {
+                            <input class="form-check-input chk-all" type="checkbox" name="checkAll" value="option1" />
+                        }
+                    </th>
                     <th class="text-center">Id Pelanggan</th>
                     <th class="text-center">Nomor & Jenis</th>
-                    <th class="text-center">Nama & Jenis</th>
+                    <th class="text-center">Nama & Alamat</th>
                     <th class="text-center">Periode</th>
                     <th class="text-center">Nominal</th>
-                    <th class="text-center">Tanggal</th>
+                    <th class="text-center">Tanggal Bayar</th>
                     <th class="text-center">Kasir</th>
                     <th class="text-center">Keterangan</th>
                 </tr>
@@ -32,17 +49,30 @@
                 @foreach (var item in Model.Payments)
                 {
                     <tr class="odd">
-                        <td class="text-center"><input type="checkbox" name="NopPiutang" class="form-check-input chk-save"></td>
+                        <td class="text-center">
+                            @if (isDatabase)
+                            {
+                                @no
+                                ;
+                            }
+                            else
+                            {
+                                <input type="checkbox"
+                                       name="SelectedPayments"
+                                       class="form-check-input chk-save"
+                                       value="@JsonConvert.SerializeObject(item)">
+                            }
+                        </td>
                         <td class="text-center">
                             <b>@item.IdPelanggan</b>
                         </td>
                         <td class="text-center">
-                            <span class="fw-bold">@(item.IdPelangganNavigation?.Nomor ?? "-")</span> <br /> @item.IdPelangganNavigation?.JenisNavigation?.Deskripsi
+                            <span class="fw-bold">@(Model.Customers.FirstOrDefault(x => x.Id == item.IdPelanggan)?.Nomor ?? "-")</span> <br /> @Model.Customers.FirstOrDefault(x => x.Id == item.IdPelanggan)?.JenisNavigation?.Deskripsi
                         </td>
                         <td class="text-center">
-                            <span class="fw-bold"> @item.IdPelangganNavigation?.Nama</span> <br />
-                            @item.IdPelangganNavigation?.Alamat <br />
-                            @item.IdPelangganNavigation?.KelurahanNavigation?.Nama | @item.IdPelangganNavigation?.KelurahanNavigation?.KodeKecNavigation?.Nama
+                            <span class="fw-bold"> @Model.Customers.FirstOrDefault(x => x.Id == item.IdPelanggan)?.Nama</span> <br />
+                            @Model.Customers.FirstOrDefault(x => x.Id == item.IdPelanggan)?.Alamat <br />
+                            @Model.Customers.FirstOrDefault(x => x.Id == item.IdPelanggan)?.KelurahanNavigation?.Nama | @Model.Customers.FirstOrDefault(x => x.Id == item.IdPelanggan)?.KelurahanNavigation?.KodeKecNavigation?.Nama
                         </td>
                         @{
                             var bulan = new DateTime(item.Tahun.GetValueOrDefault(), item.Bulan.GetValueOrDefault(), 1)
@@ -68,6 +98,7 @@
                             @(item?.Ket ?? "-")
                         </td>
                     </tr>
+                    no++;
                 }
             </tbody>
         </table>
@@ -89,8 +120,36 @@
 
     $(document).ready(function () {
         $('#tbl').DataTable({
+            ordering: false,
         })
+        $("#btnAction").on("click", function () {
+            var action = $(this).data("action");
+            if (action === "GetDataApi") {
+                GetDataApi();
+            } else if (action === "Save") {
+                Save();
+            }
+        });
+        // Checkbox single
+        $('#tbl').on('change', 'input[name="SelectedPayments"]', function () {
+            updateSelectedItems();
+        });
+
+        // Checkbox "Check All"
+        $('.chk-all').on('click', function () {
+            var isChecked = $(this).prop('checked');
+            $('#tbl input[name="SelectedPayments"]').prop('checked', isChecked);
+            updateSelectedItems();
+        });
+
+        function updateSelectedItems() {
+            selectedItems = [];
+            $('#tbl input[name="SelectedPayments"]:checked').each(function () {
+                selectedItems.push($(this).val());
+            });
+        }
     });
+
     function GetDataApi() {
         var t = $("input[name='__RequestVerificationToken']").val();
         var bulan = $("#period-container").data("bulan");
@@ -120,7 +179,8 @@
                             icon: 'success',
                             title: '<b>Success</b>',
                             text: msg,
-                            confirmButtonText: 'OK'
+                            timer: 1000,
+                            showConfirmButton: false,
                         });
 
                     } else {
@@ -144,5 +204,62 @@
                 }
             }
         });
+    }
+
+    function Save() {
+        if (selectedItems.length > 0) {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: 'Anda akan mencatat pembayaran yang dipilih.',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Lanjutkan',
+                cancelButtonText: 'Batal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("Save", "Payments")',
+                        data: { selectedpayments: selectedItems },
+                        traditional: true, // penting untuk kirim array ke controller
+                        beforeSend: function () {
+                            $("#loader").show();
+                        },
+                        complete: function () {
+                            $("#loader").hide();
+                        },
+                        success: function (resp) {
+                            if (resp.status == 1) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '<b>Info</b>',
+                                    text: resp.message,
+                                    showConfirmButton: false,
+                                    timer: 1000
+                                }).then(() => {
+                                    window.location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: '<b style="color:orange">Peringatan</b>',
+                                    text: resp.message,
+                                });
+                            }
+                        },
+                        error: function (xhr) {
+                            $("#loader").hide();
+                            alert(xhr.statusText, '', 'Information!', 1);
+                        }
+                    });
+                }
+            });
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                text: 'Pilih Minimal 1 pembayaran',
+            });
+        }
     }
 </script>

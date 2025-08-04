@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
+using Newtonsoft.Json;
 using TirtaOptima.Helpers;
 using TirtaOptima.Models;
 using TirtaOptima.ViewModels;
@@ -12,6 +12,10 @@ namespace TirtaOptima.Services
         private readonly DatabaseContext _context = context;
         public List<Customer> Customers { get; set; } = new();
         public string? Message { get; set; }
+        public List<Village> GetVillages() => [.. _context.Villages.Where(x => x.DeletedAt == null)];
+        public List<District> GetDistricts() => [.. _context.Districts.Where(x => x.DeletedAt == null)];
+        public List<CustomerType> GetCustomerTypes() => [.. _context.CustomerTypes.Where(x => x.DeletedAt == null)];
+        public List<Status> GetStatus() => [.. _context.Statuses.Where(x => x.DeletedAt == null)];
         public List<Customer> GetCustomers(CustomerViewModel model) => [.._context.Customers.Include(x => x.JenisNavigation)
             .Include(x => x.KelurahanNavigation).Include(x => x.KecamatanNavigation).Include(x => x.StatusNavigation).Include(x => x.JenisNavigation)
             .Where(x => x.Pasang.HasValue && x.Pasang.Value.Month == model.BulanSelect && x.Pasang.Value.Year == model.TahunSelect)
@@ -32,7 +36,7 @@ namespace TirtaOptima.Services
                 if (apires.IsSuccessStatusCode)
                 {
                     var resdata = await apires.Content.ReadAsStringAsync();
-                    var customers = JsonSerializer.Deserialize<List<CustomerColumn>>(resdata);
+                    var customers = System.Text.Json.JsonSerializer.Deserialize<List<CustomerColumn>>(resdata);
                     if (customers?.Any() == true)
                     {
                         Customers = customers
@@ -52,10 +56,6 @@ namespace TirtaOptima.Services
                                 Wilayah = item.Wilayah,
                                 NoTelepon = item.NoTelepon,
                                 Email = item.Email,
-                                JenisNavigation = _context.CustomerTypes.FirstOrDefault(x => x.Id == item.Jenis),
-                                StatusNavigation = _context.Statuses.FirstOrDefault(x => x.Id == item.Status),
-                                KelurahanNavigation = _context.Villages.FirstOrDefault(x => x.Id == item.Kelurahan),
-                                KecamatanNavigation = _context.Districts.FirstOrDefault(x => x.Id == item.Kecamatan)
                             })
                             .ToList();
 
@@ -85,6 +85,38 @@ namespace TirtaOptima.Services
                 Message = "Terjadi kesalahan saat memanggil API.";
                 return false;
             }
+        }
+        public void Store(string[] selectedcustomers, long userid)
+        {
+            foreach (var customerJson in selectedcustomers)
+            {
+                var customer = JsonConvert.DeserializeObject<CustomerColumn>(customerJson);
+                if (customer != null)
+                {
+                    Customers.Add(new Customer
+                    {
+                        Id = customer.Id,
+                        Nama = customer.Nama,
+                        Nomor = customer.Nomor,
+                        Alamat = customer.Alamat,
+                        Jenis = customer.Jenis,
+                        Pasang = customer.Pasang,
+                        Kecamatan = customer.Kecamatan,
+                        Kelurahan = customer.Kelurahan,
+                        Status = customer.Status,
+                        Cabang = customer.Cabang,
+                        NoTelepon = customer.NoTelepon,
+                        Wilayah = customer.Wilayah,
+                        Email = customer.Email,
+                        CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now,
+                        CreatedBy = userid,
+                        UpdatedBy = userid,
+                    });
+                }
+            }
+            _context.Customers.AddRange(Customers);
+            _context.SaveChanges();
         }
 
     }

@@ -33,6 +33,10 @@ public partial class User
 
     public bool? Status { get; set; }
 
+    public int? Failedloginattempts { get; set; }
+
+    public DateTime? Lockoutend { get; set; }
+
     public DateTime CreatedAt { get; set; }
 
     public DateTime UpdatedAt { get; set; }

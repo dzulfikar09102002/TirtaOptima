@@ -6,12 +6,14 @@ namespace TirtaOptima.ViewModels
 {
     public class CustomerViewModel
     {
-        [Required(ErrorMessage ="Harap Pilih Bulan")]
         public int BulanSelect { get; set; }
 
-        [Required(ErrorMessage ="Harap Pilih Tahun")]
         public int TahunSelect { get; set; }
         public List<Customer> Customers { get; set; } = new();
+        public List<Village> Kelurahans { get; set; } = new();
+        public List<District> Kecamatans { get; set; } = new();
+        public List<CustomerType> Jenis { get; set; } = new();
+        public List<Status> Status { get; set; } = new();
 
     }
     public class CustomerColumn

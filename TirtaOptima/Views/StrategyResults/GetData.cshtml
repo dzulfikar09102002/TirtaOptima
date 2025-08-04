@@ -1,0 +1,139 @@
+﻿@using Newtonsoft.Json
+@model StrategyResultViewModel
+@{
+    ViewData["Title"] = "Hasil Strategi";
+    var totalNominal = Model.Debts.Sum(d => d.Nominal);
+}
+<div class="card mt-2">
+    <div class="card-body">
+        <div class="d-flex flex-wrap gap-2 mb-3">
+            <button type="button"
+                    id="btnTugaskan"
+                    class="btn btn-info btn-label waves-effect waves-light"
+                    onclick="AssignCollector()">
+                <i class="ri-file-edit-line label-icon align-middle fs-16 me-2"></i> Pilih Petugas
+            </button>
+        </div>
+        <table id="tbl" class="table table-hover table-striped align-middle table-bordered">
+            <thead class="table-light">
+                <tr class="align-middle">
+                    <th rowspan="2" class="text-center" width="5%"><input class="form-check-input chk-all" type="checkbox" name="checkAll" value="option1"><br /></th>
+                    <th rowspan="2" class="text-center" width="20%">Pelanggan</th>
+                    <th colspan="8" class="text-center">Score</th>
+                    <th rowspan="2" class="text-center">Tindakan</th>
+                </tr>
+                <tr>
+                    <th class="text-center" width="7%">Nominal</th>
+                    <th class="text-center" width="7%">Umur</th>
+                    <th class="text-center" width="7%">Jenis</th>
+                    <th class="text-center" width="7%">Status</th>
+                    <th class="text-center" width="7%">Layanan</th>
+                    <th class="text-center" width="7%">Alamat</th>
+                    <th class="text-center" width="10%">Zona</th>
+                    <th class="text-center" width="12%">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Results)
+                {
+                    <tr class="odd">
+                        <td class="text-center">
+                            <input type="checkbox"
+                                   name="SelectedItems"
+                                   class="form-check-input chk-save"
+                                   value="@JsonConvert.SerializeObject(item)">
+
+                        </td>
+                        <td>
+                            @Html.Raw(item.Pelanggan)
+                        </td>
+                        <td class="text-center">@item.Nominal.ToString("F3")</td>
+                        <td class="text-center">@item.Umur.ToString("F3")</td>
+                        <td class="text-center">@item.Jenis.ToString("F3")</td>
+                        <td class="text-center">@item.Status.ToString("F3")</td>
+                        <td class="text-center">@item.Layanan.ToString("F3")</td>
+                        <td class="text-center">@item.Alamat.ToString("F3")</td>
+                        <td class="text-center">
+                            @{
+                                var zonaText = item.ZonaGroup switch
+                                {
+                                    1 => "Satu Kelurahan",
+                                    2 => "Satu Kecamatan",
+                                    _ => "Beda Kecamatan"
+                                };
+                            }
+                            @zonaText
+                        </td>
+                        <td class="text-center fw-bold">@item.Score.ToString("F4")</td>
+                        <td class="text-center">
+                            @item.Tindakan
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="period-container"
+     data-bulan="@Model.BulanSelect"
+     data-tahun="@Model.TahunSelect">
+    @{
+        TempData["Bulan-debts"] = Model.BulanSelect;
+        TempData["Tahun-debts"] = Model.TahunSelect;
+        if (!string.IsNullOrEmpty(ViewBag.Message))
+        {
+            <div id="partial-message" data-message="@ViewBag.Message"></div>
+        }
+    }
+</div>
+<script>
+    var selectedItems = [];
+    $(document).ready(function () {
+        var table = $('#tbl').DataTable({
+            ordering: false,
+        });
+
+        // Checkbox single
+        $('#tbl').on('change', 'input[name="SelectedItems"]', function () {
+            updateSelectedItems();
+        });
+
+        // Checkbox "Check All"
+        $('.chk-all').on('click', function () {
+            var isChecked = $(this).prop('checked');
+            $('#tbl input[name="SelectedItems"]').prop('checked', isChecked);
+            updateSelectedItems();
+        });
+
+        function updateSelectedItems() {
+            selectedItems = [];
+            $('#tbl input[name="SelectedItems"]:checked').each(function () {
+                selectedItems.push($(this).val());
+            });
+        }
+
+    });
+
+    function AssignCollector() {
+        if (selectedItems.length > 0) {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("AssignCollector", "StrategyResults")',
+                data: {
+                    selecteditems: selectedItems
+                },
+                traditional: true, 
+                success: function (data) {
+                    $("#staticBackdrop .modal-title").html("Penugasan Petugas Penagihan");
+                    $("#staticBackdrop .modal-body").html(data);
+                    $("#staticBackdrop").modal('show');
+                }
+            });
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                text: 'Pilih minimal 1 item',
+            });
+        }
+    }
+</script>

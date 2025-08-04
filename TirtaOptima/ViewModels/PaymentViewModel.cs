@@ -6,12 +6,12 @@ namespace TirtaOptima.ViewModels
 {
     public class PaymentViewModel
     {
-        [Required(ErrorMessage = "Harap Pilih Bulan")]
+
         public int BulanSelect { get; set; }
 
-        [Required(ErrorMessage = "Harap Pilih Tahun")]
         public int TahunSelect { get; set; }
         public List<Payment> Payments { get; set; } = new();
+        public List<Customer> Customers { get; set; } = new();
     }
 
     public class PaymentColumn
@@ -20,7 +20,7 @@ namespace TirtaOptima.ViewModels
         public long IdPelanggan { get; set; }
 
         [JsonPropertyName("pembayaran1")]
-        public long NominalBayar { get; set; }
+        public decimal NominalBayar { get; set; }
 
         [JsonPropertyName("ket")]
         public string? Ket { get; set; }

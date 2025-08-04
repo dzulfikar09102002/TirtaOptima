@@ -9,6 +9,7 @@ namespace TirtaOptima.ViewModels
         public int BulanSelect { get; set; }
         public int TahunSelect { get; set; }
         public List<Bill> Bills { get; set; } = new();
+        public List<Customer> Customers {  get; set; } = new();
           
     }
     public class BillColumn
@@ -17,7 +18,7 @@ namespace TirtaOptima.ViewModels
         public long IdPelanggan { get; set; }
 
         [JsonPropertyName("total")]
-        public long? Total { get; set; }
+        public decimal? Total { get; set; }
 
         [JsonPropertyName("ket")]
         public string? Ket { get; set; }

@@ -11,7 +11,7 @@ public partial class Debt
 
     public int Rekening { get; set; }
 
-    public decimal? Nominal { get; set; }
+    public decimal Nominal { get; set; }
 
     public DateTime? TanggalTerakhir { get; set; }
 

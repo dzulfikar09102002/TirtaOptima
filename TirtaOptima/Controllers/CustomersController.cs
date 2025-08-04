@@ -9,10 +9,10 @@ using TirtaOptima.ViewModels;
 
 namespace TirtaOptima.Controllers
 {
+    [Authorize(Roles = "Administrator Sistem, Petugas Pengelola Piutang")]
     public class CustomersController : BaseController
     {
 
-        [Authorize(Roles = "Administrator Sistem, Petugas Pengelola Piutang")]
         public IActionResult Index()
         {
             var bulan = TempData.Peek("Bulan-cs")?.ToString();
@@ -32,7 +32,6 @@ namespace TirtaOptima.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "Administrator Sistem, Petugas Pengelola Piutang")]
         [HttpGet]
         public IActionResult GetData(string bulan, string tahun)
         {
@@ -40,9 +39,13 @@ namespace TirtaOptima.Controllers
             CustomerViewModel model = new CustomerViewModel
             {
                 BulanSelect = Convert.ToInt32(bulan),
-                TahunSelect = Convert.ToInt32(tahun)
+                TahunSelect = Convert.ToInt32(tahun),
+                Kelurahans = service.GetVillages(),
+                Kecamatans = service.GetDistricts(),
+                Jenis = service.GetCustomerTypes(),
+                Status = service.GetStatus(),
             };
-            CustomerRequest requestValidator = new(ModelState, model, service);
+            CustomerRequest requestValidator = new(model, service);
             try
             {
                 if (!requestValidator.Validate())
@@ -60,7 +63,7 @@ namespace TirtaOptima.Controllers
                 return Json(ResponseBase);
             }
         }
-        [Authorize(Roles = "Administrator Sistem, Petugas Pengelola Piutang")]
+
         [HttpGet]
         public async Task<IActionResult> GetDataApi(string bulan, string tahun)
         {
@@ -68,9 +71,13 @@ namespace TirtaOptima.Controllers
             CustomerViewModel model = new CustomerViewModel
             {
                 BulanSelect = Convert.ToInt32(bulan),
-                TahunSelect = Convert.ToInt32(tahun)
+                TahunSelect = Convert.ToInt32(tahun),
+                Kelurahans = service.GetVillages(),
+                Kecamatans = service.GetDistricts(),
+                Jenis = service.GetCustomerTypes(),
+                Status = service.GetStatus(),
             };
-            CustomerRequest requestValidator = new(ModelState, model, service);
+            CustomerRequest requestValidator = new(model, service);
             try
             {
                 if (!requestValidator.Validate())
@@ -94,5 +101,23 @@ namespace TirtaOptima.Controllers
                 return Json(ResponseBase);
             }
         }
+        [HttpPost]
+        public IActionResult Save(string[] selectedcustomers)
+        {
+            try
+            {
+                CustomerService service = new(_context);
+                service.Store(selectedcustomers, UserId);
+                ResponseBase.Message = "Pelanggan berhasil dicatat";
+                ResponseBase.Status = StatusEnum.Success;
+            }
+            catch (Exception ex)
+            {
+                ResponseBase.Message = ex.Message ?? throw new Exception();
+                return Json(ResponseBase);
+            }
+            return Json(ResponseBase);
+        }
+
     }
 }

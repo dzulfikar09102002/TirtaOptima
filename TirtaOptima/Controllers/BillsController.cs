@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TirtaOptima.Models;
 using TirtaOptima.Requests;
 using TirtaOptima.Services;
 using TirtaOptima.ViewModels;
 
 namespace TirtaOptima.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Administrator Sistem, Petugas Pengelola Piutang")]
     public class BillsController : BaseController
     {
         public IActionResult Index()
@@ -27,7 +28,7 @@ namespace TirtaOptima.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "Administrator Sistem, Petugas Pengelola Piutang")]
+
         [HttpGet]
         public IActionResult GetData(string bulan, string tahun)
         {
@@ -47,6 +48,8 @@ namespace TirtaOptima.Controllers
                 }
                 TempData["Source"] = "database";
                 model.Bills = service.GetBills(model);
+                var idPelangganList = model.Bills.Select(x => x.IdPelanggan).Distinct().ToList();
+                model.Customers = service.GetCustomers(idPelangganList);
                 return PartialView("GetData", model);
             }
             catch (Exception ex)
@@ -55,7 +58,7 @@ namespace TirtaOptima.Controllers
                 return Json(ResponseBase);
             }
         }
-        [Authorize(Roles = "Administrator Sistem, Petugas Pengelola Piutang")]
+
         [HttpGet]
         public async Task<IActionResult> GetDataApi(string bulan, string tahun)
         {
@@ -81,6 +84,8 @@ namespace TirtaOptima.Controllers
                     return Json(ResponseBase);
                 }
                 model.Bills = service.Bills;
+                var idPelangganList = model.Bills.Select(x => x.IdPelanggan).Distinct().ToList();
+                model.Customers = service.GetCustomers(idPelangganList);
                 if (result && !string.IsNullOrEmpty(service.Message))
                 {
                     ViewBag.Message = service.Message;
@@ -94,5 +99,22 @@ namespace TirtaOptima.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult Save(string[] selectedbills)
+        {
+            try
+            {
+                BillService service = new(_context);
+                service.Store(selectedbills, UserId);
+                ResponseBase.Message = "Rekening berhasil dicatat";
+                ResponseBase.Status = StatusEnum.Success;
+            }
+            catch (Exception ex)
+            {
+                ResponseBase.Message = ex.Message ?? throw new Exception();
+                return Json(ResponseBase);
+            }
+            return Json(ResponseBase);
+        }
     }
 }

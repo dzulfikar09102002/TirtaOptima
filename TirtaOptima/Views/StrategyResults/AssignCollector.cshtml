@@ -1,0 +1,68 @@
+﻿@model StrategyResultViewModel
+<div class="row">
+    <div class="col-12 mb-3">
+        <form id="frmSave" class="needs-validation" novalidate asp-controller="StrategyResults" asp-action="Save" method="POST" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-12 mb-3">
+                    @Html.AntiForgeryToken()
+                    <label for="Ket" class="form-label required-star">Petugas Penagihan</label>
+                    @Html.DropDownListFor(
+                             x => x.Penagih,
+                             new SelectList(Model.Users, "Id", "Name"),
+                             "-- Pilih Petugas Penagihan --", 
+                             new { @class = "form-control" , @data_choices = true}
+                             )
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="hstack gap-2 justify-content-end">
+        <button type="button" class="btn btn-danger" id="btn-tutup-event" data-bs-dismiss="modal">Tutup</button>
+        <button type="button" class="btn btn-success" id="btn-save-event" onclick="Save()">Simpan</button>
+    </div>
+</div>
+<script src="~/assets/js/pluginaddon.js"></script>
+<script>
+	function Save() {
+		var formData = new FormData($("#frmSave")[0]);
+		var t = $("input[name='__RequestVerificationToken']").val();
+
+		$.ajax({
+			url: $("#frmSave").attr('action'),
+			type: "POST",
+			data: formData,
+			dataType: "json",
+			contentType: false,
+			processData: false,
+			headers:
+			{
+				"RequestVerificationToken": t
+			},
+			beforeSend: function () {
+				$("#loader").show()
+			},
+			complete: function () { $("#loader").hide(); },
+			success: function (resp) {
+				if (resp.status == 1) {
+					Swal.fire({
+						icon: 'success',
+						title: '<b>Info</b>',
+						text: resp.message,
+						timer: 1000,
+						showConfirmButton: false,
+					}).then(() => {
+						window.location.reload();
+					})
+				}
+				else {
+					Swal.fire({
+						icon: 'warning',
+						title: '<b style="color:orange">Peringatan</b>',
+						text: resp.message,
+					})
+				}
+			}
+		})
+
+	}
+</script>

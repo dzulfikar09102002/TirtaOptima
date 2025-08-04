@@ -13,7 +13,7 @@ namespace TirtaOptima.Helpers
 
             if (!vDebts.Any()) return;
 
-            var pelangganIds = vDebts.Select(v => v.PelangganId).ToList();
+            var pelangganIds = vDebts.Select(v => v.IdPelanggan).ToList();
 
             var existingDebts = context.Debts
                 .Where(d => pelangganIds.Contains(d.PelangganId))
@@ -21,12 +21,13 @@ namespace TirtaOptima.Helpers
 
             foreach (var v in vDebts)
             {
-                if (existingDebts.TryGetValue(v.PelangganId, out var existing))
+                if (existingDebts.TryGetValue(v.IdPelanggan ?? 0, out var existing))
                 {
-                    if (existing.Nominal != v.TotalNominal || existing.Rekening != v.Rekening)
+                    if (existing.Nominal != v.TotalNominal ||
+                        existing.TanggalTerakhir != v.TanggalTerakhir ||
+                        existing.StatusTerakhir != v.StatusTerakhir)
                     {
-                        existing.Nominal = v.TotalNominal;
-                        existing.Rekening = v.Rekening;
+                        existing.Nominal = v.TotalNominal ?? 0;
                         existing.TanggalTerakhir = v.TanggalTerakhir;
                         existing.StatusTerakhir = v.StatusTerakhir;
                         existing.UpdatedAt = DateTime.Now;
@@ -36,9 +37,8 @@ namespace TirtaOptima.Helpers
                 {
                     context.Debts.Add(new Debt
                     {
-                        PelangganId = v.PelangganId,
-                        Nominal = v.TotalNominal,
-                        Rekening = v.Rekening,
+                        PelangganId = v.IdPelanggan ?? 0,
+                        Nominal = v.TotalNominal ?? 0,
                         CreatedAt = DateTime.Now,
                         UpdatedAt = DateTime.Now,
                         TanggalTerakhir = v.TanggalTerakhir,

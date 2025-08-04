@@ -9,7 +9,7 @@ public partial class Bill
 
     public long IdPelanggan { get; set; }
 
-    public long? Total { get; set; }
+    public decimal? Total { get; set; }
 
     public string? Ket { get; set; }
 

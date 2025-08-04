@@ -12,23 +12,54 @@
                 <div class="col-12 mb-3">
                     <label asp-for="KodeKec" class="form-label required-star">Kecamatan</label>
                     @Html.DropDownListFor(x => x.KodeKec,
-                             new SelectList(Model.Districts, "Id", "Nama"),
+                             new SelectList(Model.Districts, "Id", "Nama", Model.KodeKec), 
                              "-- Pilih Kecamatan --",
                              new { @class = "form-select", @data_choices = true })
-                    <div class="col-12 mb-3">
-                        <label asp-for="Layanan" class="form-label required-star">Kualitas Layanan</label>
-                        <input asp-for="Layanan" type="range" class="form-range" min="1" max="5" id="customRange2">
-                        <div class="d-flex justify-content-between px-2 fw-bold text-primary">
-                            <span>1</span>
-                            <span>2</span>
-                            <span>3</span>
-                            <span>4</span>
-                            <span>5</span>
+                    <label asp-for="Layanan" class="form-label required-star">Kualitas Layanan</label>
+                    <select asp-for="Layanan" id="Layanan" class="form-select">
+                        <option value="">-- Pilih Kualitas Layanan --</option>
+                        <option value="1">Sangat Buruk</option>
+                        <option value="2">Buruk</option>
+                        <option value="3">Cukup</option>
+                        <option value="4">Baik</option>
+                        <option value="5">Sangat Baik</option>
+                    </select>
+                    <a class="d-block mt-1 mb-2 small text-primary" data-bs-toggle="collapse" href="#infoLayanan">
+                        <i class="mdi mdi-information-outline"></i>
+                        Lihat penjelasan skala
+                    </a>
+                    <div class="collapse" id="infoLayanan">
+                        <div class="card card-body mt-2">
+                            <strong>Penjelasan Skala Jarak:</strong><br />
+                            1 - Air sering mati, tekanan sangat rendah<br />
+                            2 - Air sering mati & tekanan rendah<br />
+                            3 - Air kadang mati, tekanan cukup<br />
+                            4 - Air jarang mati, tekanan baik<br />
+                            5 - Air selalu lancar, tekanan stabil
                         </div>
                     </div>
-                    <div class="col-12 mb-3">
-                        <label asp-for="Jarak" class="form-label required-star">Jarak (Km)</label>
-                        @Html.TextBoxFor(x => x.Jarak, new { @class = "form-control" })
+                    <label asp-for="Jarak" class="form-label required-star">Jarak</label>
+                    <select asp-for="Jarak" class="form-select">
+                        <option value="">-- Pilih Jarak --</option>
+                        <option value="1">Sangat Dekat</option>
+                        <option value="2">Dekat</option>
+                        <option value="3">Sedang</option>
+                        <option value="4">Jauh</option>
+                        <option value="5">Sangat Jauh</option>
+                    </select>
+                    <a class="d-block mt-1 mb-2 small text-primary" data-bs-toggle="collapse" href="#infoJarak">
+                        <i class="mdi mdi-information-outline"></i>
+                        Lihat penjelasan skala
+                    </a>
+                    <div class="collapse" id="infoJarak">
+                        <div class="card card-body mt-2">
+                            <strong>Penjelasan Skala Jarak:</strong><br />
+                            1 - Sangat Dekat (≤ 1 km)<br />
+                            2 - Dekat (&gt; 1 – 3 km)<br />
+                            3 - Sedang (&gt; 3 – 7 km)<br />
+                            4 - Jauh (&gt; 7 – 15 km)<br />
+                            5 - Sangat Jauh (&gt; 15 km)
+                        </div>
                     </div>
                     <div class="col-12">
                         <label asp-for="Keterangan" class="form-label required-star">Keterangan</label>

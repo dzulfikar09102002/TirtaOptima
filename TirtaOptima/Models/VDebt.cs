@@ -5,11 +5,7 @@ namespace TirtaOptima.Models;
 
 public partial class VDebt
 {
-    public long? PiutangId { get; set; }
-
-    public long PelangganId { get; set; }
-
-    public int Rekening { get; set; }
+    public long? IdPelanggan { get; set; }
 
     public decimal? TotalNominal { get; set; }
 

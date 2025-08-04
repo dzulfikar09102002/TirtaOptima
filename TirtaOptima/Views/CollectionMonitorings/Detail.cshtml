@@ -122,7 +122,7 @@
                             </label>
                             @Html.TextBox("Collection.Piutang.Rekening",
                                      Model.Collection?.Piutang?.Rekening != null
-                                     ? $"Rp {Model.Collection.Piutang.Nominal!.Value.ToString("#,0", new System.Globalization.CultureInfo("id-ID"))}"
+                                     ? $"Rp {Model.Collection.Piutang.Nominal.ToString("#,0", new System.Globalization.CultureInfo("id-ID"))}"
                                      : "",
                                      new { @class = "form-control", @readonly = "readonly" })
                         </div>

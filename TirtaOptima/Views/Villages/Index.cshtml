@@ -51,7 +51,7 @@
                             @item.Nama
                         </td>
                         <td class="text-center">
-                            @item.KodeKecNavigation.Nama
+                            @item.KodeKecNavigation?.Nama
                         </td>
                         <td class="text-center fs-18">
                             @{
@@ -70,7 +70,17 @@
                             }
                         </td>
                         <td class="text-center">
-                            @(item.Jarak != null && item.Jarak > 0 ? item.Jarak + " Km" : "-")
+                            <span>
+                                @(item.Jarak switch
+                                {
+                                    1 => "Sangat Dekat",
+                                    2 => "Dekat",
+                                    3 => "Sedang",
+                                    4 => "Jauh",
+                                    5 => "Sangat Jauh",
+                                    _ => "-"
+                                })
+                            </span>
                         </td>
                         <td class="text-center">
                             @item.Keterangan

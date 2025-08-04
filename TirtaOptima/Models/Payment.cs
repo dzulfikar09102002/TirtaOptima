@@ -9,7 +9,7 @@ public partial class Payment
 
     public long IdPelanggan { get; set; }
 
-    public long NominalBayar { get; set; }
+    public decimal NominalBayar { get; set; }
 
     public string? Ket { get; set; }
 

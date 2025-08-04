@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Text.Json;
 using TirtaOptima.Helpers;
 using TirtaOptima.Models;
@@ -10,7 +11,18 @@ namespace TirtaOptima.Services
     {
         private readonly DatabaseContext _context = context;
         public List<Bill> Bills { get; set; } = new();
+        public List<DebtsManagement> DebtsManagements { get; set; } = new();
         public string? Message { get; set; }
+        public List<Customer> GetCustomers(List<long> idpelanggan)
+        {
+            return _context.Customers
+                .Include(x => x.JenisNavigation)
+                .Include(x => x.KelurahanNavigation)
+                .Include(x => x.KecamatanNavigation)
+                .Include(x => x.StatusNavigation)
+                .Where(x => idpelanggan.Contains(x.Id))
+                .ToList();
+        }
         public List<Bill> GetBills(BillViewModel model) =>
         [.._context.Bills
             .Where(x => x.Bulan == model.BulanSelect && x.Tahun == model.TahunSelect && x.IdPelangganNavigation != null)
@@ -37,7 +49,7 @@ namespace TirtaOptima.Services
                 if (apires.IsSuccessStatusCode)
                 {
                     var resdata = await apires.Content.ReadAsStringAsync();
-                    var bills = JsonSerializer.Deserialize<List<BillColumn>>(resdata);
+                    var bills = System.Text.Json.JsonSerializer.Deserialize<List<BillColumn>>(resdata);
 
                     if (bills != null && bills.Count > 0)
                     {
@@ -64,7 +76,6 @@ namespace TirtaOptima.Services
                             validBills.Add(new Bill
                             {
                                 IdPelanggan = item.IdPelanggan,
-                                IdPelangganNavigation = pelanggan,
                                 Awal = item.Awal,
                                 Akhir = item.Akhir,
                                 Total = item.Total,
@@ -105,7 +116,61 @@ namespace TirtaOptima.Services
                 return false;
             }
         }
-
+        public void Store(string[] selectedbills, long userid)
+        {
+            var idbill = _context.Bills.Any() ? _context.Bills.Max(x => x.Id) + 1 : 1;
+            var iddm = _context.DebtsManagements.Any() ? _context.DebtsManagements.Max(x => x.Id) + 1 : 1;
+            foreach (var billJson in selectedbills)
+            {
+                var bill = JsonConvert.DeserializeObject<BillColumn>(billJson);
+                if (bill != null)
+                {
+                    Bills.Add(new Bill
+                    {
+                        Id = idbill,
+                        IdPelanggan = bill.IdPelanggan,
+                        Total = bill.Total,
+                        Ket = bill.Ket,
+                        JatuhTempo = bill.JatuhTempo,
+                        Bulan = bill.Bulan,
+                        Tahun = bill.Tahun,
+                        Tagihan = bill.Tagihan,
+                        Awal = bill.Awal,
+                        Akhir = bill.Akhir,
+                        Admin = bill.Admin,
+                        Dpm = bill.Dpm,
+                        Materai = bill.Materai,
+                        Pakai = bill.Pakai,
+                        CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now,
+                        CreatedBy = userid,
+                        UpdatedBy = userid,
+                    });
+                    var tanggalJatuhTempo = new DateTime(
+                        bill.Tahun ?? DateTime.Now.Year,
+                        bill.Bulan ?? DateTime.Now.Month,
+                        1
+                    ).AddMonths(1);
+                    DebtsManagements.Add(new DebtsManagement
+                    {
+                        Id = iddm,
+                        PiutangId = idbill,
+                        Nominal = bill.Total ?? 0,
+                        Status = "Kredit",
+                        Tanggal = tanggalJatuhTempo,
+                        CreatedAt = DateTime.Now,
+                        CreatedBy = userid,
+                        UpdatedAt = DateTime.Now,
+                        UpdatedBy = userid
+                    });
+                    idbill++;
+                    iddm++;
+                }
+            }
+            _context.Bills.AddRange(Bills);
+            _context.DebtsManagements.AddRange(DebtsManagements);
+            _context.SaveChanges();
+        }
     }
 
 }
