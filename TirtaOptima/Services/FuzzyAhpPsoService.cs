@@ -47,7 +47,14 @@ namespace TirtaOptima.Services
             return psoWeights;
         }
 
-        private List<decimal> CalculateFahpWeights(FuzzyComparisonRequest request)
+        public class FuzzyWeight
+        {
+            public decimal L { get; set; }
+            public decimal M { get; set; }
+            public decimal U { get; set; }
+        }
+
+        public List<decimal> CalculateFahpWeights(FuzzyComparisonRequest request)
         {
             int n = request.CriteriaCount;
             var comparisons = request.Comparisons;
@@ -56,30 +63,28 @@ namespace TirtaOptima.Services
             decimal[] geomM = new decimal[n];
             decimal[] geomU = new decimal[n];
 
+            // Hitung G-mean tiap kriteria
             for (int i = 0; i < n; i++)
             {
                 decimal prodL = 1, prodM = 1, prodU = 1;
                 for (int j = 0; j < n; j++)
                 {
                     var item = comparisons.FirstOrDefault(c => c.Kriteria1Id == i && c.Kriteria2Id == j);
+
                     if (item == null)
                     {
                         if (i == j)
-                        {
                             item = new FuzzyComparisonViewModel { L = 1, M = 1, U = 1 };
-                        }
                         else
                         {
                             var reverse = comparisons.FirstOrDefault(c => c.Kriteria1Id == j && c.Kriteria2Id == i);
                             if (reverse != null)
-                            {
                                 item = new FuzzyComparisonViewModel
                                 {
                                     L = 1 / reverse.U,
                                     M = 1 / reverse.M,
                                     U = 1 / reverse.L
                                 };
-                            }
                         }
                     }
 
@@ -93,6 +98,7 @@ namespace TirtaOptima.Services
                 geomU[i] = (decimal)Math.Pow((double)prodU, 1.0 / n);
             }
 
+            // Total untuk normalisasi
             decimal sumL = geomL.Sum();
             decimal sumM = geomM.Sum();
             decimal sumU = geomU.Sum();
@@ -102,20 +108,23 @@ namespace TirtaOptima.Services
 
             for (int i = 0; i < n; i++)
             {
-                var normalized = (geomL[i] + geomM[i] + geomU[i]) / (sumL + sumM + sumU);
+                decimal normalized = (geomL[i] / sumL + geomM[i] / sumM + geomU[i] / sumU) / 3m;
                 result.Add(normalized);
+
                 NormalisasiLog.Add(new NormalisasiDetailViewModel
                 {
                     NamaKriteria = $"C{i + 1}",
                     GeomL = geomL[i],
                     GeomM = geomM[i],
                     GeomU = geomU[i],
-                    Normalized = normalized
+                    NormalizedL = geomL[i] / sumL,
+                    NormalizedM = geomM[i] / sumM,
+                    NormalizedU = geomU[i] / sumU
                 });
             }
 
-            return result;
-        }   
+            return result; 
+        }
 
         private bool IsRankingEqual(List<decimal> fahp, List<decimal> pso)
             {
@@ -154,32 +163,8 @@ namespace TirtaOptima.Services
                 middleMatrix[j, i] = 1 / item.M;
                 upperMatrix[j, i] = 1 / item.L;
             }
-
-            int particleCount, maxIter;
-
-            switch (_option?.ToLower())
-            {
-                case "low":
-                    particleCount = 20;
-                    maxIter = 50;
-                    break;
-                case "medium":
-                    particleCount = 50;
-                    maxIter = 100;
-                    break;
-                case "high":
-                    particleCount = 100;
-                    maxIter = 200;
-                    break;
-                case "veryhigh":
-                    particleCount = 200;
-                    maxIter = 500;
-                    break;
-                default:
-                    particleCount = 50;
-                    maxIter = 100;
-                    break;
-            }
+            int particleCount = 10;
+            int maxIter = 20;
 
             var rand = new Random();
             var particles = new List<decimal[]>();
@@ -192,6 +177,26 @@ namespace TirtaOptima.Services
             for (int p = 0; p < particleCount; p++)
             {
                 var w = RandomWeights(n, rand);
+                // Cetak header hanya sekali, saat p == 0
+                if (p == 0)
+                {
+                    Console.Write("Partikel\t");
+                    for (int h = 0; h < n; h++)
+                    {
+                        Console.Write($"w{h + 1}\t");
+                    }
+                    Console.Write("Total"); // Tambahan header kolom total
+                    Console.WriteLine();
+                }
+
+                Console.Write($"P{p + 1}\t\t");
+                for (int h = 0; h < w.Length; h++)
+                {
+                    Console.Write($"{Math.Round(w[h], 4)}\t");
+                }
+                Console.Write($"{Math.Round(w.Sum(), 4)}"); // Cetak jumlah bobot
+                Console.WriteLine();
+
                 var v = new decimal[n];
                 particles.Add(w);
                 velocities.Add(v);
@@ -447,6 +452,7 @@ namespace TirtaOptima.Services
 
         public void SaveNormalizations()
         {
+            // Hapus data lama
             _context.CriteriaNormalizations.RemoveRange(_context.CriteriaNormalizations);
             _context.SaveChanges();
 
@@ -454,16 +460,19 @@ namespace TirtaOptima.Services
 
             for (int i = 0; i < NormalisasiLog.Count; i++)
             {
-                var nama = NormalisasiLog[i].NamaKriteria;
                 var criteria = criteriaList[i];
+                var log = NormalisasiLog[i];
 
                 var data = new CriteriaNormalization
                 {
                     CriteriaId = criteria.Id,
-                    GeomL = NormalisasiLog[i].GeomL,
-                    GeomM = NormalisasiLog[i].GeomM,
-                    GeomU = NormalisasiLog[i].GeomU,
-                    NormalizationResult = NormalisasiLog[i].Normalized,
+                    GeomL = log.GeomL,
+                    GeomM = log.GeomM,
+                    GeomU = log.GeomU,
+
+                    // Simpan defuzzifikasi (opsional)
+                    NormalizationResult = (log.NormalizedL + log.NormalizedM + log.NormalizedU) / 3,
+
                     CreatedAt = DateTime.Now
                 };
 
@@ -472,6 +481,7 @@ namespace TirtaOptima.Services
 
             _context.SaveChanges();
         }
+
 
     }
 }

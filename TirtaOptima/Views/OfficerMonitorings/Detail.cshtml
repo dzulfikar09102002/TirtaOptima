@@ -101,7 +101,6 @@
                                 <th class="text-center">Nominal</th>
                                 <th class="text-center">Petugas</th>
                                 <th class="text-center">Tindakan</th>
-                                <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -130,9 +129,9 @@
                                                 )
                                         </strong>
                                         <br />
-                                        <span class="badge bg-@(item.Piutang.Nominal == 0 ? "success" : item.Piutang.Nominal < 1 ? "danger" : "info")">
+                                        <span class="badge bg-@(item.Piutang.Nominal == 0 ? "success" : item.Piutang.Nominal > 1 ? "danger" : "info")">
                                             <i class="mdi mdi-circle-medium"></i>
-                                            @(item.Piutang.Nominal == 0 ? "Lunas" : item.Piutang.Nominal < 1 ? "Belum Lunas" : "Lebih Bayar")
+                                            @(item.Piutang.Nominal == 0 ? "Lunas" : item.Piutang.Nominal > 1 ? "Belum Lunas" : "Lebih Bayar")
                                         </span>
                                     </td>
                                     <td class="text-center">
@@ -140,12 +139,7 @@
                                     </td>
                                     <td class="text-center">
                                         @item.Tindakan!.Name
-                                    </td>
-                                    <td class="text-center">
-                                        <a href="@Url.Action("Detail", new { id = item.Id })" class="btn btn-info btn-detail" type="button">
-                                            <i class="ri-external-link-line"></i>
-                                        </a>
-                                    </td>
+                                    </td>    
                                 </tr>
                                 no++;
                             }

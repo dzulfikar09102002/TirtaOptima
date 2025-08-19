@@ -1,0 +1,105 @@
+﻿@model LetterIssuancesViewModel
+<div class="row">
+    <div class="col-12 mb-3">
+        <form id="frmSave" class="needs-validation" novalidate asp-controller="LetterIssuances" asp-action="Save" method="POST" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-12 mb-3">
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(x => x.Collection!.Id)
+                    @Html.HiddenFor(x => x.Collection!.PiutangId)
+                    @Html.HiddenFor(x => x.Collection!.TindakanId)
+
+                    <label class="form-label">Kategori Surat <span class="text-danger">*</span></label>
+                    @Html.DropDownListFor(
+                             x => x.KategoriId,
+                             new SelectList(Model.LetterCategories, "Id", "Name"),
+                             "-- Pilih Kategori Surat --",
+                             new { @class = "form-control", @data_choices = true })
+
+                    <label class="form-label">Pimpinan <span class="text-danger">*</span></label>
+                    @Html.DropDownListFor(
+                             x => x.PimpinanId,
+                             new SelectList(Model.Leaders, "Id", "User.Name"),
+                             "-- Pilih Pimpinan --",
+                             new { @class = "form-control", @data_choices = true })
+                </div>
+
+                <div class="col-12 mb-3">
+                    <label class="form-label">Sifat <span class="text-danger">*</span></label>
+                    @Html.DropDownListFor(x => x.Sifat, new SelectList(new[]
+                             {
+                    new { Value = "Biasa", Text = "Biasa" },
+                    new { Value = "Penting", Text = "Penting" },
+                    new { Value = "Segera", Text = "Segera" },
+                    new { Value = "Sangat Segera", Text = "Sangat Segera" },
+                    new { Value = "Rahasia", Text = "Rahasia" }
+                    }, "Value", "Text"), "-- Pilih Sifat Surat --", new { @class = "form-control", @data_choices = true })
+                </div>
+
+                <div class="col-12 mb-3">
+                    <label class="form-label">Lampiran </label>
+                    @Html.TextBoxFor(x => x.Lampiran, new { @class = "form-control", @placeholder = "0" })
+                </div>
+
+                <div class="col-12 mb-3">
+                    <label class="form-label">Catatan <span class="text-danger">*</span></label>
+                    @Html.TextBoxFor(x => x.Note, new { @class = "form-control", @placeholder = "NB : " })
+                </div>
+
+                <div class="col-12 mb-3">
+                    <label class="form-label">Keterangan</label>
+                    @Html.TextAreaFor(x => x.Ket, new { @class = "form-control", rows = 3 })
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="hstack gap-2 justify-content-end">
+        <button type="button" class="btn btn-danger" id="btn-tutup-event" data-bs-dismiss="modal">Tutup</button>
+        <button type="button" class="btn btn-success" id="btn-save-event" onclick="Save()">Simpan</button>
+    </div>
+</div>
+<script>
+    function Save() {
+        var formData = new FormData($("#frmSave")[0]);
+        var t = $("input[name='__RequestVerificationToken']").val();
+
+        $.ajax({
+            url: $("#frmSave").attr('action'),
+            type: "POST",
+            data: formData,
+            dataType: "json",
+            contentType: false,
+            processData: false,
+            headers:
+            {
+                "RequestVerificationToken": t
+            },
+            beforeSend: function () {
+                $("#loader").show()
+            },
+            complete: function () { $("#loader").hide(); },
+            success: function (resp) {
+                if (resp.status == 1) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '<b>Info</b>',
+                        text: resp.message,
+                        timer: 1000,
+                        showConfirmButton: false,
+                    }).then(() => {
+                        window.location.reload();
+                    })
+                }
+                else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '<b style="color:orange">Peringatan</b>',
+                        text: resp.message,
+                    })
+                }
+            }
+        })
+
+    }
+</script>
+<script src="~/assets/js/pluginaddon.js"></script>

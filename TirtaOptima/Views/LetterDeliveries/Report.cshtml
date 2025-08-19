@@ -1,0 +1,154 @@
+﻿@model LetterDeliveriesViewModel
+@{
+    ViewData["Title"] = "Laporan Penyampaian Surat";
+}
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">TIRTA OPTIMA PERUMDAM TIRTA UMBULAN KOTA PASURUAN</h4>
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Tirta Optima</a></li>
+                    <li class="breadcrumb-item">Master Data</li>
+                    <li class="breadcrumb-item active">Jenis Tindakan</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card mt-2">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12 mb-3">
+                <form id="frmSave" class="needs-validation" novalidate asp-controller="LetterDeliveries" asp-action="Save" method="POST" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label class="form-label">Nomor Surat</label>
+                            @Html.TextBoxFor(x => x.Letter!.NomorSurat, new { @class = "form-control", @readonly = true })
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="form-label">Kategori Surat</label>
+                            @Html.TextBoxFor(x => x.Letter!.Kategori!.Name, new { @class = "form-control", @readonly = true })
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="form-label">Id Pelanggan </label>
+                            @Html.TextBoxFor(x => x.Letter!.Penagihan.Piutang.PelangganId, new { @class = "form-control", @readonly = true })
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="form-label">Nama Pelanggan </label>
+                            @Html.TextBoxFor(x => x.Letter!.Penagihan.Piutang.Pelanggan.Nama, new { @class = "form-control", @readonly = true })
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="form-label">Nama Petugas </label>
+                            @Html.TextBoxFor(x => x.Letter!.Penagihan.Penagih!.Name, new { @class = "form-control", @readonly = true })
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="form-label">Nama Tindakan </label>
+                            @Html.TextBoxFor(x => x.Letter!.Penagihan.Tindakan!.Name, new { @class = "form-control", @readonly = true })
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="form-label">Nama Penerima </label>
+                            @Html.TextBoxFor(x => x.Letter!.NamaPenerima, new { @class = "form-control" })
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="form-label">No Telp / WA Penerima </label>
+                            @Html.TextBoxFor(x => x.Letter!.NotelpPenerima, new { @class = "form-control" })
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="form-label">Rencana Bayar</label>
+                            @Html.TextBoxFor(x => x.Letter!.RencanaBayar, "", new { @class = "form-control", @data_provider = "flatpickr", @data_date_format = "d M Y", @data_deafult_date = "today" })
+                        </div>
+                            <div class="col-6 mb-3">
+                                <label class="form-label">Alasan </label>
+                                @Html.TextBoxFor(x => x.Letter!.Alasan, new { @class = "form-control"})
+                            </div>
+                        <div class="col-6 mb-3">
+                            <label class="form-label">Keterangan </label>
+                            @Html.TextBoxFor(x => x.Letter!.Ket, new { @class = "form-control" })
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="form-label">Status Penyampaian</label>
+                            @Html.DropDownListFor(x => x.Letter!.Status, new List<SelectListItem>
+                            {
+                            new SelectListItem { Text = "Belum Ditagih", Value = "Belum Disampaikan" },
+                            new SelectListItem { Text = "Berhasil Ditagih", Value = "Berhasil Ditagih" },
+                            new SelectListItem { Text = "Gagal Ditagih", Value = "Gagal Ditagih" },
+                            new SelectListItem { Text = "Janji Bayar", Value = "Janji Bayar" }
+                            }, "-- Pilih Status --", new { @class = "form-control",@data_choices = true })
+                        </div>
+                        <div class="col-3">
+                            <img class="img-thumbnail img-fluid"
+                                 src="@(Url.Content(Model.Letter!.Foto == null ? "/assets/images/nophoto.jpg" : "/assets/images/collections/" + Model.Letter.Foto))"
+                                 id="preview"
+                                 style="max-height: 300px;">
+
+                        </div>
+                        <div class="col-9">
+                            <label class="form-label">Bukti Foto Ratio</label>
+                            <input type="file" id="inputImage" name="Img" class="form-control" accept=".jpg, .jpeg, .png" onchange="previewImage(event,'preview')" />
+                        </div>
+                    </div>
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(x => x.Letter!.Id) 
+                    @Html.HiddenFor(x => x.Letter!.PenagihanId) 
+                </form>
+            </div>
+            <div class="hstack gap-2 justify-content-end">
+                <a href="@Url.Action("Index", "LetterDeliveries")" class="btn btn-danger" id="btn-tutup-event">Kembali</a>
+                <button type="button" class="btn btn-success" id="btn-save-event" onclick="Save()">Simpan</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/assets/js/pluginaddon.js"></script>
+<script>
+    const previewImage = (evt, elId) => {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+            document.getElementById(elId).src = e.target.result
+        }
+        reader.readAsDataURL(evt.target.files[0])
+    }
+    function Save() {
+        var formData = new FormData($("#frmSave")[0]);
+        var t = $("input[name='__RequestVerificationToken']").val();
+
+        $.ajax({
+            url: $("#frmSave").attr('action'),
+            type: "POST",
+            data: formData,
+            dataType: "json",
+            contentType: false,
+            processData: false,
+            headers:
+            {
+                "RequestVerificationToken": t
+            },
+            beforeSend: function () {
+                $("#loader").show()
+            },
+            complete: function () { $("#loader").hide(); },
+            success: function (resp) {
+                if (resp.status == 1) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '<b>Info</b>',
+                        text: resp.message,
+                        timer: 1000,
+                        showConfirmButton: false,
+                    }).then(() => {
+                        window.location.reload();
+                    })
+                }
+                else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '<b style="color:orange">Peringatan</b>',
+                        text: resp.message,
+                    })
+                }
+            }
+        })
+
+    }
+</script>

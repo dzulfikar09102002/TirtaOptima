@@ -48,29 +48,43 @@ namespace TirtaOptima.Services
 
         public void Save(CriteriaComparison comparison, bool repricoral)
         {
-            var tfn = FuzzyAHPHelper.TFNScaleNumber(comparison.ScaleValue ?? 0);
-            var repcricoraltfn = FuzzyAHPHelper.TFNReciprocalScaleNumber((comparison.ScaleValue) ?? 0);
+            var tfn = FuzzyAHPHelper.TFNScaleNumber(comparison.ScaleValue ?? 0);  // asli (L,M,U)
+
+            // hitung reciprocal TFN secara benar (1/U, 1/M, 1/L)
+            var reciprocalTFN = new TFNScale(
+                l: 1 / tfn.U,
+                m: 1 / tfn.M,
+                u: 1 / tfn.L
+            );
+
             if (repricoral)
             {
-                tfn = repcricoraltfn;
-                repcricoraltfn = FuzzyAHPHelper.TFNScaleNumber(comparison.ScaleValue ?? 0);
+                // jika yang disimpan kebalik
                 comparison.ScaleValue = 1 / comparison.ScaleValue;
+                // tukar
+                (tfn, reciprocalTFN) = (reciprocalTFN, tfn);
             }
-            CriteriaComparison? existingComparison = GetCriteriaComparison(comparison.CriteriaId1, comparison.CriteriaId2);
-            CriteriaComparison? repcricoralComparison = GetCriteriaComparison(comparison.CriteriaId2, comparison.CriteriaId1);
-            if (existingComparison != null && repcricoralComparison != null)
+
+            var existingComparison = GetCriteriaComparison(comparison.CriteriaId1, comparison.CriteriaId2);
+            var repComparison = GetCriteriaComparison(comparison.CriteriaId2, comparison.CriteriaId1);
+
+            if (existingComparison != null && repComparison != null)
             {
+                // sisi utama
                 existingComparison.ScaleValue = comparison.ScaleValue;
                 existingComparison.FuzzyL = tfn.L;
                 existingComparison.FuzzyM = tfn.M;
                 existingComparison.FuzzyU = tfn.U;
-                repcricoralComparison.ScaleValue = (1 / comparison.ScaleValue);
-                repcricoralComparison.FuzzyL = repcricoraltfn.L;
-                repcricoralComparison.FuzzyM = repcricoraltfn.M;
-                repcricoralComparison.FuzzyU = repcricoraltfn.U;
+                // sisi reciprocal
+                repComparison.ScaleValue = 1 / comparison.ScaleValue;
+                repComparison.FuzzyL = reciprocalTFN.L;
+                repComparison.FuzzyM = reciprocalTFN.M;
+                repComparison.FuzzyU = reciprocalTFN.U;
             }
+
             _context.SaveChanges();
         }
+
         public void Store(Dictionary<string, decimal> result, long userid)
         {
             foreach (var item in result)

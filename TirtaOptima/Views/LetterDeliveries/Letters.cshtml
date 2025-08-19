@@ -1,0 +1,52 @@
+﻿@model LetterDeliveriesViewModel
+<div class="table-responsive">
+    <table class="table table-bordered mb-0 text-center align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>No Surat</th>
+                <th>Jenis Surat</th>
+                <th>Sifat</th>
+                <th>Lampiran</th>
+                <th>Status</th>
+                <th>Laporan</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Letters != null && Model.Letters.Any())
+            {
+                foreach (var item in Model.Letters)
+                {
+                    <tr>
+                        <td>@item.NomorSurat</td>
+                        <td>@item.Kategori?.Name</td>
+                        <td>
+                            @{
+                                var sifat = item.Sifat;
+                                var badgeClass = sifat switch
+                                {
+                                    "Biasa" => "bg-secondary",
+                                    "Penting" => "bg-info",
+                                    "Segera" => "bg-warning",
+                                    "Sangat Segera" => "bg-danger",
+                                    "Rahasia" => "bg-dark",
+                                    _ => "bg-light"
+                                };
+                            }
+
+                            <span class="badge @badgeClass text-white">• @sifat</span>
+                        </td>
+                        <td>@(item.Lampiran == 0 ? "-" : $"{item.Lampiran} lembar")</td>
+                        <td>@(item.Status ?? "-")</td>
+                        <td>
+                            <a asp-controller="LetterDeliveries" asp-action="Report" asp-route-id="@item.Id"
+                               class="btn btn-info" title="Laporan Penyampaian">
+                                <i class="ri-share-box-line"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+z
+        </tbody>
+    </table>
+</div>

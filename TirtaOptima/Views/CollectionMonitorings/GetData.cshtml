@@ -51,9 +51,9 @@
                             @item.Tindakan!.Name
                         </td>
                         <td class="text-center">
-                            <a href="@Url.Action("Detail", new { id = item.Id })" class="btn btn-info btn-detail" type="button">
+                            <button class="btn btn-info btn-edit" data-id="@item.Id" onclick="Letters(this)" title="Detail">
                                 <i class="ri-external-link-line"></i>
-                            </a>
+                            </button>
                         </td>
                     </tr>
                     no++;
@@ -80,4 +80,17 @@
         $('#tbl').DataTable({
         })
     });
+    function Letters(button) {
+        var id = $(button).data('id');
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Letters")',
+            data: { id: id },
+            success: function (data) {
+                $("#staticBackdropLarge .modal-title").html("Daftar Surat");
+                $("#staticBackdropLarge .modal-body").html(data);
+                $("#staticBackdropLarge").modal('show');
+            }
+        });
+    }
 </script>

@@ -1,0 +1,249 @@
+﻿@using System.Globalization
+@model LetterIssuancesViewModel
+@{
+    Layout = null;
+    var item = Model.Letter;
+    List<DebtsSaldoPerMonthDto> dm = Model.DebtsManagement;
+    string message = "";
+    if (item!.Tindakan.Name == "Himbauan")
+    {
+        message = "Tagihan Anda telah melewati jatuh tempo dan tercatat sebagai piutang. Mohon segera melakukan pembayaran untuk menghindari sanksi berikutnya.";
+    }
+    else if (item!.Tindakan.Name == "Teguran")
+    {
+        message = "Kami mengingatkan bahwa tagihan Anda sudah menunggak lebih dari 1 bulan. Segera lakukan pembayaran melalui sistem sebelum dikenakan tindakan penagihan berikutnya.";
+    }
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title id="namasurat">Surat @item!.Kategori?.Name</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="~/assets/images/Logo Bulat.png">
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/assets/css/icons.min.css" rel="stylesheet" />
+    <link href="~/assets/css/app.min.css" rel="stylesheet" />
+    <link href="~/assets/css/custom.min.css" rel="stylesheet" />
+</head>
+
+<body id="pageprint">
+    <div class="d-print-none text-end" style="width: 720px; margin:20px auto 0;">
+        <button class="btn btn-info btn btn-success btn-label waves-effect waves-light" onclick="window.print()">
+            <i class="ri-printer-fill label-icon align-middle fs-16 me-2"></i> Cetak
+        </button>
+    </div>
+    <div class="text-center" style="width: 720px; margin: auto;" id="reportbox">
+        <table>
+            <tr>
+                <td style="width: 200px; text-align: right; padding-right: 20px;">
+                    <img src="~/assets/images/logo-circle.png" alt="Gambar" style="width:130px; margin-top: 5px;">
+                </td>
+                <td>
+                    <h4 style="margin-top: 10px;">
+                        <small>PERUSAHAAN UMUM DAERAH AIR MINUM</small>
+                    </h4>
+                    <h3 style="margin-top: -10px;">
+                        <b>TIRTA UMBULAN KOTA PASURUAN</b>
+                    </h3>
+                    <p style="font-size: 9pt;margin-top: -5px;">
+                        JL. Erlangga No.4 Purworejo Kota Pasuruan <br>
+                        Telepon (0343) 410411
+                    </p>
+                </td>
+            </tr>
+        </table>
+        <hr style="width: 620px; margin: auto;border: 2px solid black; color:black !important;">
+    </div>
+    @{
+        string noSurat = item.NomorSurat;
+    }
+    <div style="width: 620px; margin: auto;">
+        <div class="row">
+            <div class="col-sm-6">
+                <table style="font-size: 10pt; margin-top: 20px;">
+                    <tr>
+                        <td style="width: 80px;">Nomor <br>Sifat <br>Lampiran <br>Hal</td>
+                        <td>: <br> : <br> : <br>:</td>
+                        <td>@noSurat <br> @item.Sifat <br> @(item.Lampiran != 0 ? item.Lampiran : "-") <br> <b><u>@item.Tindakan.Name</u></b> </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-sm-6" style="text-align: right;">
+                <p style="font-size: 10pt;">Pasuruan, @item.CreatedAt.ToString("dd MMMM yyyy", new CultureInfo("id-ID"))</p>
+            </div>
+        </div>
+    </div>
+    <div style="width: 620px; margin: auto;">
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-sm-12">
+                <p style="font-size: 10pt;">
+                    Yth. @item.Penagihan.Piutang.Pelanggan.Nama<br>
+                    Jl. @item.Penagihan.Piutang.Pelanggan.Alamat <br>
+                    di - <br>
+                    Tempat
+                </p>
+            </div>
+        </div>
+    </div>
+    <div style="width: 620px; margin: auto;">
+        <div class="row">
+            <div class="col-sm-12">
+                <p style="font-size: 10pt;">
+                    Dengan Hormat,
+                </p>
+                <p style="font-size: 10pt; text-align: justify; text-indent: 50px;">
+                    Melalui surat ini, kami informasikan bahwa berdasarkan catatan administrasi PDAM Tirta Umbulan Kota Pasuruan, Saudara masih memiliki tunggakan pembayaran rekening air yang belum diselesaikan.
+                    <br>
+                    Adapun data pelanggan tercatat sebagai berikut :
+                </p>
+                <table style="width: 100%; font-size: 10pt; margin-top: -10px;">
+                    <tr>
+                        <td style="width: 30%;">ID & Jenis Pelanggan</td>
+                        <td>:</td>
+                        <td style="width: 70%;">@item.Penagihan.Piutang.Pelanggan.Id / @item.Penagihan.Piutang.Pelanggan.JenisNavigation?.Deskripsi</td>
+                    </tr>
+                    <tr>
+                        <td>Nama Pelanggan</td>
+                        <td>:</td>
+                        <td id="namaop">@item.Penagihan.Piutang.Pelanggan.Nama</td>
+                    </tr>
+                    <tr>
+                        <td>Alamat</td>
+                        <td>:</td>
+                        <td>@item.Penagihan.Piutang.Pelanggan.Alamat</td>
+                    </tr>
+                    <tr>
+                        <td>Tagihan</td>
+                        <td>:</td>
+                        <td>Data terlampir</td>
+                    </tr>
+                </table>
+                <p style="font-size: 10pt; text-align: justify; margin-top: 10px; text-indent: 50px;">
+                    Sehubungan dengan hal tersebut,
+                    @message
+                    Jika Saudara memerlukan penjelasan lebih lanjut mengenai hal ini,
+                    silakan menghubungi Kantor Perumdam Tirta Umbulan di nomor telepon
+                    (0343) 410411 atau datang langsung ke Kantor Perumdam Tirta Umbulan Jl. Erlangga No.4 Purworejo, Kota Pasuruan.
+                </p>
+                <p style="font-size: 10pt; text-align: justify; margin-top: 10px; text-indent: 50px;">
+                    Demikian yang dapat kami sampaikan, atas perhatian dan kerjasama Saudara, kami ucapkan terima kasih.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div style="width: 620px; margin: auto;">
+        <div class="row">
+            <div class="col-sm-6">
+            </div>
+            <div class="col-sm-6" style="text-align: center; position: relative;">
+
+                <p style="font-size: 10pt;">
+                    Mengetahui, <br>
+
+                    @item.Pimpinan.User.Jabatan <br><br><br><br> 
+                    <img src="~/assets/images/signatures/stempel.png"
+                         style="position:absolute; top:55%; left:30%; transform:translate(-50%, -50%);
+                    max-height:180px; opacity:0.7; z-index:15;" />
+                    <img src="~/assets/images/signatures/1-3-1746679049.png"
+                         style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);
+                max-height:160px;" />
+
+                    <table style="font-size: 10pt; text-align: center; margin: auto;">
+                        <tr>
+                            <td>
+                                <p style="text-transform: uppercase; text-decoration: underline; font-weight: bold;">
+                                    @item.Pimpinan.User.Name
+                                </p>
+                                <p style="margin-top: -20px;">NIP : @item.Pimpinan.User.NikNip</p>
+                            </td>
+                        </tr>
+                    </table>
+                </p>
+            </div>
+
+        </div>
+    </div>
+    <div style="width: 620px; margin: auto;">
+        <div class="row" style="margin-top: -20px;">
+            <div class="col-sm-12">
+                <p style="font-size: 10pt;">
+                    <u>Catatan :</u> <br>
+                    - Abaikan surat ini bila telah melakukan pembayaran <br>
+                </p>
+            </div>
+            <div style="page-break-after: always;"></div>
+        </div>
+    </div>
+
+
+    <div style="width: 620px; margin: auto;">
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-sm-12">
+                <h5 class="text-center">
+                    <u>NOTA PERHITUNGAN DATA TUNGGAKAN</u>
+                </h5>
+                <table style="font-size: 10pt;">
+                    <tr>
+                        <td style="width: 120px;">Jenis Pelanggan</td>
+                        <td style="width: 10px;">:</td>
+                        <td>@item.Penagihan.Piutang.Pelanggan.JenisNavigation?.Deskripsi</td>
+                    </tr>
+                    <tr>
+                        <td>ID Pelanggan</td>
+                        <td>:</td>
+                        <td>@item.Penagihan.Piutang.PelangganId</td>
+                    </tr>
+                    <tr>
+                        <td>Nama Pelanggan</td>
+                        <td>:</td>
+                        <td>@item.Penagihan.Piutang.Pelanggan.Nama</td>
+                    </tr>
+                    <tr>
+                        <td>ALAMAT</td>
+                        <td>:</td>
+                        <td>@item.Penagihan.Piutang.Pelanggan.Alamat</td>
+                    </tr>
+                </table>
+                <table style="width: 100%; border: 1px solid black; font-size: 8pt;">
+                    <tr style="border: 1px solid black; text-align: center;">
+                        <td style="border: 1px solid black; text-align: center;">
+                            <strong>TAHUN</strong>
+                        </td>
+                        <td style="border: 1px solid black; text-align: center;">
+                            <strong>BULAN</strong>
+                        </td>
+                        <td style="border: 1px solid black; text-align: center;">
+                            <strong>KETERANGAN</strong>
+                        </td>
+                        <td style="border: 1px solid black; text-align: center;">
+                            <strong>TOTAL TUNGGAKAN</strong>
+                        </td>
+                    </tr>
+                    @foreach (var itemdm in dm)
+                    {
+                        <tr style="border: 1px solid black;">
+                            <td style="border: 1px solid black; text-align: center;">@itemdm.Year</td>
+                            <td style="border: 1px solid black; text-align: center;">
+                                @{
+                                    var monthName = new DateTime(2024, itemdm.Month, 1).ToString("MMMM", new CultureInfo("id-ID"));
+                                }
+                                @monthName
+                            </td>
+                            <td style="border: 1px solid black; text-align: center;">@(item.Ket ?? "-")</td>
+                            <td style="border: 1px solid black; text-align: right;">RP @itemdm.Sisa.ToString("n0")</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td colspan="3" style="border: 1px solid black; text-align: center;"><b>TOTAL</b></td>
+                        <td style="border: 1px solid black; text-align: right;"><b>RP @dm.Sum(x => x.Sisa).ToString("n0")</b></td>
+                    </tr>
+                </table>
+                <p style="font-size: 10pt;">Catatan: @item.Note</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

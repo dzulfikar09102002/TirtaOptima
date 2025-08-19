@@ -69,7 +69,7 @@
                             </span>
                         </td>
                         <td class="text-center">
-                            @(item.Nominal != 0 ? (item.Collections != null && item.Collections.Any() ? item.Collections.LastOrDefault()?.StatusId : "-") : "Tuntas")
+                            @(item.Nominal != 0 ? (item.Collections != null && item.Collections.Any() ? item.Collections.LastOrDefault()?.Status : "-") : "Tuntas")
                         </td>
                         @foreach (var policy in Model.Policies)
                         {

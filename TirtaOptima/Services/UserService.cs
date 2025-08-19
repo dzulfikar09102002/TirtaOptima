@@ -8,7 +8,7 @@ namespace TirtaOptima.Services
     {
         private readonly DatabaseContext _context = context;
         public List<User> GetUsers() => [.. _context.Users.Where(x => x.DeletedAt == null).Include(x => x.Role)];
-        public User? GetUser(long id) => _context.Users.FirstOrDefault(x => x.Id == id && x.DeletedAt == null);
+        public User? GetUser(long id) => _context.Users.Include(x => x.Role).FirstOrDefault(x => x.Id == id && x.DeletedAt == null);
         public List<Role> GetRoles() => [.. _context.Roles.Where(x => x.DeletedAt == null)];
         public void Store(User user, long userid)
         {

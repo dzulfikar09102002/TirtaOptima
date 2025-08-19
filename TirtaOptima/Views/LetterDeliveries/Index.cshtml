@@ -31,7 +31,7 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 class="mb-sm-0">Penerbitan Surat</h4>
+            <h4 class="mb-sm-0">Penyampaian Surat</h4>
 
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
@@ -47,7 +47,7 @@
 <div class="card">
     <div class="card-body">
         <div class="row p-2 align-items-end">
-            <h6 class="mb-3">Pilih Periode Pemakaian</h6>
+            <h6 class="mb-3">Pilih Bulan & Tahun Penagihan</h6>
 
             <div class="col-lg-4 col-md-6 col-sm-12">
                 <label for="bulan-select" class="form-label">Bulan</label>
@@ -67,8 +67,11 @@
         </div>
     </div>
 </div>
-
-<div id="data-customers">
+<div id="data-collections">
+</div>
+<div id="temp-container"
+     data-temp-bulan="@TempData["Bulan-li"]"
+     data-temp-tahun="@TempData["Tahun-li"]">
 </div>
 @section Scripts
 {
@@ -84,7 +87,13 @@
                 GetData();
             }
         });
-
+        const previewImage = (evt, elId) => {
+            const reader = new FileReader()
+            reader.onload = (e) => {
+                document.getElementById(elId).src = e.target.result
+            }
+            reader.readAsDataURL(evt.target.files[0])
+        }
         const bulanDropdown = new Choices('#bulan-select', {
             shouldSort: false
         });
@@ -98,7 +107,7 @@
             var tahun = $("#tahun-select").val();
 
             $.ajax({
-                url: '@(Url.Action("GetData", "Customers"))',
+                url: '@(Url.Action("GetData", "LetterDeliveries"))',
                 type: "GET",
                 data: { bulan, tahun },
                 headers:
@@ -107,13 +116,13 @@
                 },
                 beforeSend: function () {
                     $("#loader").show()
-                    $('#data-customers').hide();
+                    $('#data-collections').hide();
                 },
                 complete: function () { $("#loader").hide(); },
                 success: function (resp) {
                     if (resp.status == undefined) {
-                        $('#data-customers').show();
-                        $('#data-customers').html(resp);
+                        $('#data-collections').show();
+                        $('#data-collections').html(resp);
                         $("#loader").hide()
                     }
                     else {

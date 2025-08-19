@@ -1,0 +1,47 @@
+﻿@model LetterIssuancesViewModel
+<div class="table-responsive">
+    <table class="table table-bordered mb-0 text-center align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>No Surat</th>
+                <th>Jenis Surat</th>
+                <th>Sifat</th>
+                <th>Lampiran</th>
+                <th>Status</th>
+                <th>Cetak Surat</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Letters)
+            {
+                <tr>
+                    <td>@item.NomorSurat</td>
+                    <td>@item.Kategori?.Name</td>
+                    <td>
+                        @{
+                            var sifat = item.Sifat;
+                            var badgeClass = sifat switch
+                            {
+                                "Biasa" => "bg-secondary",
+                                "Penting" => "bg-info",
+                                "Segera" => "bg-warning",
+                                "Sangat Segera" => "bg-danger",
+                                "Rahasia" => "bg-dark",
+                                _ => "bg-light"
+                            };
+                        }
+
+                        <span class="badge @badgeClass text-white">• @sifat</span>
+                    </td>
+                    <td>@(item.Lampiran == 0 ? "-" : $"{item.Lampiran} lembar")</td>
+                    <td>@item.Status</td>
+                    <td>
+                        <a href="@Url.Action("Print", "LetterIssuances", new { id = item.Id })" class="btn btn-primary btn-sm">
+                            <i class="ri-printer-line"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

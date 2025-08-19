@@ -1,1 +1,146 @@
 ﻿@model FurtherActionsViewModel
+@using System.Globalization
+@{
+    int no = 1;
+}
+<div class="card mt-2">
+    <div class="card-body">
+        <div class="table-responsive">
+
+            <table id="tbl" class="table table-hover table-striped align-middle table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th class="text-center align-middle">No.</th>
+                        <th class="text-center align-middle">Pelanggan</th>
+                        <th class="text-center align-middle">Nomor & Jenis</th>
+                        <th class="text-center align-middle">Alamat</th>
+                        <th class="text-center align-middle">Tanggal</th>
+                        <th class="text-center align-middle">Score</th>
+                        <th class="text-center align-middle">Tindakan</th>
+                        <th class="text-center align-middle">Nominal</th>
+                        <th class="text-center align-middle">Keterangan</th>
+                        <th class="text-center align-middle">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Collections.OrderByDescending(x => x.Piutang.StrategyResults.FirstOrDefault()?.Score))
+                    {
+                        <tr class="odd">
+                            <td class="text-center">@no</td>
+                            <td class="text-center">
+                                <strong>@item.Piutang.PelangganId</strong> <br />
+                                @item.Piutang.Pelanggan.Nama
+                            </td>
+                            <td class="text-center">
+                                <span class="fw-bold">@(item.Piutang.Pelanggan.Nomor ?? "-")</span> <br /> @item.Piutang.Pelanggan.JenisNavigation!.Deskripsi
+                            </td>
+                            <td class="text-center">
+                                @item.Piutang.Pelanggan.Alamat <br />
+                                @item.Piutang.Pelanggan.KelurahanNavigation!.Nama | @item.Piutang.Pelanggan.KelurahanNavigation.KodeKecNavigation!.Nama
+                            </td>
+                            <td class="text-center">
+                                @item.Tanggal.ToString("d MMMM yyyy", new System.Globalization.CultureInfo("id-ID")) <br />
+                                @{
+                                    var statusText = "";
+                                    var statusColor = "";
+
+                                    switch (item.Status)
+                                    {
+                                        case "Belum Ditindak":
+                                            statusText = "Belum Ditindak";
+                                            statusColor = "danger";
+                                            break;
+                                        case "Belum Tuntas":
+                                            statusText = "Belum Tuntas";
+                                            statusColor = "warning";
+                                            break;
+                                        case "Tuntas":
+                                            statusText = "Tuntas";
+                                            statusColor = "success";
+                                            break;
+                                        default:
+                                            statusText = "Tidak Diketahui";
+                                            statusColor = "dark";
+                                            break;
+                                    }
+                                }
+                                <span class="badge bg-@statusColor mt-1">@statusText</span>
+                            </td>
+                            <td class="text-center">
+                                @item.Piutang.StrategyResults.FirstOrDefault()?.Score?.ToString("F4")
+                            </td>
+                            <td class="text-center">
+                                @item.Tindakan?.Name
+                            </td>
+                            <td class="text-end">
+                                <strong>
+                                    @(
+                                        string.Format(
+                                        new System.Globalization.CultureInfo("id-ID"),
+                                        "Rp {0:N0}",
+                                        Math.Abs(item.Piutang.Nominal)
+                                        )
+                                        )
+                                </strong>
+                                <br />
+                                <span class="badge badge-label bg-@(item.Piutang.Nominal == 0 ? "success" : item.Piutang.Nominal > 1 ? "danger" : "info")">
+                                    <i class="mdi mdi-circle-medium"></i>
+                                    @(item.Piutang.Nominal == 0 ? "Lunas" : item.Piutang.Nominal > 1 ? "Belum Lunas" : "Lebih Bayar")
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                @(item.Ket ?? "-")
+                            </td>
+                            <td class="text-center">
+                                @{
+                                    if (item.TindakanId > 3)
+                                    {
+                                        <button class="btn btn-info btn-edit" data-id="@item.Id" onclick="Action(this)" title="Aksi">
+                                            <i class="ri-mail-send-fill"></i>
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning">Penyampaian Surat</span>
+                                    }
+                                }
+                            </td>
+                        </tr>
+                        no++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="period-container"
+     data-bulan="@Model.BulanSelect"
+     data-tahun="@Model.TahunSelect">
+    @{
+        TempData["Bulan-fa"] = Model.BulanSelect;
+        TempData["Tahun-fa"] = Model.TahunSelect;
+        if (!string.IsNullOrEmpty(ViewBag.Message))
+        {
+            <div id="partial-message" data-message="@ViewBag.Message"></div>
+        }
+    }
+</div>
+<script>
+    $(document).ready(function () {
+        $('#tbl').DataTable({
+        })
+    });
+    function Action(button) {
+        var id = $(button).data('id');
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Letters")',
+            data: { id: id },
+            success: function (data) {
+                $("#staticBackdropLarge .modal-title").html("Daftar Surat");
+                $("#staticBackdropLarge .modal-body").html(data);
+                $("#staticBackdropLarge").modal('show');
+            }
+        });
+    }
+</script>

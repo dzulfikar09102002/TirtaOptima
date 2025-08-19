@@ -68,7 +68,11 @@
     </div>
 </div>
 
-<div id="data-customers">
+<div id="data-collections">
+</div>
+<div id="temp-container"
+     data-temp-bulan="@TempData["Bulan-fa"]"
+     data-temp-tahun="@TempData["Tahun-fa"]">
 </div>
 @section Scripts
 {
@@ -98,7 +102,7 @@
             var tahun = $("#tahun-select").val();
 
             $.ajax({
-                url: '@(Url.Action("GetData", "Customers"))',
+                url: '@(Url.Action("GetData", "FurtherActions"))',
                 type: "GET",
                 data: { bulan, tahun },
                 headers:
@@ -107,13 +111,13 @@
                 },
                 beforeSend: function () {
                     $("#loader").show()
-                    $('#data-customers').hide();
+                    $('#data-collections').hide();
                 },
                 complete: function () { $("#loader").hide(); },
                 success: function (resp) {
                     if (resp.status == undefined) {
-                        $('#data-customers').show();
-                        $('#data-customers').html(resp);
+                        $('#data-collections').show();
+                        $('#data-collections').html(resp);
                         $("#loader").hide()
                     }
                     else {

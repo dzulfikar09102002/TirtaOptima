@@ -29,10 +29,10 @@
                     .ToList();
 
                     var total = collections.Count;
-                    var belum = collections.Count(x => x.StatusId == "Belum Ditagih");
+                    var belum = collections.Count(x => x.Status == "Belum Ditindak");
                     var sudah = total - belum;
-                    var berhasil = collections.Count(x => x.StatusId == "Berhasil Ditagih");
-                    var gagal = collections.Count(x => x.StatusId == "Gagal Ditagih");
+                    var berhasil = collections.Count(x => x.Status == "Tuntas");
+                    var gagal = collections.Count(x => x.Status == "Belum Tuntas");
                     var sisa = total - berhasil - gagal;
 
                     double persenBerhasil = total == 0 ? 0 : berhasil * 100.0 / total;
@@ -40,7 +40,7 @@
                     double persenSisa = total == 0 ? 0 : sisa * 100.0 / total;
 
                     var tertagih = collections
-                    .Where(x => x.StatusId == "Berhasil Ditagih")
+                    .Where(x => x.Status == "Tuntas")
                     .Sum(x => x.Piutang?.Nominal ?? 0);
                     <tr class="odd">
                         <td class="text-center">@no</td>
