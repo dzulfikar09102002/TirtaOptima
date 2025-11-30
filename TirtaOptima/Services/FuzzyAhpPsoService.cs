@@ -23,29 +23,58 @@ namespace TirtaOptima.Services
         {
             var fahpWeights = CalculateFahpWeights(request);
 
-            // Simpan ranking FAHP untuk digunakan di Fitness
             _fahpRanking = fahpWeights
                 .Select((v, i) => new { Index = i, Value = v })
                 .OrderByDescending(x => x.Value)
                 .Select(x => x.Index)
                 .ToList();
 
-            List<decimal> psoWeights;
-            int attempts = 0;
-            const int maxAttempts = 10;
+            List<decimal> bestWeights = new();
+            decimal bestFitness = decimal.MinValue;
+            decimal bestSpearman = -1m;
 
-            do
+            int attempts = 0;
+            const int maxAttempts = 5;
+
+            while (attempts < maxAttempts)
             {
-                psoWeights = await CalculateWeightsAsync(request);
+                var psoWeights = await CalculateWeightsAsync(request);
+
+                // hitung fitnessnya SEKALI LAGI menggunakan matriks asli PSO
+                var fitness = Fitness(
+                    psoWeights.ToArray(),
+                    /* kita ambil matrix dari request -> diisi di method Fitness */
+                    CreateLowerMatrix(request),
+                    CreateMiddleMatrix(request),
+                    CreateUpperMatrix(request),
+                    request.CriteriaCount
+                );
+
+                var spearman = CalculateSpearmanCorrelation(fahpWeights, psoWeights);
+
+                if (fitness > bestFitness || (fitness == bestFitness && spearman > bestSpearman))
+                {
+                    bestWeights = psoWeights;
+                    bestFitness = fitness;
+                    bestSpearman = spearman;
+                }
+
                 attempts++;
             }
-            while (!IsRankingEqual(fahpWeights, psoWeights) && attempts < maxAttempts);
-            var spearman = CalculateSpearmanCorrelation(fahpWeights, psoWeights);
-            Console.WriteLine($"Spearman's rho: {spearman:F4}");
+
             SavePsoLogs();
             SaveNormalizations();
-            return psoWeights;
+
+            // Konvergensi sudah ditemukan di dalam metode CalculateWeightsAsync
+            // Jadi, tidak perlu melakukan pencarian lagi di sini
+
+            // Tampilkan hanya hasil ringkas
+            Console.WriteLine($"Spearman rho: {bestSpearman:F4}");
+
+            // Jika ingin mengembalikan bestWeights tetap dipakai UI
+            return bestWeights;
         }
+
 
         public class FuzzyWeight
         {
@@ -123,22 +152,7 @@ namespace TirtaOptima.Services
                 });
             }
 
-            return result; 
-        }
-
-        private bool IsRankingEqual(List<decimal> fahp, List<decimal> pso)
-            {
-            var fahpRank = fahp.Select((v, i) => new { Index = i, Value = v })
-                               .OrderByDescending(x => x.Value)
-                               .Select(x => x.Index)
-                               .ToList();
-
-            var psoRank = pso.Select((v, i) => new { Index = i, Value = v })
-                              .OrderByDescending(x => x.Value)
-                              .Select(x => x.Index)
-                              .ToList();
-
-            return fahpRank.SequenceEqual(psoRank);
+            return result;
         }
 
         public Task<List<decimal>> CalculateWeightsAsync(FuzzyComparisonRequest request)
@@ -163,8 +177,8 @@ namespace TirtaOptima.Services
                 middleMatrix[j, i] = 1 / item.M;
                 upperMatrix[j, i] = 1 / item.L;
             }
-            int particleCount = 10;
-            int maxIter = 20;
+            int particleCount = 100;
+            int maxIter = 100;
 
             var rand = new Random();
             var particles = new List<decimal[]>();
@@ -173,30 +187,11 @@ namespace TirtaOptima.Services
             var pBestScore = new List<decimal>();
             decimal[] gBest = new decimal[n];
             decimal gBestScore = decimal.MinValue;
+            decimal previousGBestScore = decimal.MinValue;
 
             for (int p = 0; p < particleCount; p++)
             {
                 var w = RandomWeights(n, rand);
-                // Cetak header hanya sekali, saat p == 0
-                if (p == 0)
-                {
-                    Console.Write("Partikel\t");
-                    for (int h = 0; h < n; h++)
-                    {
-                        Console.Write($"w{h + 1}\t");
-                    }
-                    Console.Write("Total"); // Tambahan header kolom total
-                    Console.WriteLine();
-                }
-
-                Console.Write($"P{p + 1}\t\t");
-                for (int h = 0; h < w.Length; h++)
-                {
-                    Console.Write($"{Math.Round(w[h], 4)}\t");
-                }
-                Console.Write($"{Math.Round(w.Sum(), 4)}"); // Cetak jumlah bobot
-                Console.WriteLine();
-
                 var v = new decimal[n];
                 particles.Add(w);
                 velocities.Add(v);
@@ -210,8 +205,8 @@ namespace TirtaOptima.Services
                 }
             }
 
-            decimal c1 = 2m, c2 = 2m, wInertia = 0.5m;
-            PsoIterationsLog.Clear(); // sebelum iterasi
+            decimal c1 = 1.0m, c2 = 1.0m, wInertia = 0.2m;
+            PsoIterationsLog.Clear();
 
             for (int iter = 0; iter < maxIter; iter++)
             {
@@ -259,12 +254,19 @@ namespace TirtaOptima.Services
                         Fitness = score
                     });
                 }
-            }
 
+                // Kondisi penghentian yang BENAR-BENAR menghentikan loop iterasi
+                if (Math.Round(gBestScore, 6) == Math.Round(previousGBestScore, 6) && iter > 0)
+                {
+                    Console.WriteLine($"Konvergen di iterasi: {iter + 1}");
+                    break; // Ini akan menghentikan seluruh proses
+                }
+
+                previousGBestScore = gBestScore;
+            }
 
             return Task.FromResult(gBest.ToList());
         }
-
         private decimal[] RandomWeights(int n, Random rand)
         {
             var raw = new decimal[n];
@@ -435,7 +437,7 @@ namespace TirtaOptima.Services
 
                     _context.PsoIterations.Add(new PsoIteration
                     {
-                        Id = currentId++, 
+                        Id = currentId++,
                         Iteration = best.Iteration,
                         CriteriaId = criteria.Id,
                         Weight = best.Weights[i],
@@ -481,7 +483,40 @@ namespace TirtaOptima.Services
 
             _context.SaveChanges();
         }
+        private decimal[,] CreateLowerMatrix(FuzzyComparisonRequest request)
+        {
+            int n = request.CriteriaCount;
+            decimal[,] mat = new decimal[n, n];
+            foreach (var c in request.Comparisons)
+            {
+                mat[c.Kriteria1Id, c.Kriteria2Id] = c.L;
+                mat[c.Kriteria2Id, c.Kriteria1Id] = 1 / c.L;
+            }
+            return mat;
+        }
 
+        private decimal[,] CreateMiddleMatrix(FuzzyComparisonRequest request)
+        {
+            int n = request.CriteriaCount;
+            decimal[,] mat = new decimal[n, n];
+            foreach (var c in request.Comparisons)
+            {
+                mat[c.Kriteria1Id, c.Kriteria2Id] = c.M;
+                mat[c.Kriteria2Id, c.Kriteria1Id] = 1 / c.M;
+            }
+            return mat;
+        }
 
+        private decimal[,] CreateUpperMatrix(FuzzyComparisonRequest request)
+        {
+            int n = request.CriteriaCount;
+            decimal[,] mat = new decimal[n, n];
+            foreach (var c in request.Comparisons)
+            {
+                mat[c.Kriteria1Id, c.Kriteria2Id] = c.U;
+                mat[c.Kriteria2Id, c.Kriteria1Id] = 1 / c.U;
+            }
+            return mat;
+        }
     }
 }

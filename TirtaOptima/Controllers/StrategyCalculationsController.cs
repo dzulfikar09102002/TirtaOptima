@@ -42,6 +42,7 @@ namespace TirtaOptima.Controllers
             };
             return PartialView("Input", model);
         }
+        [HttpPost]
         public IActionResult SaveScale(StrategyCalculationViewModel input)
         {
             try

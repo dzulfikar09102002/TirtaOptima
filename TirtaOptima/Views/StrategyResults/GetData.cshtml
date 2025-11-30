@@ -66,7 +66,27 @@
                         </td>
                         <td class="text-center fw-bold">@item.Score.ToString("F4")</td>
                         <td class="text-center">
-                            @item.Tindakan
+                            @switch (item.Tindakan)
+                            {
+                                case "Himbauan":
+                                    @:<span class="badge bg-info">Himbauan</span>
+                                    break;
+                                case "Teguran":
+                                    @:<span class="badge bg-info">Teguran</span>
+                                    break;
+                                case "Penagihan":
+                                    @:<span class="badge bg-primary">Penagihan</span>
+                                    break;
+                                case "Segel":
+                                    @:<span class="badge bg-warning">Segel</span>
+                                    break;
+                                case "Cabut":
+                                    @:<span class="badge bg-danger">Cabut</span>
+                                    break;
+                                default:
+                                    @:<span class="badge bg-light text-dark">@item.Tindakan</span>
+                                    break;
+                            }
                         </td>
                     </tr>
                 }

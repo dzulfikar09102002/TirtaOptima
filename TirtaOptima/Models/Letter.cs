@@ -7,7 +7,7 @@ public partial class Letter
 {
     public long Id { get; set; }
 
-    public long PiutangId { get; set; }
+    public long PenagihanId { get; set; }
 
     public long TindakanId { get; set; }
 
@@ -25,6 +25,18 @@ public partial class Letter
 
     public string? Note { get; set; }
 
+    public string? Status { get; set; }
+
+    public string? NamaPenerima { get; set; }
+
+    public string? NotelpPenerima { get; set; }
+
+    public DateOnly? RencanaBayar { get; set; }
+
+    public string? Foto { get; set; }
+
+    public string? Alasan { get; set; }
+
     public DateTime CreatedAt { get; set; }
 
     public DateTime UpdatedAt { get; set; }
@@ -37,17 +49,15 @@ public partial class Letter
 
     public long? DeletedBy { get; set; }
 
-    public virtual ICollection<Collection> Collections { get; set; } = new List<Collection>();
-
     public virtual User? CreatedByNavigation { get; set; }
 
     public virtual User? DeletedByNavigation { get; set; }
 
     public virtual LetterCategory? Kategori { get; set; }
 
-    public virtual Leader Pimpinan { get; set; } = null!;
+    public virtual Collection Penagihan { get; set; } = null!;
 
-    public virtual Debt Piutang { get; set; } = null!;
+    public virtual Leader Pimpinan { get; set; } = null!;
 
     public virtual ActionType Tindakan { get; set; } = null!;
 

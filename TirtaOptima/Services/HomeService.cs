@@ -24,7 +24,7 @@ namespace TirtaOptima.Services
         public List<Letter> GetLetters()
             => [.. _context.Letters.Where(x => x.DeletedAt == null)];
 
-        public List<DebtPerMonthDto> GetDebtPerMonthByYear(int year = 2024)
+        public List<DebtPerMonthDto> GetDebtPerMonthByYear(int year = 2025)
         {
             // Data asli dari DB
             var raw = _context.Debts

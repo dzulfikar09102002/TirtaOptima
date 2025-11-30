@@ -9,25 +9,13 @@ public partial class Collection
 
     public long PiutangId { get; set; }
 
-    public long? SuratId { get; set; }
-
     public DateTime Tanggal { get; set; }
 
-    public string? StatusId { get; set; }
+    public string? Status { get; set; }
 
     public long? PenagihId { get; set; }
 
     public long? TindakanId { get; set; }
-
-    public string? NamaPenerima { get; set; }
-
-    public string? NotelpPenerima { get; set; }
-
-    public DateOnly? RencanaBayar { get; set; }
-
-    public string? Foto { get; set; }
-
-    public string? Alasan { get; set; }
 
     public string? Ket { get; set; }
 
@@ -47,11 +35,11 @@ public partial class Collection
 
     public virtual User? DeletedByNavigation { get; set; }
 
+    public virtual ICollection<Letter> Letters { get; set; } = new List<Letter>();
+
     public virtual User? Penagih { get; set; }
 
     public virtual Debt Piutang { get; set; } = null!;
-
-    public virtual Letter? Surat { get; set; }
 
     public virtual ActionType? Tindakan { get; set; }
 

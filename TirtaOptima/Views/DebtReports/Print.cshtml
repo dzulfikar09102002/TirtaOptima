@@ -1,0 +1,82 @@
+﻿@model TirtaOptima.ViewModels.DebtReportsViewModel
+@{
+    Layout = null;
+    int no = 1;
+    var totalNominal = Model.Debts.Sum(d => d.Nominal);
+}
+
+<link rel="shortcut icon" href="~/assets/images/Logo Bulat.png">
+@*VELZON CSS*@
+<script src="~/assets/js/layout.js"></script>
+<link href="~/assets/css/bootstrap.min.css" rel="stylesheet" />
+<link href="~/assets/css/icons.min.css" rel="stylesheet" />
+<link href="~/assets/css/app.min.css" rel="stylesheet" />
+<link href="~/assets/css/custom.min.css" rel="stylesheet" />
+<title>Tirta Optima | Laporan Piutang</title>
+<div class="card mt-2">
+    <div class="card-body">
+        <div class="d-flex  d-print-none flex-wrap gap-2 mb-3">
+            <a href="javascript:window.print()" type="button" class="btn btn-info btn-label waves-effect waves-light">
+                <i class="ri-printer-line label-icon align-middle fs-16 me-2"></i> Cetak Laporan
+            </a>
+        </div>
+        <table id="tbl" class="table table-hover table-striped align-middle table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th class="text-center">No</th>
+                    <th class="text-center">Pelanggan</th>
+                    <th class="text-center">Nomor & Jenis</th>
+                    <th class="text-center">Alamat</th>
+                    <th class="text-center">Tanggal</th>
+                    <th class="text-center">Status Terakhir</th>
+                    <th class="text-center">Total Nominal</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Debts)
+                {
+                    <tr class="odd">
+                        <td class="text-center">
+                            @no
+                        </td>
+                        <td class="text-center">
+                            <strong>@item.PelangganId</strong> <br />
+                            @item.Pelanggan.Nama
+                        </td>
+                        <td class="text-center">
+                            <strong>@item.Pelanggan.Nomor</strong> <br />
+                            @item.Pelanggan.JenisNavigation!.Deskripsi
+                        </td>
+                        <td class="text-center">
+                            <span>@item.Pelanggan.Alamat</span> <br />
+                            @item.Pelanggan.KelurahanNavigation!.Nama | @item.Pelanggan.KelurahanNavigation.KodeKecNavigation!.Nama
+                        </td>
+                        <td class="text-center">
+                            @item.TanggalTerakhir!.Value.ToString("d MMMM yyyy", new System.Globalization.CultureInfo("id-ID"))
+                        </td>
+                        <td class="text-center">
+                            @item.StatusTerakhir
+                        </td>
+                        <td class="text-end">
+                            <strong>
+                                @("Rp " + item.Nominal.ToString("N0", new System.Globalization.CultureInfo("id-ID")))
+                            </strong>
+                            <br />
+                            <span class="badge badge-label bg-@(item.Nominal == 0 ? "success" : item.Nominal > 1 ? "danger" : "info")">
+                                <i class="mdi mdi-circle-medium"></i>
+                                @(item.Nominal == 0 ? "Lunas" : item.Nominal > 1 ? "Belum Lunas" : "Lebih Bayar")
+                            </span>
+                        </td>
+                    </tr>
+                    no++;
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6" class="text-center"><strong>TOTAL PIUTANG</strong></td>
+                    <td class="text-end"><strong>@("Rp " + totalNominal.ToString("N0", new System.Globalization.CultureInfo("id-ID")))</strong></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

@@ -30,8 +30,88 @@ namespace TirtaOptima.Services
 
 			return debts;
 		}
+        public List<ResultColumn> GetScoreFahpOnly(StrategyResultViewModel input, long userid)
+        {
+            var debts = GetDebts(input)
+                .Where(x =>
+                    !x.Collections.Any() ||
+                    x.StrategyResults.Any(r => r.Status == "pending"
+                    || !x.StrategyResults.Any())
+                );
+            if (!debts.Any()) return new();
 
-		public List<ResultColumn> GetScore(StrategyResultViewModel input, long userid)
+            // Hitung umur piutang
+            var umurSemua = debts
+                .Where(d => d.TanggalTerakhir.HasValue)
+                .Select(d => (DateTime.Now - d.TanggalTerakhir!.Value).Days)
+                .ToList();
+
+            // Min/Max value
+            decimal minNominal = debts.Min(d => d.Nominal);
+            decimal maxNominal = debts.Max(d => d.Nominal);
+            int minUmur = umurSemua.Min();
+            int maxUmur = umurSemua.Max();
+
+            // Ambil bobot FAHP normalisasi berdasarkan CriteriaNormalization
+            var criterias = _context.CriteriaNormalizations
+                .Include(cn => cn.Criteria)
+                .ToDictionary(cn => cn.CriteriaId, cn => cn.NormalizationResult ?? 0m);
+
+            var results = new List<ResultColumn>();
+
+            foreach (var d in debts)
+            {
+                int umurPiutang = (DateTime.Now - d.TanggalTerakhir!.Value).Days;
+
+                // Normalisasi
+                decimal normNominal = Normalize(d.Nominal, minNominal, maxNominal);
+                decimal normUmur = Normalize(umurPiutang, minUmur, maxUmur);
+                decimal normJenis = JenisMapping.TryGetValue(d.Pelanggan.Jenis ?? "", out var jVal) ? jVal : 0m;
+                decimal normStatus = StatusMapping.TryGetValue(d.Pelanggan.Status, out var sVal) ? sVal : 0m;
+                decimal normLayanan = Normalize((decimal)(d.Pelanggan.KelurahanNavigation!.Layanan ?? 1m), 1, 5);
+                decimal normAlamat = Normalize((decimal)(d.Pelanggan.KelurahanNavigation!.Jarak ?? 1m), 5, 1);
+
+                // Mapping C1..Cn sesuai urutan Criteria di DB
+                decimal scoreNominal = criterias.GetValueOrDefault(1, 0) * normNominal;
+                decimal scoreUmur = criterias.GetValueOrDefault(2, 0) * normUmur;
+                decimal scoreJenis = criterias.GetValueOrDefault(3, 0) * normJenis;
+                decimal scoreStatus = criterias.GetValueOrDefault(4, 0) * normStatus;
+                decimal scoreLayanan = criterias.GetValueOrDefault(5, 0) * normLayanan;
+                decimal scoreAlamat = criterias.GetValueOrDefault(6, 0) * normAlamat;
+
+                decimal totalScore = scoreNominal + scoreUmur + scoreJenis + scoreStatus + scoreLayanan + scoreAlamat;
+                var roundedScore = Math.Round(totalScore, 4);
+
+                // Cari tindakan (policy)
+                var policy = _context.Policies
+                    .Where(p => umurPiutang >= (int)(p.RentangWaktu ?? 0))
+                    .OrderByDescending(p => p.RentangWaktu)
+                    .FirstOrDefault();
+
+                results.Add(new ResultColumn
+                {
+                    Id = d.PelangganId,
+                    Pelanggan = $"<b>{d.Pelanggan.Id}</b> - {d.Pelanggan.Nama}",
+                    Nominal = scoreNominal,
+                    Umur = scoreUmur,
+                    Jenis = scoreJenis,
+                    Status = scoreStatus,
+                    Layanan = scoreLayanan,
+                    Alamat = scoreAlamat,
+                    Score = roundedScore,
+                    Tindakan = policy?.NamaStrategi,
+                    PiutangId = d.Id
+                });
+
+            }
+
+            // Urutkan sama seperti sebelumnya
+            return results
+                .OrderByDescending(r => r.Score)
+                .ToList();
+        }
+
+        public List<ResultColumn> GetScore(StrategyResultViewModel input, long userid)
 		{
 			var debts = GetDebts(input)
 			.Where(x =>
@@ -100,7 +180,7 @@ namespace TirtaOptima.Services
 					Nominal = scoreNominal,
 					Umur = scoreUmur,
 					Jenis = scoreJenis,
-					Status = scoreJenis,
+					Status = scoreStatus,
 					Layanan = scoreLayanan,
 					Alamat = scoreAlamat,
 					Score = score ?? 0,
@@ -134,39 +214,47 @@ namespace TirtaOptima.Services
 				}
 
 			}
+			
 			_context.SaveChanges();
-			var patokan = results.OrderByDescending(x => x.Score).FirstOrDefault();
-			if (patokan != null)
-			{
-				var patokanDebt = debts.FirstOrDefault(x => x.PelangganId == patokan.Id);
-				var patokanKelurahan = patokanDebt?.Pelanggan.Kelurahan;
-				var patokanKecamatan = patokanDebt?.Pelanggan.Kecamatan;
+            // cari patokan berdasarkan alamat (score alamat tertinggi), jika sama lihat skor akhir
+            var patokan = results
+                .OrderByDescending(x => x.Alamat)
+                .ThenByDescending(x => x.Score)
+                .FirstOrDefault();
 
-				// 2. Hitung ZonaGroup untuk setiap hasil
-				foreach (var r in results)
-				{
-					var d = debts.FirstOrDefault(x => x.PelangganId == r.Id);
-					if (d == null || d.Pelanggan == null)
-					{
-						r.ZonaGroup = 3; // default di luar kecamatan
-						continue;
-					}
+            if (patokan != null)
+            {
+                var patokanDebt = debts.FirstOrDefault(x => x.PelangganId == patokan.Id);
+                var patokanKelurahan = patokanDebt?.Pelanggan.Kelurahan;
+                var patokanKecamatan = patokanDebt?.Pelanggan.Kecamatan;
 
-					if (d.Pelanggan.Kelurahan == patokanKelurahan)
-						r.ZonaGroup = 1; // Kelurahan sama
-					else if (d.Pelanggan.Kecamatan == patokanKecamatan)
-						r.ZonaGroup = 2; // Kecamatan sama
-					else
-						r.ZonaGroup = 3; // Luar kecamatan
-				}
+                // 2. Hitung ZonaGroup untuk setiap hasil
+                foreach (var r in results)
+                {
+                    var d = debts.FirstOrDefault(x => x.PelangganId == r.Id);
+                    if (d == null || d.Pelanggan == null)
+                    {
+                        r.ZonaGroup = 3; // default di luar kecamatan
+                        continue;
+                    }
 
-				// 3. Urutkan ulang berdasarkan zona & skor
-				results = results
-					.OrderBy(r => r.ZonaGroup)
-					.ThenByDescending(r => r.Score)
-					.ToList();
-			}
-			return results;
+                    if (d.Pelanggan.Kelurahan == patokanKelurahan)
+                        r.ZonaGroup = 1; // Kelurahan sama
+                    else if (d.Pelanggan.Kecamatan == patokanKecamatan)
+                        r.ZonaGroup = 2; // Kecamatan sama
+                    else
+                        r.ZonaGroup = 3; // Luar kecamatan
+                }
+
+                // 3. Urutkan ulang berdasarkan zona & skor
+                results = results
+							.OrderBy(r => r.ZonaGroup)           // 1. Utamakan zona
+							.ThenByDescending(r => r.Alamat)     // 2. Dalam zona, alamat terbesar dulu
+							.ThenByDescending(r => r.Score)      // 3. Kalau alamat sama, total score
+							.ToList();
+            }
+
+            return results;
 		}
 
 

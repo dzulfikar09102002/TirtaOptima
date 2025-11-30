@@ -47,8 +47,9 @@ namespace TirtaOptima.Controllers
                     ResponseBase.Message = requestValidator.ErrorMessage ?? throw new Exception();
                     return Json(ResponseBase.Message);
                 }
-                model.Results = service.GetScore(model, UserId);
-                return PartialView("GetData", model);
+				model.Results = service.GetScoreFahpOnly(model, UserId);
+				//model.Results = service.GetScore(model, UserId);
+				return PartialView("GetData", model);
             }
             catch (Exception ex)
             {

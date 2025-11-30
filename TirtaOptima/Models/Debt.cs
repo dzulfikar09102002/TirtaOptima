@@ -37,8 +37,6 @@ public partial class Debt
 
     public virtual User? DeletedByNavigation { get; set; }
 
-    public virtual ICollection<Letter> Letters { get; set; } = new List<Letter>();
-
     public virtual Customer Pelanggan { get; set; } = null!;
 
     public virtual ICollection<StrategyResult> StrategyResults { get; set; } = new List<StrategyResult>();

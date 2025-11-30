@@ -184,12 +184,12 @@
                     <table class="table table-bordered text-center" id="tbl">
                         <thead class="table-warning">
                             <tr>
-                                <th>Iterasi</th>
+                                <th class="text-center">Iterasi</th>
                                 @for (int i = 0; i < Model.CriteriaNames.Count; i++)
                                 {
-                                    <th>@($"W{i + 1}")</th>
+                                    <th class="text-center">@Model.CriteriaNames[i]</th>
                                 }
-                                <th>Fitness</th>
+                                <th class="text-center">Fitness</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -208,15 +208,16 @@
                         <tfoot>
                             @{
                                 var best = Model.PsoLogs.OrderByDescending(x => x.Fitness).FirstOrDefault();
+                                var avgfitness = Model.PsoLogs.Average(x => x.Fitness);
                                 if (best != null)
                                 {
                                     <tr class="fw-bold table-success">
                                         <td class="text-center">Terbaik (@best.Iteration)</td>
                                         @foreach (var w in best.Weights)
                                         {
-                                            <td>@w.ToString("0.0000")</td>
+                                            <td class="text-center">@w.ToString("0.0000")</td>
                                         }
-                                        <td class="text-center">@best.Fitness.ToString("0.0000")</td>
+                                        <td class="text-center">@best.Fitness.ToString("0.0000") (AVG = @avgfitness.ToString("0.0000"))</td>
                                     </tr>
                                 }
                             }

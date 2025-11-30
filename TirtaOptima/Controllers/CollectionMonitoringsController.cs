@@ -53,15 +53,29 @@ namespace TirtaOptima.Controllers
                 return Json(ResponseBase);
             }
         }
+        [HttpPost]
+        public IActionResult Letters(long id)
+        {
+            CollectionMonitoringsService service = new(_context);
+            CollectionMonitoringsViewModel model = new CollectionMonitoringsViewModel
+            {
+                Letters = service.GetLetters(id),
+            };
+            if (model.Letters == null)
+            {
+                return NotFound();
+            }
+            return PartialView(model);
+        }
         [HttpGet]
         public IActionResult Detail(long id)
         {
             CollectionMonitoringsService service = new(_context);
             CollectionMonitoringsViewModel model = new CollectionMonitoringsViewModel
             {
-                Collection = service.GetCollection(id)
+                Letter = service.GetLetter(id),
             };
-            if (model.Collection == null)
+            if (model.Letter == null)
             {
                 return NotFound();
             }

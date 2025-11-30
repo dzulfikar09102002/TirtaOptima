@@ -54,6 +54,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29sbGVjdGlvbk1vbml0b3JpbmdzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Projek C\#/TirtaOptima/TirtaOptima/Views/CollectionMonitorings/Letters.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29sbGVjdGlvbk1vbml0b3JpbmdzXExldHRlcnMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Projek C\#/TirtaOptima/TirtaOptima/Views/Criteria/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3JpdGVyaWFcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -114,6 +118,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVidFJlcG9ydHNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Projek C\#/TirtaOptima/TirtaOptima/Views/DebtReports/Print.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVidFJlcG9ydHNcUHJpbnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Projek C\#/TirtaOptima/TirtaOptima/Views/DebtWriteOffs/GetData.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVidFdyaXRlT2Zmc1xHZXREYXRhLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -144,6 +152,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Projek C\#/TirtaOptima/TirtaOptima/Views/FurtherActions/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRnVydGhlckFjdGlvbnNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projek C\#/TirtaOptima/TirtaOptima/Views/FurtherActions/Letters.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRnVydGhlckFjdGlvbnNcTGV0dGVycy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projek C\#/TirtaOptima/TirtaOptima/Views/FurtherActions/Report.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRnVydGhlckFjdGlvbnNcUmVwb3J0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Projek C\#/TirtaOptima/TirtaOptima/Views/Home/Index.cshtml]
@@ -186,12 +202,28 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGV0dGVyRGVsaXZlcmllc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Projek C\#/TirtaOptima/TirtaOptima/Views/LetterDeliveries/Letters.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGV0dGVyRGVsaXZlcmllc1xMZXR0ZXJzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projek C\#/TirtaOptima/TirtaOptima/Views/LetterDeliveries/Report.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGV0dGVyRGVsaXZlcmllc1xSZXBvcnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Projek C\#/TirtaOptima/TirtaOptima/Views/LetterIssuances/GetData.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGV0dGVySXNzdWFuY2VzXEdldERhdGEuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Projek C\#/TirtaOptima/TirtaOptima/Views/LetterIssuances/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGV0dGVySXNzdWFuY2VzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projek C\#/TirtaOptima/TirtaOptima/Views/LetterIssuances/Letters.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGV0dGVySXNzdWFuY2VzXExldHRlcnMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projek C\#/TirtaOptima/TirtaOptima/Views/LetterIssuances/Publish.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGV0dGVySXNzdWFuY2VzXFB1Ymxpc2guY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Projek C\#/TirtaOptima/TirtaOptima/Views/OfficerMonitorings/Detail.cshtml]
@@ -224,6 +256,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Projek C\#/TirtaOptima/TirtaOptima/Views/Policies/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUG9saWNpZXNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projek C\#/TirtaOptima/TirtaOptima/Views/Profile/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Projek C\#/TirtaOptima/TirtaOptima/Views/Roles/Create.cshtml]
@@ -284,6 +320,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Projek C\#/TirtaOptima/TirtaOptima/Views/StrategyCalculations/Input.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RyYXRlZ3lDYWxjdWxhdGlvbnNcSW5wdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projek C\#/TirtaOptima/TirtaOptima/Views/StrategyResults/AssignCollector.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RyYXRlZ3lSZXN1bHRzXEFzc2lnbkNvbGxlY3Rvci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Projek C\#/TirtaOptima/TirtaOptima/Views/StrategyResults/GetData.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RyYXRlZ3lSZXN1bHRzXEdldERhdGEuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Projek C\#/TirtaOptima/TirtaOptima/Views/StrategyResults/Index.cshtml]

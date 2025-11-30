@@ -70,13 +70,17 @@
               "target": "Package",
               "version": "[8.0.3, )"
             },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
             "Pomelo.EntityFrameworkCore.MySql": {
               "target": "Package",
               "version": "[8.0.3, )"
             },
             "SixLabors.ImageSharp": {
               "target": "Package",
-              "version": "[3.1.8, )"
+              "version": "[3.1.11, )"
             },
             "System.Diagnostics.Tools": {
               "target": "Package",

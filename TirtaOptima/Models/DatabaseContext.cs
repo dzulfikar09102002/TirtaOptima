@@ -62,18 +62,18 @@ public partial class DatabaseContext : DbContext
 
     public virtual DbSet<Village> Villages { get; set; }
 
-	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-	{
-		IConfigurationRoot configuration = new ConfigurationBuilder()
-			.SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-			.AddJsonFile("appsettings.json")
-			.Build();
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        IConfigurationRoot configuration = new ConfigurationBuilder()
+            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+            .AddJsonFile("appsettings.json")
+            .Build();
 
-		string connectionString = configuration?.GetConnectionString("MySQL") ?? "server=localhost;database=tirtaoptima;user=root";
+        string connectionString = configuration?.GetConnectionString("MySQL") ?? "server=localhost;database=tirtaoptima;user=root";
 
-		optionsBuilder.UseMySql(connectionString, ServerVersion.Parse("8.0.30-mysql"));
-	}
-	protected override void OnModelCreating(ModelBuilder modelBuilder)
+        optionsBuilder.UseMySql(connectionString, ServerVersion.Parse("8.0.30-mysql"));
+    }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
             .UseCollation("utf8mb4_0900_ai_ci")
@@ -202,9 +202,7 @@ public partial class DatabaseContext : DbContext
 
             entity.HasIndex(e => e.PenagihId, "collections_users_FK");
 
-            entity.HasIndex(e => e.StatusId, "penagihan_status_FK");
-
-            entity.HasIndex(e => e.SuratId, "penagihan_surat_FK");
+            entity.HasIndex(e => e.Status, "penagihan_status_FK");
 
             entity.HasIndex(e => e.CreatedBy, "penagihan_users_FK");
 
@@ -213,9 +211,6 @@ public partial class DatabaseContext : DbContext
             entity.HasIndex(e => e.DeletedBy, "penagihan_users_FK_2");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Alasan)
-                .HasMaxLength(255)
-                .HasColumnName("alasan");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp")
@@ -225,25 +220,14 @@ public partial class DatabaseContext : DbContext
                 .HasColumnType("timestamp")
                 .HasColumnName("deleted_at");
             entity.Property(e => e.DeletedBy).HasColumnName("deleted_by");
-            entity.Property(e => e.Foto)
-                .HasMaxLength(100)
-                .HasColumnName("foto");
             entity.Property(e => e.Ket)
                 .HasColumnType("text")
                 .HasColumnName("ket");
-            entity.Property(e => e.NamaPenerima)
-                .HasMaxLength(100)
-                .HasColumnName("nama_penerima");
-            entity.Property(e => e.NotelpPenerima)
-                .HasMaxLength(100)
-                .HasColumnName("notelp_penerima");
             entity.Property(e => e.PenagihId).HasColumnName("penagih_id");
             entity.Property(e => e.PiutangId).HasColumnName("piutang_id");
-            entity.Property(e => e.RencanaBayar).HasColumnName("rencana_bayar");
-            entity.Property(e => e.StatusId)
-                .HasColumnType("enum('Belum Ditagih','Berhasil Ditagih','Gagal Ditagih','Janji Bayar')")
-                .HasColumnName("status_id");
-            entity.Property(e => e.SuratId).HasColumnName("surat_id");
+            entity.Property(e => e.Status)
+                .HasColumnType("enum('Belum Ditindak','Belum Tuntas','Tuntas')")
+                .HasColumnName("status");
             entity.Property(e => e.Tanggal)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("datetime")
@@ -272,10 +256,6 @@ public partial class DatabaseContext : DbContext
                 .HasForeignKey(d => d.PiutangId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("collections_debts_FK");
-
-            entity.HasOne(d => d.Surat).WithMany(p => p.Collections)
-                .HasForeignKey(d => d.SuratId)
-                .HasConstraintName("penagihan_surat_FK");
 
             entity.HasOne(d => d.Tindakan).WithMany(p => p.Collections)
                 .HasForeignKey(d => d.TindakanId)
@@ -351,10 +331,18 @@ public partial class DatabaseContext : DbContext
             entity.Property(e => e.CreatedBy).HasColumnName("created_by");
             entity.Property(e => e.CriteriaId1).HasColumnName("criteria_id_1");
             entity.Property(e => e.CriteriaId2).HasColumnName("criteria_id_2");
-            entity.Property(e => e.FuzzyL).HasColumnName("fuzzy_l");
-            entity.Property(e => e.FuzzyM).HasColumnName("fuzzy_m");
-            entity.Property(e => e.FuzzyU).HasColumnName("fuzzy_u");
-            entity.Property(e => e.ScaleValue).HasColumnName("scale_value");
+            entity.Property(e => e.FuzzyL)
+                .HasPrecision(10)
+                .HasColumnName("fuzzy_l");
+            entity.Property(e => e.FuzzyM)
+                .HasPrecision(10)
+                .HasColumnName("fuzzy_m");
+            entity.Property(e => e.FuzzyU)
+                .HasPrecision(10)
+                .HasColumnName("fuzzy_u");
+            entity.Property(e => e.ScaleValue)
+                .HasPrecision(10)
+                .HasColumnName("scale_value");
 
             entity.HasOne(d => d.CriteriaId1Navigation).WithMany(p => p.CriteriaComparisonCriteriaId1Navigations)
                 .HasForeignKey(d => d.CriteriaId1)
@@ -795,7 +783,7 @@ public partial class DatabaseContext : DbContext
 
             entity.ToTable("letters");
 
-            entity.HasIndex(e => e.PiutangId, "letters_debts_FK");
+            entity.HasIndex(e => e.PenagihanId, "letters_collections_FK");
 
             entity.HasIndex(e => e.TindakanId, "surat_jenis_tindakan_FK");
 
@@ -810,6 +798,9 @@ public partial class DatabaseContext : DbContext
             entity.HasIndex(e => e.DeletedBy, "surat_users_FK_2");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Alasan)
+                .HasMaxLength(255)
+                .HasColumnName("alasan");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp")
@@ -819,22 +810,35 @@ public partial class DatabaseContext : DbContext
                 .HasColumnType("timestamp")
                 .HasColumnName("deleted_at");
             entity.Property(e => e.DeletedBy).HasColumnName("deleted_by");
+            entity.Property(e => e.Foto)
+                .HasMaxLength(100)
+                .HasColumnName("foto");
             entity.Property(e => e.KategoriId).HasColumnName("kategori_id");
             entity.Property(e => e.Ket)
                 .HasColumnType("text")
                 .HasColumnName("ket");
             entity.Property(e => e.Lampiran).HasColumnName("lampiran");
+            entity.Property(e => e.NamaPenerima)
+                .HasMaxLength(100)
+                .HasColumnName("nama_penerima");
             entity.Property(e => e.NomorSurat)
                 .HasMaxLength(100)
                 .HasColumnName("nomor_surat");
             entity.Property(e => e.Note)
                 .HasMaxLength(100)
                 .HasColumnName("note");
+            entity.Property(e => e.NotelpPenerima)
+                .HasMaxLength(100)
+                .HasColumnName("notelp_penerima");
+            entity.Property(e => e.PenagihanId).HasColumnName("penagihan_id");
             entity.Property(e => e.PimpinanId).HasColumnName("pimpinan_id");
-            entity.Property(e => e.PiutangId).HasColumnName("piutang_id");
+            entity.Property(e => e.RencanaBayar).HasColumnName("rencana_bayar");
             entity.Property(e => e.Sifat)
                 .HasMaxLength(100)
                 .HasColumnName("sifat");
+            entity.Property(e => e.Status)
+                .HasColumnType("enum('Tersampaikan','Belum Disampaikan')")
+                .HasColumnName("status");
             entity.Property(e => e.TindakanId).HasColumnName("tindakan_id");
             entity.Property(e => e.UpdatedAt)
                 .ValueGeneratedOnAddOrUpdate()
@@ -855,15 +859,15 @@ public partial class DatabaseContext : DbContext
                 .HasForeignKey(d => d.KategoriId)
                 .HasConstraintName("surat_kategori_surat_FK");
 
+            entity.HasOne(d => d.Penagihan).WithMany(p => p.Letters)
+                .HasForeignKey(d => d.PenagihanId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("letters_collections_FK");
+
             entity.HasOne(d => d.Pimpinan).WithMany(p => p.Letters)
                 .HasForeignKey(d => d.PimpinanId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("surat_pimpinan_FK");
-
-            entity.HasOne(d => d.Piutang).WithMany(p => p.Letters)
-                .HasForeignKey(d => d.PiutangId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("letters_debts_FK");
 
             entity.HasOne(d => d.Tindakan).WithMany(p => p.Letters)
                 .HasForeignKey(d => d.TindakanId)
@@ -1170,7 +1174,7 @@ public partial class DatabaseContext : DbContext
             entity.Property(e => e.DeletedBy).HasColumnName("deleted_by");
             entity.Property(e => e.PiutangId).HasColumnName("piutang_id");
             entity.Property(e => e.Score)
-                .HasPrecision(10)
+                .HasPrecision(16, 8)
                 .HasColumnName("score");
             entity.Property(e => e.Status)
                 .HasDefaultValueSql("'pending'")

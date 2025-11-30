@@ -17,5 +17,14 @@ namespace TirtaOptima.Controllers
             };
             return View(model);
         }
+        public IActionResult Print()
+        {
+            DebtReportsService service = new(_context);
+            DebtReportsViewModel model = new DebtReportsViewModel
+            {
+                Debts = service.GetDebts()
+            };
+            return View(model);
+        }
     }
 }
